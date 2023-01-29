@@ -4,66 +4,110 @@ import (
 	"context"
 	"fmt"
 	"log"
+  "math/big"
 	"strings"
+  "time"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/contracts/token/abi"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/ethclient"
+  "github.com/ethereum/go-ethereum"
+  "github.com/ethereum/go-ethereum/accounts/abi"
+  "github.com/ethereum/go-ethereum/common"
+  "github.com/ethereum/go-ethereum/ethclient"
+
+  events "bacalhau-bridge/events"
 )
 
+func getCurrentBlock(client *ethclient.Client) (*big.Int, error) {
+    block, err := client.BlockNumber(context.Background())
+    if err != nil {
+      return nil, err
+    }
+    return big.NewInt(int64(block)), nil
+}
+
+func processLogs(client *ethclient.Client, contractAddress common.Address, lastBlock *big.Int) (*big.Int, error) {
+    currentBlock, err := getCurrentBlock(client)
+    if err != nil {
+      return nil, err
+    }
+
+    // assert lastBlock < currentBlock
+    if lastBlock.Cmp(currentBlock) >= 0 {
+      fmt.Println("DEBUG:: skipping (" + lastBlock.String() + " < " + currentBlock.String() +")")
+      return nil, nil
+    }
+
+    fmt.Println("Processing blocks #" + lastBlock.String() + " - #" + currentBlock.String())
+    query := ethereum.FilterQuery{
+      FromBlock: lastBlock,
+      ToBlock:   currentBlock,
+      Addresses: []common.Address{
+        contractAddress,
+      },
+    }
+
+    logs, err := client.FilterLogs(context.Background(), query)
+    if err != nil {
+      return nil, err
+    }
+
+    contractAbi, err := abi.JSON(strings.NewReader(string(events.EventsABI)))
+    if err != nil {
+      return nil, err
+    }
+
+    for _, vLog := range logs {
+      fmt.Println("> Log found:")
+      //fmt.Println(vLog.BlockHash.Hex())
+      //fmt.Println(vLog.BlockNumber)
+      //fmt.Println(vLog.TxHash.Hex())
+
+      event := struct {
+        Number *big.Int
+      }{}
+      err := contractAbi.UnpackIntoInterface(&event, "NumberEvent", vLog.Data)
+      if err != nil {
+        log.Fatal(err)
+      }
+
+      fmt.Println("> " + event.Number.String())
+    }
+
+    // update lastBlock to maximum processed block
+    return currentBlock, nil
+}
+
 func main() {
+  // set-up Client
+  contract := "0x9F8865559f2b22F3883e162bEbe80F6069Dd9Dc9"
+  contractAddress := common.HexToAddress(contract)
 	client, err := ethclient.Dial("https://api.hyperspace.node.glif.io/rpc/v1")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer client.Close()
 
-	contractAddress := common.HexToAddress("0x773d8856dd7F78857490e5Eea65111D8d466A646")
-	query := fmt.Sprintf("0x%s", abi.TokenABI)
-	contractAbi, err := client.EthClient.ABIDecoder(query)
+  currentBlock, err := getCurrentBlock(client)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	logs := make(chan types.Log)
-	sub, err := client.EthClient.SubscribeFilterLogs(context.Background(), types.FilterQuery{
-		Addresses: []common.Address{contractAddress},
-		Topics: [][]common.Hash{
-			{common.HexToHash("0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef")},
-		},
-	}, logs)
-	if err != nil {
-		log.Fatal(err)
-	}
+  fmt.Println("Listen for logs for actor " + contractAddress.String() + " at block #" + currentBlock.String())
 
-	for {
-		select {
-		case err := <-sub.Err():
-			log.Fatal(err)
-		case vLog := <-logs:
-			event, err := contractAbi.Event(&vLog)
-			if err != nil {
-				log.Println("error decoding event:", err)
-				continue
-			}
+  oneConstant := big.NewInt(1)
+  lastBlock := new(big.Int)
+  lastBlock.Sub(currentBlock, oneConstant)
 
-			if event.Name == "Transfer" {
-				var transferEvent abi.TokenTransfer
-				if err := contractAbi.Unpack(&transferEvent, "Transfer", vLog.Data); err != nil {
-					log.Println("error unpacking event data:", err)
-					continue
-				}
-
-				fromAddress := transferEvent.From.Hex()
-				toAddress := transferEvent.To.Hex()
-				value := transferEvent.Value.String()
-
-				fmt.Println("Event: Transfer")
-				fmt.Println("From: ", strings.ToLower(fromAddress))
-				fmt.Println("To: ", strings.ToLower(toAddress))
-				fmt.Println("Value: ", value)
-			}
-		}
-	}
+  // poll and process logs in a loop
+  ticker := time.NewTicker(10 * time.Second)
+  for range ticker.C {
+    lastProcessedBlock, err := processLogs(client, contractAddress, lastBlock)
+    if err != nil {
+      log.Fatal(err)
+    }
+    if lastProcessedBlock != nil {
+      // ensure we don't process again this block
+      lastBlock.Add(lastProcessedBlock, oneConstant)
+      fmt.Println("DEBUG:: waiting for next block " + lastBlock.String())
+    }
+  }
 }
