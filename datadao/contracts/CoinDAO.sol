@@ -1,34 +1,28 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-error SimpleCoin__NotEnoughBalance();
+error CoinDAO__NotEnoughBalance();
 
-contract SimpleCoin {
+contract CoinDAO {
     mapping(address => uint) balances;
     uint256 private i_tokensToBeMinted;
-    uint256 internal s_counter;
-
-    /* Events */
-    event EventCalled(address caller, uint256 counter);
 
     constructor(uint256 tokensToBeMinted) {
         balances[tx.origin] = tokensToBeMinted;
         i_tokensToBeMinted = tokensToBeMinted;
     }
 
+    function isMember() public returns (bool membership) {
+        return (getBalance(msg.sender) > 0);
+    }
+
     function sendCoin(address receiver, uint amount) public returns (bool sufficient) {
         if (balances[msg.sender] < amount) {
-            // return false;
-            revert SimpleCoin__NotEnoughBalance();
+            revert CoinDAO__NotEnoughBalance();
         }
-
         balances[msg.sender] -= amount;
         balances[receiver] += amount;
         return true;
-    }
-
-    function getBalanceInEth(address addr) public view returns (uint) {
-        return getBalance(addr) * 2;
     }
 
     function getBalance(address addr) public view returns (uint) {
@@ -37,14 +31,5 @@ contract SimpleCoin {
 
     function getMintedTokenBalance() public view returns (uint256) {
         return i_tokensToBeMinted;
-    }
-
-    function callEvent() external {
-        s_counter++;
-        emit EventCalled(msg.sender, s_counter);
-    }
-
-    function getCounter() public view returns (uint256) {
-        return s_counter;
     }
 }

@@ -12,23 +12,30 @@ module.exports = async ({ deployments }) => {
     const tokensToBeMinted = networkConfig[chainId]["tokensToBeMinted"]
 
     //deploy Simplecoin
-    const SimpleCoin = await ethers.getContractFactory("SimpleCoin", wallet)
+    const SimpleCoin = await ethers.getContractFactory("CoinDAO", wallet)
     console.log("Deploying Simplecoin...")
     const simpleCoin = await SimpleCoin.deploy(tokensToBeMinted)
     await simpleCoin.deployed()
     console.log("SimpleCoin deployed to:", simpleCoin.address)
 
+    //deploy SimpleCIDTracker
+    const DataDAO = await ethers.getContractFactory("SimpleCidTracker", wallet)
+    console.log("Deploying DataDAO...")
+    const dataDAO = await DataDAO.deploy(simpleCoin.address)
+    await dataDAO.deployed()
+    console.log("DataDAO deployed to:", dataDAO.address)
+
     // //deploy FilecoinMarketConsumer
-    // const FilecoinMarketConsumer = await ethers.getContractFactory('FilecoinMarketConsumer', wallet);
-    // console.log('Deploying FilecoinMarketConsumer...');
-    // const filecoinMarketConsumer = await FilecoinMarketConsumer.deploy();
+    // const FilecoinMarketConsumer = await ethers.getContractFactory("FilecoinMarketConsumer", wallet)
+    // console.log("Deploying FilecoinMarketConsumer...")
+    // const filecoinMarketConsumer = await FilecoinMarketConsumer.deploy()
     // await filecoinMarketConsumer.deployed()
-    // console.log('FilecoinMarketConsumer deployed to:', filecoinMarketConsumer.address);
+    // console.log("FilecoinMarketConsumer deployed to:", filecoinMarketConsumer.address)
 
     // //deploy DealRewarder
-    // const DealRewarder = await ethers.getContractFactory('DealRewarder', wallet);
-    // console.log('Deploying DealRewarder...');
-    // const dealRewarder = await DealRewarder.deploy();
+    // const DealRewarder = await ethers.getContractFactory("DealRewarder", wallet)
+    // console.log("Deploying DealRewarder...")
+    // const dealRewarder = await DealRewarder.deploy()
     // await dealRewarder.deployed()
-    // console.log('DealRewarder deployed to:', dealRewarder.address);
+    // console.log("DealRewarder deployed to:", dealRewarder.address)
 }
