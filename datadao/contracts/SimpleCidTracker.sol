@@ -10,8 +10,8 @@ contract SimpleCidTracker {
 
     mapping(string => bool) public cidSet;
     // mapping(bytes => uint) public cidSizes;
-    mapping(bytes => mapping(uint64 => bool)) public cidProviders;
-    mapping(bytes => mapping(uint64 => bool)) public cidToValidate;
+    mapping(string => mapping(uint64 => bool)) public cidProviders;
+    mapping(string => mapping(uint64 => bool)) public cidToValidate;
 
     string[] public cids;
 
@@ -23,14 +23,21 @@ contract SimpleCidTracker {
         coinContract = CoinDAO(_addressCoinContract);
     }
 
-    function isCIDStored(bytes memory cidraw, uint64 provider) internal view returns (bool) {
+    function isCIDStored(string memory cidraw, uint64 provider) internal view returns (bool) {
         bool alreadyStoring = cidProviders[cidraw][provider];
         return !alreadyStoring;
     }
 
-    function proposeCID(bytes memory cidraw, uint64 provider /* , uint size */) public {
-        require(coinContract.isMember(), "caller must be a member");
+    function proposeCID(string memory cidraw, uint64 provider /* , uint size */) public {
         cidToValidate[cidraw][provider] = true;
+    }
+
+    function addCID(string memory cidraw) public {
+        cids.push(cidraw);
+    }
+
+    function getCidStored() public view returns (string[] memory) {
+        return cids;
     }
 
     // function authorizeData(bytes memory cidraw, uint64 provider /* , uint size */) public {
@@ -40,14 +47,6 @@ contract SimpleCidTracker {
     //     require(isCIDStored(cidraw, provider), "cid is already stored by this provider");
     //     cidProviders[cidraw][provider] = true;
     // }
-
-    function addCID(string memory cidraw) public {
-        cids.push(cidraw);
-    }
-
-    function getCidStored() public view returns (string[] memory) {
-        return cids;
-    }
 
     // function addCIDForBounty(bytes calldata cidraw, uint size) public {
     //     require(msg.sender == owner);
