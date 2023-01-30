@@ -45,20 +45,24 @@ const SocialButton = ({
 export default function Footer() {
   return (
     <Box
-      bg={useColorModeValue('gray.50', 'gray.900')}
-      color={useColorModeValue('gray.700', 'gray.200')}>
+      bgGradient={useColorModeValue('linear(to-r, teal.50, green.50)', 'linear(to-r, teal.900, green.900)')}
+      color={useColorModeValue('gray.700', 'gray.200')}
+      position="fixed"
+      width="100%"
+      bottom="0"
+      >
       <Box
         borderTopWidth={1}
         borderStyle={'solid'}
-        borderColor={useColorModeValue('gray.200', 'gray.700')}>
+        borderColor={useColorModeValue('gray.200', 'gray.900')}>
         <Flex
-          as={Stack}
+          minH={'60px'}
           direction={{ base: 'column', md: 'row' }}
-          spacing={4}
           justify={{ base: 'center', md: 'space-between' }}
           align={{ base: 'center', md: 'center' }}>
-          <Box></Box>
-          <Text>© 2023 KS. All rights reserved</Text>
+          <Text
+            color={useColorModeValue('gray.600', 'gray.100')}
+            fontSize='sm' pl='20px'>© 2023 KS. All rights reserved</Text>
           <Stack direction={'row'} spacing={6} pr="20px">
             <SocialButton label={'Github'} href={'#'}>
               <FaGithub />
