@@ -18,6 +18,7 @@ import {
   Center,
 } from '@chakra-ui/react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const NavLink = ({ children }: { children: ReactNode }) => (
   <Link
@@ -51,6 +52,7 @@ export default function Nav() {
               </Button>
 
               <Menu>
+                <ConnectButton />
                 <MenuButton
                   as={Button}
                   rounded={'full'}
