@@ -1,11 +1,11 @@
 import type { AppProps } from 'next/app'
 
 // Style
-import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider, useColorModeValue } from '@chakra-ui/react'
 import '@rainbow-me/rainbowkit/styles.css';
 
 // Rainbow
-import { RainbowKitProvider, getDefaultWallets } from '@rainbow-me/rainbowkit';
+import { RainbowKitProvider, getDefaultWallets, lightTheme, darkTheme } from '@rainbow-me/rainbowkit';
 import { Chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 
 const filecoinHyperspace: Chain = {
@@ -62,7 +62,10 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider>
       <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider chains={chains}>
+        <RainbowKitProvider
+          chains={chains}
+          //theme={useColorModeValue(lightTheme, darkTheme)}
+          >
           <Component {...pageProps} />
         </RainbowKitProvider>
       </WagmiConfig>
