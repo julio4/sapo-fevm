@@ -33,14 +33,6 @@ export default function Home() {
     functionName: "getCidStored",
   });
 
-  data = [
-    "QmTkuHzN6ZvJGbuk3QAfpva8nD1shqApq9zyoVCpnFHqfi",
-    "QmRfB6rmGfmGM2aTEgBWd6GmgyX74GMc7ihYkCAayq1Bs9",
-    "Qme9qHPBxrMTN3r6TeEQuucLZS3WvKYQosNjTnWtzPsZQg",
-    "QmPNfuJH8AoHgDxheDvxrWmD99NgHcMHJ8iBzpeDByk71Z",
-    "QmRfB6rmGfmGM2aTEgBWd6GmgyX74GMc7ihYkCAayq1Bs9",
-  ];
-
   const sortAndFormatCids = async () => {
     let newImgCids: string[] = [];
     let newTextCids: string[] = [];
@@ -68,11 +60,8 @@ export default function Home() {
     sortAndFormatCids;
   }, [data]);
 
-  const consoleStuff = async () => {
+  const discoverDAO = async () => {
     await sortAndFormatCids();
-    console.log("cids: ", cids);
-    console.log("cids img: ", imgCids);
-    console.log("cids text: ", textCids);
   };
   return (
     <Layout>
@@ -85,7 +74,7 @@ export default function Home() {
           placeholder="Enter DAO Adress"
         />
 
-        <Button onClick={consoleStuff}>Test</Button>
+        <Button onClick={discoverDAO}>Check the DAO</Button>
         <Flex direction="column" p={12} rounded={6} alignItems="start">
           <Text mb={4}>Text Cids:</Text>
           {textCids.map((cid, index) => (
