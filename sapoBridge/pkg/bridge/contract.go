@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/filecoin-project/bacalhau/pkg/model"
-	"github.com/go-co-op/gocron"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 )
@@ -19,15 +18,9 @@ type SmartContract interface {
 	Refund(context.Context, ContractFailedEvent) (ContractRefundedEvent, error)
 }
 
+type ContractListenHandler func(ctx context.Context, c chan<- ContractSubmittedEvent) error
 type ContractCompleteHandler func(context.Context, BacalhauJobCompletedEvent) (ContractPaidEvent, error)
 type ContractRefundHandler func(context.Context, ContractFailedEvent) (ContractRefundedEvent, error)
-type ContractListenHandler func(ctx context.Context, c chan<- ContractSubmittedEvent) error
-
-type mockContract struct {
-	CompleteHandler ContractCompleteHandler
-	RefundHandler   ContractRefundHandler
-	ListenHandler   ContractListenHandler
-}
 
 // Complete implements SmartContract
 func (mock mockContract) Complete(ctx context.Context, e BacalhauJobCompletedEvent) (ContractPaidEvent, error) {
@@ -47,6 +40,21 @@ func (mock mockContract) Listen(ctx context.Context, out chan<- ContractSubmitte
 		return mock.ListenHandler(ctx, out)
 	}
 	return nil
+}
+
+// Refund implements SmartContract
+func (mock mockContract) Refund(ctx context.Context, e ContractFailedEvent) (ContractRefundedEvent, error) {
+	log.Ctx(ctx).Info().Stringer("id", e.OrderId()).Msg("Refunded")
+	if mock.RefundHandler != nil {
+		return mock.RefundHandler(ctx, e)
+	}
+	return e.Refunded(), nil
+}
+
+type mockContract struct {
+	ListenHandler   ContractListenHandler
+	CompleteHandler ContractCompleteHandler
+	RefundHandler   ContractRefundHandler
 }
 
 func exampleEvent() ContractSubmittedEvent {
@@ -71,36 +79,5 @@ func exampleEvent() ContractSubmittedEvent {
 		lastAttempt: time.Time{},
 		state:       OrderStateSubmitted,
 		jobSpec:     spec,
-	}
-}
-
-// Refund implements SmartContract
-func (mock mockContract) Refund(ctx context.Context, e ContractFailedEvent) (ContractRefundedEvent, error) {
-	log.Ctx(ctx).Info().Stringer("id", e.OrderId()).Msg("Refunded")
-	if mock.RefundHandler != nil {
-		return mock.RefundHandler(ctx, e)
-	}
-	return e.Refunded(), nil
-}
-
-func TimerContract() SmartContract {
-	return mockContract{
-		ListenHandler: func(ctx context.Context, out chan<- ContractSubmittedEvent) error {
-			sched := gocron.NewScheduler(time.UTC)
-			_, err := sched.WaitForSchedule().Every(10).Second().Do(func() {
-				e := exampleEvent()
-				log.Ctx(ctx).Info().Stringer("id", e.OrderId()).Msg("New order")
-				out <- e
-			})
-			if err != nil {
-				return err
-			}
-
-			sched.StartAsync()
-			defer sched.Stop()
-
-			<-ctx.Done()
-			return nil
-		},
 	}
 }
