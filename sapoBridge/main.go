@@ -6,7 +6,8 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/julio4/sapo-fevm/sapoBridge/pkg/bridge"
+	"sapoBridge/pkg/bridge"
+
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
@@ -24,7 +25,8 @@ func main() {
 		return
 	}
 
-	workflow := bridge.NewWorkflow(bridge.NewJobRunner(), bridge.TimerContract(), repo)
+	contract := bridge.NewSapoContract(ctx, "0x9F8865559f2b22F3883e162bEbe80F6069Dd9Dc9")
+	workflow := bridge.NewWorkflow(bridge.NewJobRunner(), contract, repo)
 
 	err = workflow.Start(ctx)
 	if err != nil {
