@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/json"
+	"strings"
 	"time"
 
 	"sapoBridge/hardhat/contracts"
@@ -66,7 +67,8 @@ func (r *realContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 		log.Ctx(ctx).Debug().
 			Stringer("txn", recvEvent.Raw.TxHash).
 			Uint64("block#", recvEvent.Raw.BlockNumber).
-			Str("job contract address", recvEvent.SapoJob.String()).
+			Str("job contract", recvEvent.SapoJob.String()).
+			Str("job spec cid", recvEvent.Cid).
 			Bool("removed", recvEvent.Raw.Removed).
 			Msg("Event")
 
@@ -74,39 +76,42 @@ func (r *realContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 			continue
 		}
 
-		exampleEvent()
+		// TODO: fetch the job spec from the cid
+		// image and params are hardcoded for now
+		image := "ubuntu"
+		param := strings.Split("echo hello world", " ")
 
-		//spec, err := json.Marshal(model.Spec{
-		//	Engine:    model.EngineDocker,
-		//	Verifier:  model.VerifierNoop,
-		//	Publisher: model.PublisherIpfs,
-		//	Docker: model.JobSpecDocker{
-		//		Image:      "ghcr.io/bacalhau-project/examples/stable-diffusion-gpu:0.0.1",
-		//		Entrypoint: []string{"python", "main.py", "--o", "./outputs", "--p", recvEvent.Params},
-		//	},
-		//	Resources: model.ResourceUsageConfig{
-		//		GPU: "1",
-		//	},
-		//	Outputs: []model.StorageSpec{
-		//		{
-		//			Name: "outputs",
-		//			Path: "/outputs",
-		//		},
-		//	},
-		//	Deal: model.Deal{
-		//		Concurrency: 1,
-		//	},
-		//})
-		//if err != nil {
-		//	log.Ctx(ctx).Error().Err(err).Send()
-		//	continue
-		//}
+		spec, err := json.Marshal(model.Spec{
+			Engine:    model.EngineDocker,
+			Verifier:  model.VerifierNoop,
+			Publisher: model.PublisherIpfs,
+			Docker: model.JobSpecDocker{
+				Image:      image,
+				Entrypoint: param,
+			},
+			Resources: model.ResourceUsageConfig{
+				GPU: "1",
+			},
+			Outputs: []model.StorageSpec{
+				{
+					Name: "outputs",
+					Path: "/outputs",
+				},
+			},
+			Deal: model.Deal{
+				Concurrency: 1,
+			},
+		})
+		if err != nil {
+			log.Ctx(ctx).Error().Err(err).Send()
+			continue
+		}
 
-		//out <- &event{
-		//	orderId: recvEvent.Raw.TxHash.Bytes(),
-		//	state:   OrderStateSubmitted,
-		//	jobSpec: spec,
-		//}
+		out <- &event{
+			orderId: recvEvent.Raw.TxHash.Bytes(),
+			state:   OrderStateSubmitted,
+			jobSpec: spec,
+		}
 
 		r.maxSeenBlock = recvEvent.Raw.BlockNumber
 	}

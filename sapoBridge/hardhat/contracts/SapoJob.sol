@@ -10,9 +10,6 @@ contract SapoJob {
     address payable private initiator;
     address private bridge;
 
-    string private image;
-    string private cid;
-
     bool public completed = false;
     string private result;
 
@@ -29,11 +26,9 @@ contract SapoJob {
         _;
     }
 
-    constructor(address sapoBridge, string memory dockerImg, string memory inputCid) payable {
+    constructor(address sapoBridge) payable {
         initiator = payable(msg.sender);
         bridge = sapoBridge;
-        image = dockerImg;
-        cid = inputCid;
     }
 
     function saveResult(string memory executionResult) public isBridge {

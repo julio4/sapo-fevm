@@ -13,7 +13,10 @@ contract SapoBridge {
     address private bridge;
     mapping(address => address[]) public jobs;
 
-    event JobExecutionRequest(address sapoJob);
+    event JobExecutionRequest(
+        address sapoJob,
+        string cid
+    );
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Only bridge can call this function.");
@@ -25,9 +28,9 @@ contract SapoBridge {
         bridge = bridgeAddress;
     }
 
-    function request(string memory image, string memory cid) public {
-        SapoJob job = new SapoJob(bridge, image, cid);
-        emit JobExecutionRequest(address(job));
+    function request(string memory cid) public {
+        SapoJob job = new SapoJob(bridge);
+        emit JobExecutionRequest(address(job), cid);
         jobs[msg.sender].push(address(job));
     }
 
