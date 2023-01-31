@@ -12,7 +12,6 @@ export default function ImageModal({ cid }) {
 
   const handleShow = () => {
     updateUI();
-    console.log("image uri is: ", cidImage);
     setShowModal(!showModal);
   };
 
