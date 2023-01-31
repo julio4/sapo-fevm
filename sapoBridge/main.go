@@ -8,13 +8,14 @@ import (
 
 	"sapoBridge/pkg/bridge"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
 
 func main() {
 	ctx := log.Logger.WithContext(context.Background())
-	zerolog.SetGlobalLevel(zerolog.DebugLevel)
+	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
 	defer cancel()
@@ -25,7 +26,13 @@ func main() {
 		return
 	}
 
-	contract := bridge.NewSapoContract(ctx, "0x9F8865559f2b22F3883e162bEbe80F6069Dd9Dc9")
+	addr := common.HexToAddress("0xcD522E349958c22fB7406Fc7DaC911A2C289b72f")
+	contract, err := bridge.NewContract(addr)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		return
+	}
+
 	workflow := bridge.NewWorkflow(bridge.NewJobRunner(), contract, repo)
 
 	err = workflow.Start(ctx)
