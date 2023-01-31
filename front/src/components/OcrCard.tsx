@@ -12,7 +12,9 @@ import {
 } from "@chakra-ui/react";
 
 import Image from "next/image";
+import AbiSapoBridge from "../../constants/AbiSapoBridge.json";
 import * as React from "react";
+import { useContractWrite, usePrepareContractWrite } from "wagmi";
 
 export default function OcrCard() {
   const [cid, setCid] = React.useState("");
@@ -21,8 +23,17 @@ export default function OcrCard() {
   const [cidImage, setCidImage] = React.useState("");
   const [cidText, setCidText] = React.useState("");
   const [showCid, setShowCid] = React.useState(false);
+  const [imgArg, setImgArg] = React.useState("");
 
   const handleClick = async () => {};
+
+  const { config } = usePrepareContractWrite({
+    address: "0x3225Da4Be30547E9a5c1cb6b47851B8f3BCeF7ba",
+    abi: AbiSapoBridge,
+    functionName: "request",
+    args: [cid, imgArg],
+  });
+  const { data, isLoading, isSuccess, write } = useContractWrite(config);
 
   return (
     <Card
@@ -40,12 +51,22 @@ export default function OcrCard() {
           </Text>
           <Input
             onChange={(e) => setCid(e.target.value)}
-            placeholder="Enter CID Adress to process"
+            placeholder="Enter CID to process"
+          />
+          <Input
+            onChange={(e) => setImgArg(e.target.value)}
+            placeholder="Enter Image"
           />
         </CardBody>
 
         <CardFooter pt={0} display={"flex"} justifyContent={"center"}>
-          <Button variant="solid" size="sm" colorScheme="blue">
+          <Button
+            variant="solid"
+            size="sm"
+            colorScheme="blue"
+            disabled={!write}
+            onClick={() => write?.()}
+          >
             Process
           </Button>
         </CardFooter>
