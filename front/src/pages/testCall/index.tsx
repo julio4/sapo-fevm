@@ -1,5 +1,7 @@
 import Layout from "../../components/layout";
-import textModal from "../../components/textModal";
+import TextModal from "../../components/textModal";
+import ImageModal from "../../components/imageModal";
+import { Card, CardBody } from "@chakra-ui/react";
 
 import * as React from "react";
 import { Flex, Heading, Button, Text, Input } from "@chakra-ui/react";
@@ -10,9 +12,6 @@ export default function Home() {
   const [cids, setCids] = React.useState<string[]>([]);
   const [imgCids, setImgCids] = React.useState<string[]>([]);
   const [textCids, setTextCids] = React.useState<string[]>([]);
-  const [showModal, setShowModal] = React.useState(false);
-
-  const hideModal = () => setShowModal(false);
 
   let { data, isError, isLoading } = useContractRead({
     address: daoAddress,
@@ -91,7 +90,7 @@ export default function Home() {
           <Text mb={4}>Text Cids:</Text>
           {textCids.map((cid, index) => (
             <React.Fragment key={index}>
-              {cid}
+              <TextModal cid={cid} />
               <br />
             </React.Fragment>
           ))}
@@ -100,8 +99,7 @@ export default function Home() {
           <Text mb={4}>Image Cids:</Text>
           {imgCids.map((cid, index) => (
             <Flex mb={3} key={index} direction="row" alignItems="center">
-              <Text>{cid}</Text>
-              <Button ml={4}>Show</Button>
+              <ImageModal cid={cid} />
             </Flex>
           ))}
         </Flex>
