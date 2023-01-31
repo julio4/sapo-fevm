@@ -1,4 +1,6 @@
 import Layout from "../../components/layout";
+import ImgBox from "../../components/cidImage";
+
 import * as React from "react";
 import { Flex, Heading, Button, Text, Input } from "@chakra-ui/react";
 import { useContractRead } from "wagmi";
@@ -45,7 +47,9 @@ export default function Home() {
         />
 
         <Button onClick={() => console.log(cids)}>Test</Button>
-        <Text>Cids: {data}</Text>
+        <Text mb={12}>Cids: {data}</Text>
+
+        <ImgBox cid={cids}></ImgBox>
       </Flex>
     </Layout>
   );
