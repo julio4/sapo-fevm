@@ -3,7 +3,7 @@ import Image from "next/image";
 import React from "react";
 import { Flex, Heading, Button, Text, Input } from "@chakra-ui/react";
 
-export default function NftItem({ cid }) {
+export default function cidImage({ cid }) {
   cid = "QmdsqWZGCrkpjhCgCepEtFePmkvxkXda7P7w3z7Y13dxvH";
   const [imageURI, setImageURI] = useState("");
   const [cidName, setCidName] = useState("");
@@ -39,8 +39,7 @@ export default function NftItem({ cid }) {
             src={imageURI}
             width={200}
             height={200}
-            alt="Image of the NFT"
-            className="rounded-36 mb-3 nft-img "
+            alt="Image of the CID"
           />
         </div>
       ) : (
