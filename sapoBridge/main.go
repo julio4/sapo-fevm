@@ -15,7 +15,7 @@ import (
 
 func main() {
 	ctx := log.Logger.WithContext(context.Background())
-	zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	zerolog.SetGlobalLevel(zerolog.DebugLevel)
 
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
 	defer cancel()
@@ -26,7 +26,7 @@ func main() {
 		return
 	}
 
-	addr := common.HexToAddress("0xcD522E349958c22fB7406Fc7DaC911A2C289b72f")
+	addr := common.HexToAddress("0x9f83ab155EED4F8731390Da8BEDe4cCb34371dcC")
 	contract, err := bridge.NewContract(addr)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
