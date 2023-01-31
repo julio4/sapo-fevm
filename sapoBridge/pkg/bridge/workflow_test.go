@@ -110,9 +110,9 @@ func (suite *WorkflowTestSuite) TestHappyPath() {
 			FindCompletedHandler: SuccssfulFind,
 		},
 		&mockContract{
-			ListenHandler:   suite.EmitOne(e),
 			CompleteHandler: suite.SuccessfulComplete(),
 			RefundHandler:   suite.SuccessfulRefund(),
+			ListenHandler:   suite.EmitOne(e),
 		},
 		suite.Repository(),
 	))
