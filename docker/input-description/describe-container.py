@@ -1,17 +1,27 @@
 import subprocess
 import os
 
-print("The input, if given with --inputs option is in /input")
+print("The input, if given with --inputs option is in /inputs")
 print("In this case, input folder contains this:")
+print()
 
-cmd = "tree /input"
-process = subprocess.Popen(cmd.split())
-process.communicate()
+cmd = "tree /inputs"
+process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
+out, err = process.communicate()
+
+if err == None:
+    print("=================")
+    print(out.decode("utf8"))
+    print("=================")
+else:
+    print("=================")
+    print(err.decode("utf8"))
+    print("=================")
 
 print()
-print("Similarly, output goes to /output for example, let's add a fun file")
+print("Similarly, output goes to /outputs for example, let's add a fun file")
 
-outputDir = '/output/'
+outputDir = '/outputs/'
 
 if not os.path.exists(outputDir):
     os.makedirs(outputDir)
