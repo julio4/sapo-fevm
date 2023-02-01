@@ -7,8 +7,8 @@ import (
 	ipfsapi "github.com/ipfs/go-ipfs-api"
 )
 
-const specFileName string = "params.bac"
-const inputsFileName string = "params.bac"
+const specFileName string = "specs.bac"
+const inputsFileName string = "inputs.bac"
 
 type LightJobSpec struct {
 	image     string
