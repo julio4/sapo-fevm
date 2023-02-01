@@ -70,7 +70,8 @@ func (workflow *Workflow) Start(ctx context.Context) error {
 
 	wg.Go(func() error { return workflow.Run(ctx, newEvents) })
 	wg.Go(func() error { return workflow.Contract.Listen(ctx, submittedEvents) })
-	wg.Go(func() error { return workflow.deduplicateSubmittedEvents(ctx, submittedEvents, newEvents) }) // il faudrait le mettre on interval
+	wg.Go(func() error { return workflow.deduplicateSubmittedEvents(ctx, submittedEvents, newEvents) })
+	// wg.Go(func() error { return debugJob(ctx, submittedEvents) })
 	wg.Go(func() error {
 		workflow.scheduler.StartAsync()
 		<-ctx.Done()
