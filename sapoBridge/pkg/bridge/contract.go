@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/json"
-	"strings"
 	"time"
 
 	"sapoBridge/hardhat/contracts"
@@ -76,21 +75,34 @@ func (r *RealContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 			continue
 		}
 
-		// TODO: fetch the job spec from the cid
-		// image and params are hardcoded for now
-		image := "ubuntu"
-		param := strings.Split("echo hello world", " ")
+		// Get specs from cid
+		// TODO make this asynchronous
+		// lightSpecs, err := parseSpecs(recvEvent.Cid) // TODO: uncomment
+		lightSpecs, err := dummySpecs(recvEvent.Cid)
+
+		if err != nil { // retry?
+			log.Ctx(ctx).Error().Err(err).Send()
+			continue
+		}
 
 		spec, err := json.Marshal(model.Spec{
 			Engine:    model.EngineDocker,
 			Verifier:  model.VerifierNoop,
 			Publisher: model.PublisherIpfs,
 			Docker: model.JobSpecDocker{
-				Image:      image,
-				Entrypoint: param,
+				Image:      lightSpecs.image,
+				Entrypoint: lightSpecs.params,
 			},
 			Resources: model.ResourceUsageConfig{
 				GPU: "1",
+			},
+			Inputs: []model.StorageSpec{
+				{
+					StorageSource: model.StorageSourceIPFS,
+					Name:          "inputs",
+					Path:          "/inputs",
+					CID:           lightSpecs.inputsCid,
+				},
 			},
 			Outputs: []model.StorageSpec{
 				{
@@ -102,6 +114,7 @@ func (r *RealContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 				Concurrency: 1,
 			},
 		})
+
 		if err != nil {
 			log.Ctx(ctx).Error().Err(err).Send()
 			continue
