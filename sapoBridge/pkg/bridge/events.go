@@ -75,6 +75,7 @@ type BacalhauJobCompletedEvent interface {
 	BacalhauJobRunningEvent
 
 	Paid() ContractPaidEvent
+	Addr() common.Address
 }
 
 type BacalhauJobFailedEvent interface {
@@ -115,6 +116,7 @@ type event struct {
 	state       OrderState
 	jobSpec     []byte
 	jobId       string
+	jobAddr     common.Address
 }
 
 // The smart contract order ID.
@@ -170,6 +172,11 @@ func (e *event) Refunded() ContractRefundedEvent {
 func (e *event) Spec() (spec model.Spec, err error) {
 	err = json.Unmarshal(e.jobSpec, &spec)
 	return
+}
+
+// The Sapo smart contract addr to store result.
+func (e *event) Addr() (jobAddr common.Address) {
+	return e.jobAddr
 }
 
 // Records that a running Bacalhau job has completed.

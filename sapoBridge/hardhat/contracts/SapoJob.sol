@@ -2,35 +2,59 @@
 pragma solidity >=0.8.4;
 
 /**
- * @title Sapo Job
- * @dev Representation of a Sapo job execution
- *      Owner is bridge
+ * @title   Sapo Job
+ * @dev     A bacalhau job contract.
+ *          The initiator of the job is the owner of the contract.
+ *          The bridge is the only one who can set the result.
+ *          The initiator is the only one who can get the result.
  */
 contract SapoJob {
+    /**
+     * @dev     The address of the initiator of the job.
+     *          The initiator is the owner of the contract.
+     *          He's the one who requested this job execution
+     */
     address payable private initiator;
-    address private bridge;
-
-    bool public completed = false;
-    string private result;
-
-    event JobSuceeded();
-    event JobFailed();
-
-    modifier isBridge() {
-        require(msg.sender == bridge, "Caller is not bridge");
-        _;
-    }
 
     modifier isInitiator() {
         require(msg.sender == initiator, "Caller is not initiator");
         _;
     }
 
+    /**
+     * @dev     The address of the bridge.
+     *          The bridge is the only one who can set the result.
+     */
+    address private bridge;
+
+    modifier isBridge() {
+        require(msg.sender == bridge, "Caller is not bridge");
+        _;
+    }
+
+    /**
+     * @dev     The status of the job execution.
+     */
+    bool public completed = false;
+
+    /**
+     * @dev     The result of the job execution.
+     */
+    string private result;
+
+    event JobSuceeded();
+    event JobFailed();
+
     constructor(address sapoBridge) payable {
         initiator = payable(msg.sender);
         bridge = sapoBridge;
     }
 
+    /**
+     * @dev     Set the result of the job execution.
+     *          Only the bridge can call this function.
+     * @param   executionResult The result of the job execution.
+     */
     function saveResult(string memory executionResult) public isBridge {
         require(!completed);
         completed = true;
@@ -38,11 +62,20 @@ contract SapoJob {
         emit JobSuceeded();
     }
 
+    /**
+     * @dev     Get the result of the job execution.
+     *          Only the initiator can call this function.
+     * @return  The result of the job execution.
+     */
     function getResult() public view isInitiator returns (string memory) {
         require(completed);
         return result;
     }
 
+    /**
+     * @dev     Refund the initiator of the job execution.
+     *          Only the bridge can call this function.
+     */
     function failAndRefund() public isBridge {
         require(!completed);
         (bool success, ) = initiator.call{value: address(this).balance}("");
