@@ -26,7 +26,7 @@ func main() {
 		return
 	}
 
-	addr := common.HexToAddress("0x9f83ab155EED4F8731390Da8BEDe4cCb34371dcC")
+	addr := common.HexToAddress("0x91c66B42bAC7b0d28Dd350a98DE327d8B07A31ad")
 	contract, err := bridge.NewContract(addr)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
