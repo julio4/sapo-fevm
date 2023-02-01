@@ -25,19 +25,19 @@ type SmartContract interface {
 	Refund(context.Context, ContractFailedEvent) (ContractRefundedEvent, error)
 }
 
-type realContract struct {
+type RealContract struct {
 	contract *contracts.Contracts
 
 	maxSeenBlock uint64
 }
 
 // Complete implements SmartContract
-func (r *realContract) Complete(ctx context.Context, event BacalhauJobCompletedEvent) (ContractPaidEvent, error) {
+func (r *RealContract) Complete(ctx context.Context, event BacalhauJobCompletedEvent) (ContractPaidEvent, error) {
 	return event.Paid(), nil
 }
 
 // Listen implements SmartContract
-func (r *realContract) Listen(ctx context.Context, out chan<- ContractSubmittedEvent) error {
+func (r *RealContract) Listen(ctx context.Context, out chan<- ContractSubmittedEvent) error {
 	scheduler := gocron.NewScheduler(time.UTC)
 	_, err := scheduler.Every(15*time.Second).SingletonMode().Do(r.ReadLogs, ctx, out)
 	if err != nil {
@@ -51,7 +51,7 @@ func (r *realContract) Listen(ctx context.Context, out chan<- ContractSubmittedE
 	return nil
 }
 
-func (r *realContract) ReadLogs(ctx context.Context, out chan<- ContractSubmittedEvent) {
+func (r *RealContract) ReadLogs(ctx context.Context, out chan<- ContractSubmittedEvent) {
 	log.Ctx(ctx).Debug().Uint64("fromBlock", r.maxSeenBlock+1).Msg("Polling for smart contract events")
 
 	opts := bind.FilterOpts{Start: uint64(r.maxSeenBlock + 1), Context: ctx}
@@ -118,7 +118,7 @@ func (r *realContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 }
 
 // Refund implements SmartContract
-func (r *realContract) Refund(ctx context.Context, e ContractFailedEvent) (ContractRefundedEvent, error) {
+func (r *RealContract) Refund(ctx context.Context, e ContractFailedEvent) (ContractRefundedEvent, error) {
 	return e.Refunded(), nil
 }
 
@@ -138,7 +138,7 @@ func NewContract(contractAddr common.Address) (SmartContract, error) {
 		return nil, err
 	}
 
-	return &realContract{contract, number}, nil
+	return &RealContract{contract, number}, nil
 }
 
 type ContractCompleteHandler func(context.Context, BacalhauJobCompletedEvent) (ContractPaidEvent, error)
