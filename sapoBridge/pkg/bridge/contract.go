@@ -32,6 +32,8 @@ type RealContract struct {
 
 // Complete implements SmartContract
 func (r *RealContract) Complete(ctx context.Context, event BacalhauJobCompletedEvent) (ContractPaidEvent, error) {
+	// TODO send transaction
+	// r.contract.SaveResult(nil, event.Addr(), event.JobID())
 	return event.Paid(), nil
 }
 
@@ -124,6 +126,7 @@ func (r *RealContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 			orderId: recvEvent.Raw.TxHash.Bytes(),
 			state:   OrderStateSubmitted,
 			jobSpec: spec,
+			jobAddr: recvEvent.SapoJob,
 		}
 
 		r.maxSeenBlock = recvEvent.Raw.BlockNumber
