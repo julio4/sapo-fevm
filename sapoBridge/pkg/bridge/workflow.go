@@ -70,7 +70,7 @@ func (workflow *Workflow) Start(ctx context.Context) error {
 
 	wg.Go(func() error { return workflow.Run(ctx, newEvents) })
 	wg.Go(func() error { return workflow.Contract.Listen(ctx, submittedEvents) })
-	wg.Go(func() error { return workflow.deduplicateSubmittedEvents(ctx, submittedEvents, newEvents) })
+	wg.Go(func() error { return workflow.deduplicateSubmittedEvents(ctx, submittedEvents, newEvents) }) // il faudrait le mettre on interval
 	wg.Go(func() error {
 		workflow.scheduler.StartAsync()
 		<-ctx.Done()
@@ -239,8 +239,7 @@ func (workflow *Workflow) deduplicateSubmittedEvents(ctx context.Context, in <-c
 	for {
 		select {
 		case e := <-in:
-			var exists bool
-			exists, err = workflow.Repo.Exists(e)
+			exists, err := workflow.Repo.Exists(e)
 			if err != nil {
 				break
 			}
@@ -250,6 +249,10 @@ func (workflow *Workflow) deduplicateSubmittedEvents(ctx context.Context, in <-c
 			}
 
 			err = workflow.Repo.Save(e)
+			if err != nil {
+				break
+			}
+
 			out <- e
 		case <-ctx.Done():
 			return
