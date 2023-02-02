@@ -42,6 +42,12 @@ contract SapoJob {
      */
     string private result;
 
+        /**
+     * @dev     The amount paid by the used for the job execution.
+     */
+    uint256 private amountPaid;
+
+
     event JobSuceeded();
     event JobFailed();
 
@@ -78,7 +84,7 @@ contract SapoJob {
      */
     function failAndRefund() public isBridge {
         require(!completed);
-        (bool success, ) = initiator.call{value: address(this).balance}("");
+        (bool success, ) = initiator.send(amountPaid);
         require(success, "Failed to send Ether");
         emit JobFailed();
     }

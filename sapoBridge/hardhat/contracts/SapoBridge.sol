@@ -75,10 +75,13 @@ contract SapoBridge {
      *          The job will be sent to the bridge.
      * @param   cid     The cid of the job.
      */
-    function request(string memory cid) public {
+    function request(string memory cid, uint256 value) public payable {
+        require(msg.value >= value + gasleft(), "The sent value is lower than the required value + gas cost.");
         SapoJob job = new SapoJob(bridge);
         emit JobExecutionRequest(address(job), cid);
         jobs[msg.sender].push(address(job));
+
+        bridge.transfer(value);
     }
 
     /**
