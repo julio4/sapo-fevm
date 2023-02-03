@@ -54,6 +54,7 @@ type ContractSubmittedEvent interface {
 
 	Failed() ContractFailedEvent
 	JobCreated(*model.Job) BacalhauJobRunningEvent
+	Addr() common.Address
 }
 
 type BacalhauJobRunningEvent interface {
@@ -75,7 +76,6 @@ type BacalhauJobCompletedEvent interface {
 	BacalhauJobRunningEvent
 
 	Paid() ContractPaidEvent
-	Addr() common.Address
 }
 
 type BacalhauJobFailedEvent interface {

@@ -2,3 +2,5 @@ front/.next/*
 front/node_modules/*
 front/package-lock.json
 sapoBridge/sapoBridge
+
+bridgeaccount
