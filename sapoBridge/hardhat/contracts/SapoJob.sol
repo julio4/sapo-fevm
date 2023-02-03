@@ -42,13 +42,12 @@ contract SapoJob {
      */
     string private result;
 
-        /**
+    /**
      * @dev     The amount paid by the used for the job execution.
      */
     uint256 private amountPaid;
 
-
-    event JobSuceeded();
+    event JobSucceeded();
     event JobFailed();
 
     constructor(address sapoBridge) payable {
@@ -62,10 +61,10 @@ contract SapoJob {
      * @param   executionResult The result of the job execution.
      */
     function saveResult(string memory executionResult) public isBridge {
-        require(!completed);
+        require(!completed, "Job is already finished");
         completed = true;
         result = executionResult;
-        emit JobSuceeded();
+        emit JobSucceeded();
     }
 
     /**
@@ -74,7 +73,7 @@ contract SapoJob {
      * @return  The result of the job execution.
      */
     function getResult() public view isInitiator returns (string memory) {
-        require(completed);
+        require(completed, "Job is not finished");
         return result;
     }
 
@@ -83,9 +82,27 @@ contract SapoJob {
      *          Only the bridge can call this function.
      */
     function failAndRefund() public isBridge {
-        require(!completed);
-        (bool success, ) = initiator.send(amountPaid);
+        require(!completed, "Job is already finished");
+        bool success = payable(initiator).send(amountPaid);
         require(success, "Failed to send Ether");
         emit JobFailed();
+    }
+
+    function fund() public payable isBridge {
+        require(msg.value > 0, "You need to send a positive value");
+    }
+
+    /* Getters */
+
+    function getBridgeAddress() public view returns (address) {
+        return bridge;
+    }
+
+    function getInitiator() public view returns (address) {
+        return initiator;
+    }
+
+    function getState() public view returns (bool) {
+        return completed;
     }
 }

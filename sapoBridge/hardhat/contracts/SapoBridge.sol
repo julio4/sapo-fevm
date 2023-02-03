@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.4;
 
-import './SapoJob.sol';
+import "./SapoJob.sol";
 
 /**
  * @title   Sapo Bridge
@@ -15,7 +15,7 @@ contract SapoBridge {
     address private owner;
 
     modifier onlyOwner() {
-        require(msg.sender == owner, "Only Owner can call this function.");
+        require(msg.sender == owner, "Only Owner can call this function");
         _;
     }
 
@@ -27,7 +27,7 @@ contract SapoBridge {
     address private bridge;
 
     modifier onlyBridge() {
-        require(msg.sender == bridge, "Only Bridge can call this function.");
+        require(msg.sender == bridge, "Only Bridge can call this function");
         _;
     }
 
@@ -44,20 +44,11 @@ contract SapoBridge {
         owner = msg.sender;
         bridge = bridgeAddress;
     }
-    
+
     /**
      * @dev     The addresses of the bacalhau jobs owned by each users.
      */
     mapping(address => address[]) private jobs;
-
-    /**
-     * @dev     Get the addresses of the bacalhau jobs owned by a user.
-     * @param   user    The user address.
-     * @return  The addresses of the bacalhau jobs owned by the user.
-     */
-    function getJobs(address user) public view returns (address[] memory) {
-        return jobs[user];
-    }
 
     /**
      * @dev     The event emitted when a job execution is requested.
@@ -65,10 +56,7 @@ contract SapoBridge {
      * @param   sapoJob     The address of the job as an identifier.
      * @param   cid         The cid of the job specification.
      */
-    event JobExecutionRequest(
-        address sapoJob,
-        string cid
-    );
+    event JobExecutionRequest(address sapoJob, string cid);
 
     /**
      * @dev     The user can request a job execution.
@@ -76,12 +64,15 @@ contract SapoBridge {
      * @param   cid     The cid of the job.
      */
     function request(string memory cid, uint256 value) public payable {
-        require(msg.value >= value + gasleft(), "The sent value is lower than the required value + gas cost.");
+        require(
+            msg.value >= value,
+            "The sent value is lower than the required value"
+        );
         SapoJob job = new SapoJob(bridge);
         emit JobExecutionRequest(address(job), cid);
         jobs[msg.sender].push(address(job));
 
-        bridge.transfer(value);
+        payable(bridge).transfer(value);
     }
 
     /**
@@ -90,7 +81,7 @@ contract SapoBridge {
      * @param   job     The job address.
      * @param   result  The job result.
      */
-    function saveResult(address job, string memory result) public onlyOwner {
+    function saveResult(address job, string memory result) public onlyBridge {
         SapoJob(job).saveResult(result);
     }
 
@@ -99,7 +90,22 @@ contract SapoBridge {
      *          The job will be refunded.
      * @param   job     The job address.
      */
-    function failAndRefund(address job) public onlyOwner {
+    function failAndRefund(address job) public onlyBridge {
         SapoJob(job).failAndRefund();
+    }
+
+    /* Getters */
+
+    function getBridgeAddress() public view returns (address) {
+        return bridge;
+    }
+
+    /**
+     * @dev     Get the addresses of the bacalhau jobs owned by a user.
+     * @param   user    The user address.
+     * @return  The addresses of the bacalhau jobs owned by the user.
+     */
+    function getJobs(address user) public view returns (address[] memory) {
+        return jobs[user];
     }
 }
