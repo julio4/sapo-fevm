@@ -58,7 +58,7 @@ func parseSpecs(cid string) (*LightJobSpec, error) {
 // dummy specs for debugging
 func dummySpecs(cid string) (*LightJobSpec, error) {
 	jobSpec := LightJobSpec{
-		image:     "quintenbons/bacalhau-inout",
+		image:     "quintenbons/bacalhau-inout:0.2",
 		params:    []string{},
 		inputsCid: "QmUt1CYoJwDTknfeTZVdrjzGuHnhnBVAFzzEcMBp2MFMCh",
 	}
