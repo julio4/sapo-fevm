@@ -44,41 +44,41 @@ export default function JobsSidebar() {
   const { isOpen, onToggle } = useDisclosure();
   return (
     <>
+      <Box
+        flexShrink='0'
+        bg={useColorModeValue('whiteAlpha.800', 'blackAlpha.600')}
+        backdropFilter='blur(20px)'
+        borderRight="1px"
+        borderRightColor={useColorModeValue('gray.200', 'gray.700')}
+        w={isOpen ? '60' : '0'}
+        h="full"
+        dir='column'
+        transition={'all 0.2s ease-in-out'}
+        transform={isOpen ? 'translateX(0)' : 'translateX(-100%)'}
+        opacity={isOpen ? '1' : '0'}
+      >
+
         <Box
-            bg={useColorModeValue('whiteAlpha.800', 'blackAlpha.600')}
-            backdropFilter='blur(20px)'
+          transition={'opacity 0.1s ease-in-out'}
+          opacity={isOpen ? '1' : '0'}
+          visibility={isOpen ? 'visible' : 'hidden'}
+        >
+          <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
+            <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
+              Jobs
+            </Text>
+          </Flex>
 
-            borderRight="1px"
-            borderRightColor={useColorModeValue('gray.200', 'gray.700')}
-            w={isOpen ? '60' : '0'}
-            h="full"
-            dir='column'
-            transition={'all 0.2s ease-in-out'}
-            transform={isOpen ? 'translateX(0)' : 'translateX(-100%)'}
-            opacity={isOpen ? '1' : '0'}
-            >
-
-            <Box 
-              transition={'opacity 0.1s ease-in-out'} 
-              opacity={isOpen ? '1' : '0'}
-              visibility={isOpen ? 'visible' : 'hidden'}
-              >
-              <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-                  <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-                  Jobs
-                  </Text>
-              </Flex>
-
-              {LinkItems.map((link) => (
-                  <NavItem key={link.name} icon={link.icon}>
-                  {link.name}
-                  </NavItem>
-              ))}
-            </Box>
+          {LinkItems.map((link) => (
+            <NavItem key={link.name} icon={link.icon}>
+              {link.name}
+            </NavItem>
+          ))}
         </Box>
-        <Box 
+      </Box>
+      <Box
         position='absolute'
-        left={isOpen ? '60' : '0'} 
+        left={isOpen ? '60' : '0'}
         top="45%"
         _hover={{
           color: 'teal.400',
@@ -87,8 +87,8 @@ export default function JobsSidebar() {
         transition={'all 0.2s ease-in-out'}
         transform={isOpen ? 'translateX(-100%)' : 'translateX(0)'}
         onClick={onToggle}>
-            {isOpen ? <AiFillCaretLeft /> : <AiFillCaretRight />}
-        </Box>
+        {isOpen ? <AiFillCaretLeft /> : <AiFillCaretRight />}
+      </Box>
     </>
   );
 }
