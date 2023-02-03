@@ -26,6 +26,12 @@ type JobRequest = {
     cid: string;
 }
 
+type File = {
+    cid: string;
+    type: string;
+    size: number;
+}
+
 type JobContextType = {
     step: number;
     setStep: (step: number) => void;
@@ -37,6 +43,7 @@ type JobContextType = {
     setJobRequest: (jobRequest: JobRequest) => void;
     allCategories: Category[];
     allJobs: Job[];
+    allFiles: File[];
 }
 
 /*
@@ -55,7 +62,8 @@ const JobContext = createContext<JobContextType>({
     setJob: () => {},
     setJobRequest: () => {},
     allCategories: [],
-    allJobs: []
+    allJobs: [],
+    allFiles: []
 });
 
 const useJobContext = () => React.useContext(JobContext);
@@ -65,7 +73,7 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
     const [category, setCategory] = useState<Category | null>(null);
     const [job, setJob] = useState<Job | null>(null);
     const [jobRequest, setJobRequest] = useState<JobRequest | null>(null);
-    const [allCategories, setAllCategories] = useState([
+    const [allCategories, setAllCategories] = useState<Category[]>([
         {
             id: 1,
             name: 'Images processing',
@@ -97,7 +105,7 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
             color: "purple"
         }
     ]);
-    const [allJobs, setAllJobs] = useState([
+    const [allJobs, setAllJobs] = useState<Job[]>([
         {
             name: 'Image to Image',
             category: allCategories[0]
@@ -119,13 +127,31 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
             category: allCategories[4]
         },
     ]);
+    const [allFiles, setAllFiles] = useState<File[]>([
+        {
+            cid: "QmWXShtJXt6Mw3FH7hVCQvR56xPcaEtSj4YFSGjp2QxA4v",
+            type: "img",
+            size: 400000
+          },
+          {
+            cid: "QmU7gJi6Bz3jrvbuVfB7zzXStLJrTHf6vWh8ZqkCsTGoRC",
+            type: "json",
+            size:  154555
+          },
+          {
+            cid: "QmWXShtJXt6Mw3FH7hVCQvR56xPcaEtSj4YFSGjp2QxB4v",
+            type: "txt",
+            size: 234563
+          },
+    ]);
+
     return (
         <JobContext.Provider value={{
             step, setStep,
             category, setCategory,
             job, setJob,
             jobRequest, setJobRequest,
-            allCategories, allJobs
+            allCategories, allJobs, allFiles
         }}>
             {children}
         </JobContext.Provider>
@@ -133,4 +159,4 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
 }
 
 export { useJobContext, JobProvider }
-export type { Category, Job }
+export type { Category, Job, File }

@@ -1,5 +1,7 @@
 import {
   Box,
+  Flex,
+  Text,
   useColorModeValue,
   TableContainer,
   Table,
@@ -7,14 +9,11 @@ import {
   Tr,
   Th,
   Tbody,
-  Td
+  Td,
+  Button
 } from "@chakra-ui/react";
 
-interface File {
-  cid: string,
-  type: string,
-  size: string
-}
+import { useJobContext, File } from '@/components/Context/JobContext';
 
 const AddFile = () => {
   return (
@@ -60,29 +59,23 @@ const FilesTable = ({ files }: { files: File[] }) => {
 }
 
 export default function SelectCidInput() {
-  let files = [
-    {
-      cid: "QmWXShtJXt6Mw3FH7hVCQvR56xPcaEtSj4YFSGjp2QxA4v",
-      type: "img",
-      size: "4 MB"
-    },
-    {
-      cid: "QmU7gJi6Bz3jrvbuVfB7zzXStLJrTHf6vWh8ZqkCsTGoRC",
-      type: "json",
-      size: "154 KB"
-    },
-    {
-      cid: "QmWXShtJXt6Mw3FH7hVCQvR56xPcaEtSj4YFSGjp2QxB4v",
-      type: "txt",
-      size: "234 KB"
-    },
-  ]
+  const { allFiles } = useJobContext();
 
-  //files = []
   return (
-    <Box
-      flexGrow={1}
-      p={6}>
+    <Flex direction='column' h='full' w='full' p={8}>
+      <Box alignContent='center' justifyContent='center' mb={4}>
+        <Text align='center' fontSize="2xl" fontFamily="monospace" fontWeight="bold">
+          Select input file
+        </Text>
+        <Text>Import CID:</Text>
+        <Button>
+          from IPFS CID
+        </Button>
+        <Button>
+          from DataDao
+        </Button>
+      </Box>
+
       <Box
         h="full" w="full"
         bg={useColorModeValue('whiteAlpha.700', 'blackAlpha.700')}
@@ -93,14 +86,15 @@ export default function SelectCidInput() {
         borderRadius="lg">
 
         {
-          files.length === 0 ? (
+          allFiles.length === 0 ? (
             <AddFile />
           ) : (
-            <FilesTable files={files} />
+            <FilesTable files={allFiles} />
           )
         }
 
       </Box>
-    </Box >
+    </Flex>
+
   );
 }
