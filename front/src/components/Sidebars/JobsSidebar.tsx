@@ -1,6 +1,8 @@
-import React, { ReactNode } from 'react';
+import React, { useEffect } from 'react';
 
 import { Category, useJobContext } from 'src/components/Context/JobContext';
+
+import { FaBorderAll } from 'react-icons/fa';
 
 import {
   Box,
@@ -11,45 +13,18 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-import {
-  FaImages,
-  FaCogs,
-  FaHdd,
-  FaRegObjectGroup,
-  FaPen,
-} from 'react-icons/fa';
 import { AiFillCaretRight, AiFillCaretLeft } from "react-icons/ai";
 
-const ListCatogory: Array<Category> = [
-  {
-    id: 1,
-    name: 'Images processing',
-    icon: FaImages
-  },
-  {
-    id: 2,
-    name: 'Data generation',
-    icon: FaCogs
-  },
-  {
-    id: 3,
-    name: 'Artifical Intelligence',
-    icon: FaHdd
-  },
-  {
-    id: 4,
-    name: 'Simulation',
-    icon: FaRegObjectGroup
-  },
-  {
-    id: 5,
-    name: 'Custom',
-    icon: FaPen
-  }
-];
-
 export default function JobsSidebar() {
-  const { isOpen, onToggle } = useDisclosure();
+  const { isOpen, onToggle, onOpen } = useDisclosure();
+  const { setStep, setCategory, setJob, category, allCategories } = useJobContext();
+
+  useEffect(() => {
+    onOpen();
+  }, []);
+
+  const allCat = { name: 'All', id: 0, icon: FaBorderAll };
+
   return (
     <>
       <Box
@@ -73,12 +48,24 @@ export default function JobsSidebar() {
         >
           <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
             <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-              Jobs
+              Category
             </Text>
           </Flex>
 
-          {ListCatogory.map((cat) => (
-            <NavItem cat={cat} />
+          <NavItem 
+            cat={allCat}
+            current={category || allCat} 
+            onClick={() => {
+              setStep(0);
+              setCategory(null);
+              setJob(null);
+            }} />
+
+          {allCategories.map((cat) => (
+            <NavItem cat={cat} current={category} onClick={() => {
+              setStep(0);
+              setCategory(cat)
+              }}/>
           ))}
         </Box>
       </Box>
@@ -99,12 +86,12 @@ export default function JobsSidebar() {
   );
 }
 
-const NavItem = ({ cat }: { cat: Category}) => {
-  const { setStep, setCategory, category } = useJobContext();
+const NavItem = (
+  { cat, current, onClick }: 
+  { cat: Category, current: Category | null, onClick: any}) => {
+  
   return (
-    <Box onClick={() => {
-      setCategory(cat)
-      }}>
+    <Box onClick={onClick}>
       <Flex
         align="center"
         p="4"
@@ -120,7 +107,7 @@ const NavItem = ({ cat }: { cat: Category}) => {
           bgClip: 'text',
           transform: 'scale(1.01)'
         }}
-        {...category?.id === cat.id ? {
+        {...current?.id === cat.id ? {
           bgGradient: 'linear(to-r, teal.600, green.400)',
           bgClip: 'text',
           borderColor: "teal.400"
@@ -130,7 +117,7 @@ const NavItem = ({ cat }: { cat: Category}) => {
             mr="4"
             fontSize="16"
             transition={'transform 0.1s ease-in-out'}
-            color={category?.id === cat.id ? 'teal.400' : 'black.500'}
+            color={current?.id === cat.id ? 'teal.400' : 'black.500'}
             _groupHover={{
               color: 'teal.400',
             }}

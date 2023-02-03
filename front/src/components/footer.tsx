@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   chakra,
   Flex,
   Stack,
@@ -31,6 +32,7 @@ const SocialButton = ({
       cursor={'pointer'}
       as={'a'}
       href={href}
+      target={'_blank'}
       display={'inline-flex'}
       alignItems={'center'}
       justifyContent={'center'}
@@ -45,7 +47,7 @@ const SocialButton = ({
 };
 
 export default function Footer() {
- const { step, category, job } = useJobContext();
+ const { step, setStep, category, job } = useJobContext();
   return (
     <Box
       bgGradient={useColorModeValue('linear(to-r, teal.50, green.50)', 'linear(to-r, teal.900, green.900)')}
@@ -68,13 +70,16 @@ export default function Footer() {
             fontSize='sm' pl='20px'>© 2023 KS. All rights reserved</Text>
 
           {/* Debug */}
-          <Text>Step: {step}, Category:{category?.name}, Job:{job?.name}</Text>
+          <Box>
+            Step: {step}, Category:{category?.name}, Job:{job?.name}, 
+            <Button onClick={() => setStep((step + 1) % 5)}>Next step</Button>
+          </Box>
 
           <Stack direction={'row'} spacing={6} pr="20px">
-            <SocialButton label={'Github'} href={'#'}>
+            <SocialButton label={'Github'} href={'https://github.com/julio4/sapo-fevm/'}>
               <FaGithub />
             </SocialButton>
-            <SocialButton label={'EthGlobal'} href={'#'}>
+            <SocialButton label={'EthGlobal'} href={'https://ethglobal.com/showcase/sapo-wtdhn'}>
               <FaEthereum />
             </SocialButton>
           </Stack>

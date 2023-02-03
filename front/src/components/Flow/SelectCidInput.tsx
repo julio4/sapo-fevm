@@ -7,7 +7,6 @@ import {
   Tr,
   Th,
   Tbody,
-  Tfoot,
   Td
 } from "@chakra-ui/react";
 
@@ -38,6 +37,7 @@ const FilesTable = ({ files }: { files: File[] }) => {
           {
             files.map(file => (
               <Box
+                key={file.cid}
                 transition={'all 0.2s ease-in-out'}
                 as='tr'
                 borderRadius="md"
@@ -59,7 +59,7 @@ const FilesTable = ({ files }: { files: File[] }) => {
   )
 }
 
-export default function FileSelector() {
+export default function SelectCidInput() {
   let files = [
     {
       cid: "QmWXShtJXt6Mw3FH7hVCQvR56xPcaEtSj4YFSGjp2QxA4v",
@@ -72,7 +72,7 @@ export default function FileSelector() {
       size: "154 KB"
     },
     {
-      cid: "QmWXShtJXt6Mw3FH7hVCQvR56xPcaEtSj4YFSGjp2QxA4v",
+      cid: "QmWXShtJXt6Mw3FH7hVCQvR56xPcaEtSj4YFSGjp2QxB4v",
       type: "txt",
       size: "234 KB"
     },
