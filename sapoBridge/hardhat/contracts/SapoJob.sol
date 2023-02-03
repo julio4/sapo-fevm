@@ -14,7 +14,7 @@ contract SapoJob {
      *          The initiator is the owner of the contract.
      *          He's the one who requested this job execution
      */
-    address payable private initiator;
+    address private initiator;
 
     modifier isInitiator() {
         require(msg.sender == initiator, "Caller is not initiator");
@@ -51,7 +51,7 @@ contract SapoJob {
     event JobFailed();
 
     constructor(address sapoBridge) payable {
-        initiator = payable(msg.sender);
+        initiator = msg.sender;
         bridge = sapoBridge;
     }
 
