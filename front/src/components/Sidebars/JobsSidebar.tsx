@@ -1,19 +1,14 @@
 import React, { ReactNode } from 'react';
 
+import { Category, useJobContext } from 'src/components/Context/JobContext';
+
 import {
-  IconButton,
   Box,
-  CloseButton,
   Flex,
   Icon,
   useColorModeValue,
-  Link,
-  Drawer,
-  DrawerContent,
   Text,
   useDisclosure,
-  BoxProps,
-  FlexProps,
 } from '@chakra-ui/react';
 
 import {
@@ -25,19 +20,32 @@ import {
 } from 'react-icons/fa';
 import { AiFillCaretRight, AiFillCaretLeft } from "react-icons/ai";
 
-import { IconType } from 'react-icons';
-
-interface LinkItemProps {
-  name: string;
-  icon: IconType;
-}
-
-const LinkItems: Array<LinkItemProps> = [
-  { name: 'Images processing', icon: FaImages },
-  { name: 'Data generation', icon: FaCogs },
-  { name: 'Artifical Intelligence', icon: FaHdd },
-  { name: 'Simulation', icon: FaRegObjectGroup },
-  { name: 'Custom', icon: FaPen },
+const ListCatogory: Array<Category> = [
+  {
+    id: 1,
+    name: 'Images processing',
+    icon: FaImages
+  },
+  {
+    id: 2,
+    name: 'Data generation',
+    icon: FaCogs
+  },
+  {
+    id: 3,
+    name: 'Artifical Intelligence',
+    icon: FaHdd
+  },
+  {
+    id: 4,
+    name: 'Simulation',
+    icon: FaRegObjectGroup
+  },
+  {
+    id: 5,
+    name: 'Custom',
+    icon: FaPen
+  }
 ];
 
 export default function JobsSidebar() {
@@ -69,10 +77,8 @@ export default function JobsSidebar() {
             </Text>
           </Flex>
 
-          {LinkItems.map((link) => (
-            <NavItem key={link.name} icon={link.icon}>
-              {link.name}
-            </NavItem>
+          {ListCatogory.map((cat) => (
+            <NavItem cat={cat} />
           ))}
         </Box>
       </Box>
@@ -93,41 +99,45 @@ export default function JobsSidebar() {
   );
 }
 
-interface NavItemProps extends FlexProps {
-  icon: IconType;
-  children: ReactNode;
-}
-
-const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
+const NavItem = ({ cat }: { cat: Category}) => {
+  const { setStep, setCategory, category } = useJobContext();
   return (
-    <Link href="#" style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
+    <Box onClick={() => {
+      setCategory(cat)
+      }}>
       <Flex
         align="center"
         p="4"
         mx="4"
         my="1"
-        borderRadius="lg"
         role="group"
         cursor="pointer"
         transition={'transform 0.1s ease-in-out'}
+        border='2px solid transparent'
+        borderRadius="xl"
         _hover={{
           bgGradient: 'linear(to-r, teal.600, green.400)',
           bgClip: 'text',
           transform: 'scale(1.01)'
         }}
-        {...rest}>
-        {icon && (
-          <Icon
+        {...category?.id === cat.id ? {
+          bgGradient: 'linear(to-r, teal.600, green.400)',
+          bgClip: 'text',
+          borderColor: "teal.400"
+        }:{}}
+        >
+        <Icon
             mr="4"
             fontSize="16"
+            transition={'transform 0.1s ease-in-out'}
+            color={category?.id === cat.id ? 'teal.400' : 'black.500'}
             _groupHover={{
               color: 'teal.400',
             }}
-            as={icon}
-          />
-        )}
-        {children}
+            as={cat.icon}
+        />
+        {cat.name}
       </Flex>
-    </Link>
+    </Box>
   );
 };
