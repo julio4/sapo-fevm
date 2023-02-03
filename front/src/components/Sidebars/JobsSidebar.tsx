@@ -23,7 +23,7 @@ export default function JobsSidebar() {
     onOpen();
   }, []);
 
-  const allCat = { name: 'All', id: 0, icon: FaBorderAll };
+  const allCat = { name: 'All', id: 0, icon: FaBorderAll, color: null};
 
   return (
     <>

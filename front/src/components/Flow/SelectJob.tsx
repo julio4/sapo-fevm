@@ -5,15 +5,9 @@ import {
     Box,
     SimpleGrid,
     Text,
-    Circle,
-    Image,
     Badge,
-    Icon,
-    chakra,
-    Tooltip,
     useColorModeValue
 } from '@chakra-ui/react'
-import { FaAngleDoubleRight } from 'react-icons/fa';
 
 const JobCard = ({ job, onClick }: { job: Job, onClick: () => void }) => (
     <Box
