@@ -16,7 +16,7 @@ import {
 
 import * as React from "react";
 import lighthouse from "@lighthouse-web3/sdk";
-const lighthouseApi = ;
+const lighthouseApi = "YOURAPIKEY";
 
 export default function UploadCard() {
   const [cid, setCid] = React.useState("");
