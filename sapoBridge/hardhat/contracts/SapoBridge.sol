@@ -64,7 +64,7 @@ contract SapoBridge {
      * @param   cid     The cid of the job.
      */
     function request(string memory cid) public payable {
-        require( msg.value >= 0.1 ether, "Minimum colateral is 0.1TFIL");
+        require(msg.value >= 0.1 ether, "Minimum colateral is 0.1TFIL");
         SapoJob job = new SapoJob(msg.sender, bridge);
         emit JobExecutionRequest(address(job), cid);
         jobs[msg.sender].push(address(job));

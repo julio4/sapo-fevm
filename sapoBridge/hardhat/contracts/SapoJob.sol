@@ -54,7 +54,7 @@ contract SapoJob {
     Status private completed = Status.Pending;
 
     /**
-     * @dev     The result of the job execution.
+     * @dev     The result (jobId) of the job execution.
      */
     string private result;
 
@@ -101,10 +101,6 @@ contract SapoJob {
         completed = Status.Rejected;
         result = reason;
         emit JobFailed();
-    }
-
-    function fund() public payable isBridge {
-        require(msg.value > 0, "You need to send a positive value");
     }
 
     /* Getters */
