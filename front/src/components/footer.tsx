@@ -11,6 +11,8 @@ import { FaGithub, FaEthereum } from 'react-icons/fa';
 
 import { ReactNode } from 'react';
 
+import { useJobContext } from './Context/JobContext';
+
 const SocialButton = ({
   children,
   label,
@@ -43,6 +45,7 @@ const SocialButton = ({
 };
 
 export default function Footer() {
+ const { step, category, job } = useJobContext();
   return (
     <Box
       bgGradient={useColorModeValue('linear(to-r, teal.50, green.50)', 'linear(to-r, teal.900, green.900)')}
@@ -63,6 +66,10 @@ export default function Footer() {
           <Text
             color={useColorModeValue('gray.600', 'gray.100')}
             fontSize='sm' pl='20px'>© 2023 KS. All rights reserved</Text>
+
+          {/* Debug */}
+          <Text>Step: {step}, Category:{category?.name}, Job:{job?.name}</Text>
+
           <Stack direction={'row'} spacing={6} pr="20px">
             <SocialButton label={'Github'} href={'#'}>
               <FaGithub />
