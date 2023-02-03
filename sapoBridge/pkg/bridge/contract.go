@@ -4,6 +4,8 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/json"
+	"math/big"
+	"os"
 	"time"
 
 	"sapoBridge/hardhat/contracts"
@@ -26,14 +28,15 @@ type SmartContract interface {
 
 type RealContract struct {
 	contract *contracts.Contracts
+	transact *bind.TransactOpts
 
 	maxSeenBlock uint64
 }
 
 // Complete implements SmartContract
 func (r *RealContract) Complete(ctx context.Context, event BacalhauJobCompletedEvent) (ContractPaidEvent, error) {
-	// TODO send transaction
-	// r.contract.SaveResult(nil, event.Addr(), event.JobID())
+	r.contract.SaveResult(r.transact, event.Addr(), event.JobID())
+	// todo, in contract take required paiement in SaveResult
 	return event.Paid(), nil
 }
 
@@ -135,10 +138,11 @@ func (r *RealContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 
 // Refund implements SmartContract
 func (r *RealContract) Refund(ctx context.Context, e ContractFailedEvent) (ContractRefundedEvent, error) {
+	r.contract.FailAndRefund(r.transact, e.Addr())
 	return e.Refunded(), nil
 }
 
-func NewContract(contractAddr common.Address) (SmartContract, error) {
+func NewContract(contractAddr common.Address, wallet_file string) (SmartContract, error) {
 	client, err := ethclient.Dial("wss://ws-filecoin-hyperspace.chainstacklabs.com/rpc/v0")
 	if err != nil {
 		return nil, err
@@ -149,12 +153,25 @@ func NewContract(contractAddr common.Address) (SmartContract, error) {
 		return nil, err
 	}
 
+	if err != nil {
+		return nil, err
+	}
+
+	password := "croaked!"
+
+	reader, err := os.Open(wallet_file)
+	if err != nil {
+		return nil, err
+	}
+
+	opts, err := bind.NewTransactorWithChainID(reader, password, big.NewInt(3141))
+
 	number, err := client.BlockNumber(context.Background())
 	if err != nil {
 		return nil, err
 	}
 
-	return &RealContract{contract, number}, nil
+	return &RealContract{contract, opts, number}, nil
 }
 
 type ContractCompleteHandler func(context.Context, BacalhauJobCompletedEvent) (ContractPaidEvent, error)
