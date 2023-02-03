@@ -29,6 +29,9 @@ export default function Nav() {
     <>
       <Box
         bgGradient={useColorModeValue('linear(to-r, teal.50, green.50)', 'linear(to-r, teal.900, green.900)')}
+        borderBottomWidth={1}
+        borderStyle={'solid'}
+        borderColor={useColorModeValue('gray.200', 'gray.900')}
         px={4}>
 
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>

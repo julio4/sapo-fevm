@@ -1,8 +1,9 @@
 import type { AppProps } from 'next/app'
 
 // Style
-import { ChakraProvider, useColorModeValue } from '@chakra-ui/react'
+import { Box, ChakraProvider, useColorModeValue } from '@chakra-ui/react'
 import '@rainbow-me/rainbowkit/styles.css';
+import '../styles/globals.css'
 
 // Rainbow
 import { RainbowKitProvider, getDefaultWallets, lightTheme, darkTheme } from '@rainbow-me/rainbowkit';

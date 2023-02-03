@@ -47,9 +47,9 @@ export default function Footer() {
     <Box
       bgGradient={useColorModeValue('linear(to-r, teal.50, green.50)', 'linear(to-r, teal.900, green.900)')}
       color={useColorModeValue('gray.700', 'gray.200')}
-      position="fixed"
       width="100%"
       bottom="0"
+      zIndex={10}
       >
       <Box
         borderTopWidth={1}

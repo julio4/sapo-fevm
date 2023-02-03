@@ -1,11 +1,14 @@
 import Layout from '../../components/layout'
-
-import { Text } from '@chakra-ui/react'
+import Sidebar from '../../components/Sidebars/JobsSidebar'
+import FileSelector from '../../components/Selectors/FileSelector'
+import DaoSelector from '../../components/Sidebars/DaoSidebar'
 
 export default function Home() {
   return (
     <Layout>
-      <Text>Home</Text>
+      <Sidebar />
+      <FileSelector />
+      <DaoSelector />
     </Layout>
   )
 }
