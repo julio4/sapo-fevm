@@ -32,10 +32,26 @@ contract SapoJob {
         _;
     }
 
+    modifier isDone() {
+        require(completed != Status.Pending, "Job is not completed");
+        _;
+    }
+
+    modifier isPending() {
+        require(completed == Status.Pending, "Job is not pending");
+        _;
+    }
+
+    enum Status {
+        Pending,
+        Completed,
+        Rejected
+    }
+
     /**
      * @dev     The status of the job execution.
      */
-    bool public completed = false;
+    Status private completed = Status.Pending;
 
     /**
      * @dev     The result of the job execution.
@@ -50,8 +66,8 @@ contract SapoJob {
     event JobSucceeded();
     event JobFailed();
 
-    constructor(address sapoBridge) payable {
-        initiator = msg.sender;
+    constructor(address requestInitiator, address sapoBridge) payable {
+        initiator = requestInitiator;
         bridge = sapoBridge;
     }
 
@@ -60,9 +76,8 @@ contract SapoJob {
      *          Only the bridge can call this function.
      * @param   executionResult The result of the job execution.
      */
-    function saveResult(string memory executionResult) public isBridge {
-        require(!completed, "Job is already finished");
-        completed = true;
+    function saveResult(string memory executionResult) public isBridge isPending {
+        completed = Status.Completed;
         result = executionResult;
         emit JobSucceeded();
     }
@@ -72,8 +87,7 @@ contract SapoJob {
      *          Only the initiator can call this function.
      * @return  The result of the job execution.
      */
-    function getResult() public view isInitiator returns (string memory) {
-        require(completed, "Job is not finished");
+    function getResult() public view isInitiator isDone returns (string memory) {
         return result;
     }
 
@@ -81,10 +95,11 @@ contract SapoJob {
      * @dev     Refund the initiator of the job execution.
      *          Only the bridge can call this function.
      */
-    function failAndRefund() public isBridge {
-        require(!completed, "Job is already finished");
-        bool success = payable(initiator).send(amountPaid);
+    function failAndRefund(string memory reason) public isBridge isPending {
+        (bool success, ) = payable(initiator).call{value: address(this).balance}("");
         require(success, "Failed to send Ether");
+        completed = Status.Rejected;
+        result = reason;
         emit JobFailed();
     }
 
@@ -93,7 +108,6 @@ contract SapoJob {
     }
 
     /* Getters */
-
     function getBridgeAddress() public view returns (address) {
         return bridge;
     }
@@ -102,7 +116,7 @@ contract SapoJob {
         return initiator;
     }
 
-    function getState() public view returns (bool) {
+    function getStatus() public view returns (Status) {
         return completed;
     }
 }

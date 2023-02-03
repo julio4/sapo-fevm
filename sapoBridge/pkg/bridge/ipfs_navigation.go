@@ -60,7 +60,7 @@ func dummySpecs(cid string) (*LightJobSpec, error) {
 	jobSpec := LightJobSpec{
 		image:     "quintenbons/bacalhau-inout",
 		params:    []string{},
-		inputsCid: "QmZ1fH7nFpxN3jhtb5wSrEnSNxb435ShyYtZhudwKksDXy",
+		inputsCid: "QmUt1CYoJwDTknfeTZVdrjzGuHnhnBVAFzzEcMBp2MFMCh",
 	}
 
 	return &jobSpec, nil

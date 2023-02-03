@@ -63,16 +63,13 @@ contract SapoBridge {
      *          The job will be sent to the bridge.
      * @param   cid     The cid of the job.
      */
-    function request(string memory cid, uint256 value) public payable {
-        require(
-            msg.value >= value,
-            "The sent value is lower than the required value"
-        );
-        SapoJob job = new SapoJob(bridge);
+    function request(string memory cid) public payable {
+        require( msg.value >= 0.1 ether, "Minimum colateral is 0.1TFIL");
+        SapoJob job = new SapoJob(msg.sender, bridge);
         emit JobExecutionRequest(address(job), cid);
         jobs[msg.sender].push(address(job));
 
-        payable(bridge).transfer(value);
+        payable(bridge).transfer(msg.value);
     }
 
     /**
@@ -82,7 +79,7 @@ contract SapoBridge {
      * @param   result  The job result.
      */
     function saveResult(address job, string memory result) public onlyBridge {
-        SapoJob(job).saveResult(result);
+        job.delegatecall(abi.encodeWithSignature("saveResult(string memory)", result));
     }
 
     /**
@@ -90,8 +87,8 @@ contract SapoBridge {
      *          The job will be refunded.
      * @param   job     The job address.
      */
-    function failAndRefund(address job) public onlyBridge {
-        SapoJob(job).failAndRefund();
+    function failAndRefund(address job, string memory reason) public onlyBridge {
+        job.delegatecall(abi.encodeWithSignature("failAndRefund(string memory)", reason));
     }
 
     /* Getters */

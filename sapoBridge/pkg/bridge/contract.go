@@ -98,9 +98,6 @@ func (r *RealContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 				Image:      lightSpecs.image,
 				Entrypoint: lightSpecs.params,
 			},
-			Resources: model.ResourceUsageConfig{
-				GPU: "1",
-			},
 			Inputs: []model.StorageSpec{
 				{
 					StorageSource: model.StorageSourceIPFS,
