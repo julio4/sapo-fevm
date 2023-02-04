@@ -15,13 +15,16 @@ import {
 
 import { useContractRead } from "wagmi";
 
-import * as React from "react";
+import { useEffect, useState } from "react";
 
 export default function DaoNavBar() {
-  const [daoAddress, setdaoAddress] = React.useState("");
-  const [cids, setCids] = React.useState<string[]>([]);
-  const [rawCids, setRawCids] = React.useState<string[]>([]);
-  const [cidType, setCidType] = React.useState<string[][]>([]);
+  const [daoAddress, setdaoAddress] = useState("");
+  const [daoInput, setdaoInput] = useState("");
+
+  const [cids, setCids] = useState<string[]>([]);
+  const [rawCids, setRawCids] = useState<string[]>([]);
+  const [cidType, setCidType] = useState<string[][]>([]);
+
 
   let { data, isError, isLoading } = useContractRead({
     address: daoAddress,
@@ -41,10 +44,13 @@ export default function DaoNavBar() {
       },
     ],
     functionName: "getAllCids",
-  });
+    onSuccess(data) {
+      setRawCids([...data]);
+    }
+  })
 
-  function hex2a(hex) {
-    var hex = hex.toString(); //force conversion
+  function hex2a(h: any) {
+    var hex: string = h.toString(); //force conversion
     var str = "";
     for (var i = 0; i < hex.length; i += 2)
       str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
@@ -72,20 +78,20 @@ export default function DaoNavBar() {
     setCidType(newTypeCids);
   };
 
-  const sortAndFormatCids = async () => {
+  useEffect(() => {
     console.log("Raw CIDS: ", rawCids);
     convertToCids();
+  }, [rawCids]);
+
+  useEffect(() => {
     console.log("Clean CIDS: ", cids);
-    await getCidType();
+    getCidType();
+  }, [cids]);
+
+  useEffect(() => {
     console.log("Cid types:", cidType);
-  };
-
-  React.useEffect(() => {
-    if (data) {
-      setRawCids(data);
-    }
-  }, [data]);
-
+  }, [cidType]);
+  
   return (
     <Card overflow="hidden">
       <CardHeader>
@@ -100,10 +106,10 @@ export default function DaoNavBar() {
             </Heading>
             <Input
               mb={3}
-              onChange={(e) => setdaoAddress(e.target.value)}
+              onChange={(e) => setdaoInput(e.target.value)}
               placeholder="Enter DAO Adress"
             />
-            <Button onClick={sortAndFormatCids}>See CIDs</Button>
+            <Button onClick={() => setdaoAddress(daoInput)}>See CIDs</Button>
           </Box>
 
           <Box overflow="hidden">
@@ -112,11 +118,9 @@ export default function DaoNavBar() {
             </Heading>
             <Flex direction="column" p={0} rounded={6} alignItems="start">
               {cids.map((cid, index) => (
-                <React.Fragment key={index}>
-                  <Text fontSize="sm">
-                    {index}. {cid}{" "}
-                  </Text>
-                </React.Fragment>
+                <Text fontSize="sm" key={index}>
+                  {index}. {cid}{" "}
+                </Text>
               ))}
             </Flex>
           </Box>
