@@ -36,7 +36,15 @@ type RealContract struct {
 // Complete implements SmartContract
 func (r *RealContract) Complete(ctx context.Context, event BacalhauJobCompletedEvent) (ContractPaidEvent, error) {
 	// TODO, partially refund
-	_, err := r.contract.SaveResult(r.transact, event.Addr(), event.JobID())
+	jobId1, err1 := pack(event.JobID())
+	jobId2, err2 := pack(event.JobID())
+
+	if err1 != nil || err2 != nil {
+		log.Ctx(ctx).Debug().Err(err1).Err(err2).Msg("Result saving of completed job has failed")
+		return event, context.Canceled
+	}
+
+	_, err := r.contract.SaveResult(r.transact, event.Addr(), jobId1, jobId2)
 
 	if err != nil {
 		log.Ctx(ctx).Debug().Err(err).Msg("Result saving of completed job has failed")
@@ -75,11 +83,14 @@ func (r *RealContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 
 	for logs.Next() {
 		recvEvent := logs.Event
+
+		cid := unpack(recvEvent.Cid1) + unpack(recvEvent.Cid2)
+
 		log.Ctx(ctx).Debug().
 			Stringer("txn", recvEvent.Raw.TxHash).
 			Uint64("block#", recvEvent.Raw.BlockNumber).
 			Str("job contract", recvEvent.SapoJob.String()).
-			Str("job spec cid", recvEvent.Cid).
+			Str("job spec cid", cid).
 			Bool("removed", recvEvent.Raw.Removed).
 			Msg("Event")
 
@@ -90,7 +101,7 @@ func (r *RealContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 		// Get specs from cid
 		// TODO make this asynchronous
 		// lightSpecs, err := parseSpecs(recvEvent.Cid) // TODO: uncomment
-		lightSpecs, err := dummySpecs(recvEvent.Cid)
+		lightSpecs, err := dummySpecs(cid)
 
 		if err != nil { // retry?
 			log.Ctx(ctx).Error().Err(err).Send()
@@ -143,7 +154,7 @@ func (r *RealContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 // Refund implements SmartContract
 func (r *RealContract) Refund(ctx context.Context, e ContractFailedEvent) (ContractRefundedEvent, error) {
 	// TODO refund & generate a result message
-	_, err := r.contract.FailAndRefund(r.transact, e.Addr(), "")
+	_, err := r.contract.FailAndRefund(r.transact, e.Addr())
 
 	if err != nil {
 		log.Ctx(ctx).Debug().Err(err).Msg("Refund of failed job has failed")
