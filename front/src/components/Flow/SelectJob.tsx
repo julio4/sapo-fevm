@@ -81,7 +81,7 @@ export default function SelectJob() {
                 </Text>
             </Box>
 
-            <SimpleGrid columns={4} spacing={8}>
+            <SimpleGrid columns={{xl: 4, lg: 3, md: 2}} spacing={8}>
                 {allJobs.filter((job) => category === null || job.category === category).map((job) => {
                     return (
                         <JobCard key={job.name} job={job} onClick={() => {

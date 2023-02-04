@@ -28,7 +28,7 @@ export default function Nav() {
   return (
     <>
       <Box
-        bgGradient={useColorModeValue('linear(to-r, teal.50, green.50)', 'linear(to-r, teal.900, green.900)')}
+        bgGradient={useColorModeValue('linear(to-r, teal.100, green.100)', 'linear(to-r, teal.900, green.900)')}
         borderBottomWidth={1}
         borderStyle={'solid'}
         borderColor={useColorModeValue('gray.200', 'gray.900')}
@@ -36,12 +36,17 @@ export default function Nav() {
 
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <Box>
-            <Heading as='h1' size='lg'>🐸 Sapo</Heading>
+            <Heading as='h1' size='xl' ml={2}>🐸 Sapo</Heading>
           </Box>
 
           <Flex alignItems={'center'}>
             <Stack direction={'row'} spacing={3}>
-              <Button onClick={toggleColorMode}>
+              <Button 
+                bg={useColorModeValue('green.50', 'whiteAlpha.200')}
+                _hover={{
+                  bg: useColorModeValue('whiteAlpha.600', 'whiteAlpha.300'),
+                }}
+                onClick={toggleColorMode}>
                 {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
               </Button>
 
@@ -51,12 +56,16 @@ export default function Nav() {
                     <MenuButton
                       as={Button}
                       color="green.400"
+                      bg={useColorModeValue('green.50', 'whiteAlpha.200')}
+                      _hover={{
+                        bg: useColorModeValue('whiteAlpha.600', 'whiteAlpha.300'),
+                      }}
                       cursor={'pointer'}>
                         <FaWallet />
                     </MenuButton>
                     <MenuList
                       alignItems={'center'}
-                      bg={useColorModeValue('whiteAlpha.200', 'darkAlpha.200')} 
+                      bg={useColorModeValue('whiteAlpha.500', 'darkAlpha.200')} 
                       backdropFilter='auto'
                       backdropBlur='2px'
                       >

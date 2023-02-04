@@ -7,13 +7,12 @@ import JobSubmitted from '@/components/Flow/JobSubmitted'
 import {
     Box,
     Progress,
-    useColorModeValue,
-    Slide
+    useColorModeValue
   } from "@chakra-ui/react";
   
 
 export default function JobRequestFlow() {
-    const { step, setStep } = useJobContext()
+    const { step } = useJobContext()
 
     const Step: JSX.Element = [
         <SelectJob />,
@@ -38,7 +37,7 @@ export default function JobRequestFlow() {
                     colorScheme='green' 
                     size='xs'
                     borderRadius="lg"
-                    value={step*25} />
+                    value={step*34} />
                 {Step}
             </Box>
         </Box >

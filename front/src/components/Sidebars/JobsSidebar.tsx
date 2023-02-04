@@ -103,12 +103,18 @@ const NavItem = (
         border='2px solid transparent'
         borderRadius="xl"
         _hover={{
-          bgGradient: 'linear(to-r, teal.600, green.400)',
+          bgGradient: useColorModeValue(
+            'linear(to-r, teal.600, green.400)', 
+            'linear(to-r, teal.300, green.100)'
+            ),
           bgClip: 'text',
           transform: 'scale(1.01)'
         }}
         {...current?.id === cat.id ? {
-          bgGradient: 'linear(to-r, teal.600, green.400)',
+          bgGradient: useColorModeValue(
+            'linear(to-r, teal.600, green.400)', 
+            'linear(to-r, teal.300, green.100)'
+            ),
           bgClip: 'text',
           borderColor: "teal.400"
         }:{}}

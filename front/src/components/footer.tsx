@@ -47,10 +47,10 @@ const SocialButton = ({
 };
 
 export default function Footer() {
- const { step, setStep, category, job } = useJobContext();
+ const { step, category, job, jobRequest } = useJobContext();
   return (
     <Box
-      bgGradient={useColorModeValue('linear(to-r, teal.50, green.50)', 'linear(to-r, teal.900, green.900)')}
+      bgGradient={useColorModeValue('linear(to-r, teal.100, green.100)', 'linear(to-r, teal.900, green.900)')}
       color={useColorModeValue('gray.700', 'gray.200')}
       width="100%"
       bottom="0"
@@ -71,8 +71,8 @@ export default function Footer() {
 
           {/* Debug */}
           <Box>
-            Step: {step}, Category:{category?.name}, Job:{job?.name}, 
-            <Button onClick={() => setStep((step + 1) % 5)}>Next step</Button>
+            Step: {step}, Category:{category?.name}, Job:{`${job?.name}(image: ${job?.image}))`}`,
+            JobRequest:{`${jobRequest.input?.cid} custom:${jobRequest.custom}`}
           </Box>
 
           <Stack direction={'row'} spacing={6} pr="20px">
