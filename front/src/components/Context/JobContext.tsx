@@ -47,6 +47,7 @@ type JobContextType = {
     allCategories: Category[];
     allJobs: Job[];
     allFiles: File[];
+    setAllFiles: (files: File[]) => void;
 }
 
 /*
@@ -70,7 +71,8 @@ const JobContext = createContext<JobContextType>({
     setJobRequest: () => {},
     allCategories: [],
     allJobs: [],
-    allFiles: []
+    allFiles: [],
+    setAllFiles: () => {}
 });
 
 const useJobContext = () => React.useContext(JobContext);
@@ -180,7 +182,8 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
             category, setCategory,
             job, setJob,
             jobRequest, setJobRequest,
-            allCategories, allJobs, allFiles
+            allCategories, allJobs,
+            allFiles, setAllFiles
         }}>
             {children}
         </JobContext.Provider>
