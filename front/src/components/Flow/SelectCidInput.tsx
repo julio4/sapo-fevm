@@ -25,7 +25,6 @@ import SelectFromDaoInput from "@/components/Flow/SelectFromDaoInput";
 import SelectFromIpfsInput from "@/components/Flow/SelectFromIpfsInput";
 import { useJobContext, File } from "@/components/Context/JobContext";
 import { useEffect, useState } from "react";
-var seeIncompatible = false;
 
 const NoFileFound = () => {
   return (
@@ -56,12 +55,15 @@ const NoFileFound = () => {
   );
 };
 
-const FilesTable = ({ files }: { files: File[] }) => {
-  const { job, jobRequest, setJobRequest, setStep } = useJobContext();
-
-  useEffect(() => {
-    console.log("seeIncompatible", seeIncompatible);
-  }, [seeIncompatible]);
+const FilesTable = ({ files }) => {
+  const {
+    job,
+    jobRequest,
+    setJobRequest,
+    setStep,
+    seeIncompatibleFiles,
+    setSeeIncompatibleFiles,
+  } = useJobContext();
 
   return (
     <TableContainer>
@@ -77,7 +79,7 @@ const FilesTable = ({ files }: { files: File[] }) => {
         <Tbody>
           {files
             .filter((file) => {
-              if (seeIncompatible) {
+              if (seeIncompatibleFiles) {
                 return true;
               }
               return file.type?.includes(job?.inputTypes);
@@ -141,6 +143,7 @@ const FilesTable = ({ files }: { files: File[] }) => {
 export default function SelectCidInput() {
   const { allFiles } = useJobContext();
   const [sourceInput, setSourceInput] = useState("");
+  const { seeIncompatibleFiles, setSeeIncompatibleFiles } = useJobContext();
 
   return (
     <Flex direction="column" h="full" w="full" p={8}>
@@ -176,8 +179,7 @@ export default function SelectCidInput() {
         size={"sm"}
         pb={3}
         onChange={() => {
-          seeIncompatible = !seeIncompatible;
-          console.log("seeIncompatible", seeIncompatible);
+          setSeeIncompatibleFiles(!seeIncompatibleFiles);
         }}
       >
         Load incompatible files

@@ -58,6 +58,8 @@ type JobContextType = {
   allJobs: Job[];
   allFiles: File[];
   setAllFiles: (files: File[]) => void;
+  seeIncompatibleFiles: boolean;
+  setSeeIncompatibleFiles: (see: boolean) => void;
 };
 
 /*
@@ -83,6 +85,8 @@ const JobContext = createContext<JobContextType>({
   allJobs: [],
   allFiles: [],
   setAllFiles: () => {},
+  seeIncompatibleFiles: false,
+  setSeeIncompatibleFiles: () => {},
 });
 
 const useJobContext = () => React.useContext(JobContext);
@@ -174,6 +178,7 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
     },
   ]);
   const [allFiles, setAllFiles] = useState<File[]>([]);
+  const [seeIncompatibleFiles, setSeeIncompatibleFiles] = useState(false);
 
   return (
     <JobContext.Provider
@@ -190,6 +195,8 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
         allJobs,
         allFiles,
         setAllFiles,
+        seeIncompatibleFiles,
+        setSeeIncompatibleFiles,
       }}
     >
       {children}
