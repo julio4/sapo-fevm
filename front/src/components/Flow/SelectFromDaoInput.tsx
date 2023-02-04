@@ -15,7 +15,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-import { useJobContext, Job } from "@/components/Context/JobContext";
+import { useJobContext } from "@/components/Context/JobContext";
 import { useEffect, useState } from "react";
 import { useContractRead } from "wagmi";
 
@@ -119,7 +119,12 @@ export default function SelectFromDaoInput() {
           "linear(to-r, teal.900, green.900)"
         )}
         color={useColorModeValue("gray.700", "gray.200")}
-        onClick={() => setdaoAddress(daoInput)}
+        onClick={() => {
+          if (daoInput == daoAddress) {
+            setRawCids([...data]);
+          }
+          setdaoAddress(daoInput);
+        }}
       >
         Load
       </Button>

@@ -32,7 +32,7 @@ export default function SelectFromDaoInput() {
       const timeoutPromise = new Promise((resolve, reject) => {
         setTimeout(() => {
           reject(`ERROR: ${cid} unreachable`);
-        }, 1000);
+        }, 2000);
       });
       const result = await Promise.race([fetchPromise, timeoutPromise]);
       let size = result.headers.get("content-length");
@@ -74,7 +74,13 @@ export default function SelectFromDaoInput() {
           "linear(to-r, teal.100, green.100)",
           "linear(to-r, teal.900, green.900)"
         )}
-        onClick={() => setCid(cidInput)}
+        onClick={() => {
+          if (cidInput == cid) {
+            storeCidType();
+          }
+
+          setCid(cidInput);
+        }}
       >
         Load
       </Button>

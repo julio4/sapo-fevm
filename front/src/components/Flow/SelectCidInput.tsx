@@ -24,7 +24,8 @@ import { ChevronDownIcon, CheckIcon, WarningTwoIcon } from "@chakra-ui/icons";
 import SelectFromDaoInput from "@/components/Flow/SelectFromDaoInput";
 import SelectFromIpfsInput from "@/components/Flow/SelectFromIpfsInput";
 import { useJobContext, File } from "@/components/Context/JobContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+var seeIncompatible = false;
 
 const NoFileFound = () => {
   return (
@@ -58,6 +59,10 @@ const NoFileFound = () => {
 const FilesTable = ({ files }: { files: File[] }) => {
   const { job, jobRequest, setJobRequest, setStep } = useJobContext();
 
+  useEffect(() => {
+    console.log("seeIncompatible", seeIncompatible);
+  }, [seeIncompatible]);
+
   return (
     <TableContainer>
       <Table size="sm">
@@ -70,56 +75,63 @@ const FilesTable = ({ files }: { files: File[] }) => {
           </Tr>
         </Thead>
         <Tbody>
-          {files.map((file) => (
-            <Box
-              key={file.cid}
-              transition={"all 0.2s ease-in-out"}
-              as="tr"
-              borderRadius="md"
-              _hover={{
-                cursor: "pointer",
-                bg: useColorModeValue("green.100", "green.900"),
-              }}
-              onClick={() => {
-                if (!job) return;
-                setJobRequest({
-                  ...jobRequest,
-                  job: job,
-                  usrInput: file,
-                });
-                setStep(2);
-              }}
-            >
-              <Td
-                _hover={{ transform: "scale(1.01)" }}
+          {files
+            .filter((file) => {
+              if (seeIncompatible) {
+                return true;
+              }
+              return file.type?.includes(job?.inputTypes);
+            })
+            .map((file) => (
+              <Box
+                key={file.cid}
                 transition={"all 0.2s ease-in-out"}
+                as="tr"
+                borderRadius="md"
+                _hover={{
+                  cursor: "pointer",
+                  bg: useColorModeValue("green.100", "green.900"),
+                }}
+                onClick={() => {
+                  if (!job) return;
+                  setJobRequest({
+                    ...jobRequest,
+                    job: job,
+                    usrInput: file,
+                  });
+                  setStep(2);
+                }}
               >
-                {file.cid.includes("ERROR") ? (
-                  <WarningTwoIcon size="20px" color={"red.500"} />
-                ) : (
-                  <CheckIcon size="20px" color={"green.500"} />
-                )}
-              </Td>
-              <Td
-                _hover={{ transform: "scale(1.01)" }}
-                transition={"all 0.2s ease-in-out"}
-              >
-                {file.cid}
-              </Td>
-              <Td
-                _hover={{ transform: "scale(1.01)" }}
-                transition={"all 0.2s ease-in-out"}
-              >
-                {file.type ? file.type : "Unknown"}
-              </Td>
-              <Td
-                _hover={{ transform: "scale(1.01)" }}
-                transition={"all 0.2s ease-in-out"}
-              >
-                {file.size ? file.size : "Not Specified"}
-              </Td>
-            </Box>
-          ))}
+                <Td
+                  _hover={{ transform: "scale(1.01)" }}
+                  transition={"all 0.2s ease-in-out"}
+                >
+                  {file.cid.includes("ERROR") ? (
+                    <WarningTwoIcon size="20px" color={"red.500"} />
+                  ) : (
+                    <CheckIcon size="20px" color={"green.500"} />
+                  )}
+                </Td>
+                <Td
+                  _hover={{ transform: "scale(1.01)" }}
+                  transition={"all 0.2s ease-in-out"}
+                >
+                  {file.cid}
+                </Td>
+                <Td
+                  _hover={{ transform: "scale(1.01)" }}
+                  transition={"all 0.2s ease-in-out"}
+                >
+                  {file.type ? file.type : "Unknown"}
+                </Td>
+                <Td
+                  _hover={{ transform: "scale(1.01)" }}
+                  transition={"all 0.2s ease-in-out"}
+                >
+                  {file.size ? file.size : "Not Specified"}
+                </Td>
+              </Box>
+            ))}
         </Tbody>
       </Table>
     </TableContainer>
@@ -155,15 +167,20 @@ export default function SelectCidInput() {
             </MenuItem>
           </MenuList>
         </Menu>
-        {/* <Button onClick={() => setSourceInput("ipfs")} mr={2}>
-          from IPFS CID
-        </Button>
-        <Button onClick={() => setSourceInput("datadao")}>from DataDao</Button> */}
+
         {sourceInput == "datadao" ? <SelectFromDaoInput /> : <div></div>}
         {sourceInput == "ipfs" ? <SelectFromIpfsInput /> : <div></div>}
       </Box>
-      <Checkbox size={"sm"} pb={3}>
-        See incompatible files
+
+      <Checkbox
+        size={"sm"}
+        pb={3}
+        onChange={() => {
+          seeIncompatible = !seeIncompatible;
+          console.log("seeIncompatible", seeIncompatible);
+        }}
+      >
+        Load incompatible files
       </Checkbox>
 
       <Box
