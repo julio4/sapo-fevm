@@ -2,11 +2,18 @@ package bridge
 
 import (
 	"errors"
-	"fmt"
 )
 
 func unpack(bytes [32]byte) string {
-	return fmt.Sprintf("%x", bytes)
+	var res string = ""
+
+	for _, b := range bytes {
+		if b != 0 {
+			res += string(b)
+		}
+	}
+
+	return res
 }
 
 // dummy specs for debugging
