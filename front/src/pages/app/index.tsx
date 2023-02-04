@@ -1,5 +1,5 @@
 import { JobProvider } from '@/components/Context/JobContext'
-import Layout from '@/components/layout'
+import Layout from '@/components/Layout/layout'
 import Sidebar from '@/components/Sidebars/JobsSidebar'
 import JobRequestFlow from '@/components/Flow/JobRequestFlow'
 

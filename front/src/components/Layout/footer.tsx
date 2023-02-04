@@ -12,7 +12,7 @@ import { FaGithub, FaEthereum } from 'react-icons/fa';
 
 import { ReactNode } from 'react';
 
-import { useJobContext } from './Context/JobContext';
+import { useJobContext } from '../Context/JobContext';
 
 const SocialButton = ({
   children,
