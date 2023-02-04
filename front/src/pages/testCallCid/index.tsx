@@ -1,4 +1,4 @@
-import Layout from "../../components/layout";
+import Layout from "../../components/Layout/layout";
 import DaoNavBar from "../../components/daoNavBar";
 import ZoomCard from "../../components/zoomCard";
 import OcrCard from "../../components/OcrCard";

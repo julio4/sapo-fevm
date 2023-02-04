@@ -15,21 +15,24 @@ type Category = {
     color: "red" | "green" | "blue" | "yellow" | "purple" | "pink" | "teal" | "cyan" | null;
 }
 
-type Job = {
-    name: string;
-    category: Category | null;
-}
-
-type JobRequest = {
-    image: string;
-    input: string;
-    cid: string;
-}
-
 type File = {
     cid: string;
     type: string;
     size: number;
+}
+
+type Job = {
+    name: string;
+    category: Category | null;
+    image: string;
+    generateInput: (file: File) => File;
+}
+
+type JobRequest = {
+    usrInput?: File;
+    input?: File;
+    job?: Job;
+    custom: boolean;
 }
 
 type JobContextType = {
@@ -39,31 +42,37 @@ type JobContextType = {
     setCategory: (category: Category | null) => void;
     job: Job | null;
     setJob: (job: Job | null) => void;
-    jobRequest: JobRequest | null;
+    jobRequest: JobRequest;
     setJobRequest: (jobRequest: JobRequest) => void;
     allCategories: Category[];
     allJobs: Job[];
     allFiles: File[];
+    setAllFiles: (files: File[]) => void;
 }
 
 /*
- * Step 1: Select Job
- * Step 2: Select Cid Input
- * Step 3: Submit Job
- * Step 4: Job Submitted
+ * Step 0: Select Job
+ * Step 1: Select Cid Input
+ * Step 2: Submit Job
+ * Step 3: Job Submitted
  */
 const JobContext = createContext<JobContextType>({
     step: 0,
     category: null,
     job: null,
-    jobRequest: null,
+    jobRequest: {
+        input: undefined,
+        job: undefined,
+        custom: false
+    },
     setStep: () => {},
     setCategory: () => {},
     setJob: () => {},
     setJobRequest: () => {},
     allCategories: [],
     allJobs: [],
-    allFiles: []
+    allFiles: [],
+    setAllFiles: () => {}
 });
 
 const useJobContext = () => React.useContext(JobContext);
@@ -72,7 +81,11 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
     const [step, setStep] = useState(0);
     const [category, setCategory] = useState<Category | null>(null);
     const [job, setJob] = useState<Job | null>(null);
-    const [jobRequest, setJobRequest] = useState<JobRequest | null>(null);
+    const [jobRequest, setJobRequest] = useState<JobRequest>({
+        input: undefined,
+        job: undefined,
+        custom: false
+    });
     const [allCategories, setAllCategories] = useState<Category[]>([
         {
             id: 1,
@@ -105,26 +118,44 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
             color: "purple"
         }
     ]);
+    
+    const mockGenerateInput = (file: File) => {
+        return {
+            cid: file.cid,
+            type: 'img',
+            size: file.size
+        }
+    }
     const [allJobs, setAllJobs] = useState<Job[]>([
         {
             name: 'Image to Image',
-            category: allCategories[0]
+            category: allCategories[0],
+            image: 'ubuntu:latest',
+            generateInput: mockGenerateInput
         },
         {
             name: 'EasyOCR (OCR)',
-            category: allCategories[0]
+            category: allCategories[0],
+            image: 'ubuntu:latest',
+            generateInput: mockGenerateInput
         },
         {
             name: 'Stable diffusion (GAN)',
-            category: allCategories[2]
+            category: allCategories[2],
+            image: 'ubuntu:latest',
+            generateInput: mockGenerateInput
         },
         {
             name: 'Custom (Docker)',
-            category: allCategories[4]
+            category: allCategories[4],
+            image: 'ubuntu:latest',
+            generateInput: mockGenerateInput
         },
         {
             name: 'Custom (Python)',
-            category: allCategories[4]
+            category: allCategories[4],
+            image: 'ubuntu:latest',
+            generateInput: mockGenerateInput
         },
     ]);
     const [allFiles, setAllFiles] = useState<File[]>([
@@ -151,7 +182,8 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
             category, setCategory,
             job, setJob,
             jobRequest, setJobRequest,
-            allCategories, allJobs, allFiles
+            allCategories, allJobs,
+            allFiles, setAllFiles
         }}>
             {children}
         </JobContext.Provider>
@@ -159,4 +191,4 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
 }
 
 export { useJobContext, JobProvider }
-export type { Category, Job, File }
+export type { Category, Job, File, JobRequest }
