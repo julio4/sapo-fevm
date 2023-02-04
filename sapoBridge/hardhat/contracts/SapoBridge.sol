@@ -8,6 +8,8 @@ import "./SapoJob.sol";
  * @dev     Collect bacalhau jobs requests and send them to a bridge.
  */
 contract SapoBridge {
+    uint constant MAX_UINT = 115792089237316195423570985008687907853269984665640564039457584007913129639935;
+
     /**
      * @dev     The owner of the contract.
      *          He can change bridge address.
@@ -76,10 +78,11 @@ contract SapoBridge {
      * @dev     The bridge can send the result of a job execution.
      *          The result will be saved on the job.
      * @param   job     The job address.
-     * @param   result  The job result.
+     * @param   result1 The job result jobId (part1).
+     * @param   result2 The job result jobId (part2).
      */
-    function saveResult(address job, string memory result) public onlyBridge {
-        SapoJob(job).saveResult(result);
+    function saveResult(address job, bytes32 result1, bytes32 result2) public onlyBridge {
+        SapoJob(job).saveResult(result1, result2);
     }
 
     /**
@@ -87,8 +90,8 @@ contract SapoBridge {
      *          The job will be refunded.
      * @param   job     The job address.
      */
-    function failAndRefund(address job, string memory reason) public onlyBridge {
-        SapoJob(job).failAndRefund(reason);
+    function failAndRefund(address job) public onlyBridge {
+        SapoJob(job).failAndRefund();
     }
 
     /* Getters */
@@ -104,5 +107,47 @@ contract SapoBridge {
      */
     function getJobs(address user) public view returns (address[] memory) {
         return jobs[user];
+    }
+
+    /**
+     * converts two bytes 32 to string.
+     * @param x bytes32 to convert to string (part 1).
+     * @param y bytes32 to convert to string (part 2).
+     */
+    function bytes64ToString(bytes32 x, bytes32 y) public pure returns (string memory) {
+        bytes memory bytesString = new bytes(64);
+        uint charCount = 0;
+
+        for (uint j = 0; j < 32; j++) {
+            uint shift = 8 * j;
+            uint andOp = shift == 0 ? MAX_UINT : 2 ** (256 - 8 * j) - 1;
+            uint timesOp = 2 ** shift;
+            bytes1 char = bytes1(bytes32(uint(x & bytes32(andOp)) * timesOp));
+
+            if (char != 0) {
+                bytesString[charCount] = char;
+                charCount++;
+            }
+        }
+
+        for (uint j = 0; j < 32; j++) {
+            uint shift = 8 * j;
+            uint andOp = shift == 0 ? MAX_UINT : 2 ** (256 - 8 * j) - 1;
+            uint timesOp = 2 ** shift;
+            bytes1 char = bytes1(bytes32(uint(y & bytes32(andOp)) * timesOp));
+
+            if (char != 0) {
+                bytesString[charCount] = char;
+                charCount++;
+            }
+        }
+
+        bytes memory bytesStringTrimmed = new bytes(charCount);
+
+        for (uint j = 0; j < charCount; j++) {
+            bytesStringTrimmed[j] = bytesString[j];
+        }
+
+        return string(bytesStringTrimmed);
     }
 }

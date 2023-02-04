@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.4;
 
+import "./SapoBridge.sol";
+
 /**
  * @title   Sapo Job
  * @dev     A bacalhau job contract.
@@ -58,9 +60,10 @@ contract SapoJob {
     Status private completed = Status.Pending;
 
     /**
-     * @dev     The result (jobId) of the job execution.
+     * @dev     The result (jobId) of the job execution. Has two parts
      */
-    string private result;
+    bytes32 private result1;
+    bytes32 private result2;
 
     /**
      * @dev     The amount paid by the used for the job execution.
@@ -79,13 +82,15 @@ contract SapoJob {
     /**
      * @dev     Set the result of the job execution.
      *          Only the bridge can call this function.
-     * @param   executionResult The result of the job execution.
+     * @param   exResult1 result jobId (part 1).
+     * @param   exResult2 result jobId (part 2).
      */
-    function saveResult(string memory executionResult) public isBridge isPending {
+    function saveResult(bytes32 exResult1, bytes32 exResult2) public isBridge isPending {
         (bool success, ) = payable(initiator).call{value: address(this).balance}("");
         require(success, "Failed to send Ether");
         completed = Status.Completed;
-        result = executionResult;
+        result1 = exResult1;
+        result2 = exResult2;
         emit JobSucceeded();
     }
 
@@ -95,18 +100,19 @@ contract SapoJob {
      * @return  The result of the job execution.
      */
     function getResult() public view isInitiator isDone returns (string memory) {
-        return result;
+        SapoBridge sb = SapoBridge(owner);
+        string memory resString = sb.bytes64ToString(result1, result2);
+        return resString;
     }
 
     /**
      * @dev     Refund the initiator of the job execution.
      *          Only the bridge can call this function.
      */
-    function failAndRefund(string memory reason) public isBridge isPending {
+    function failAndRefund() public isBridge isPending {
         (bool success, ) = payable(initiator).call{value: address(this).balance}("");
         require(success, "Failed to send Ether");
         completed = Status.Rejected;
-        result = reason;
         emit JobFailed();
     }
 
