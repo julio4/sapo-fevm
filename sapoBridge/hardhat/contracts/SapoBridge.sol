@@ -56,19 +56,21 @@ contract SapoBridge {
      * @dev     The event emitted when a job execution is requested.
      *          The bridge is listening for these events.
      * @param   sapoJob     The address of the job as an identifier.
-     * @param   cid         The cid of the job specification.
+     * @param   cid1        The cid of the job (part 1).
+     * @param   cid2        The cid of the job (part 2).
      */
-    event JobExecutionRequest(address sapoJob, string cid);
+    event JobExecutionRequest(address sapoJob, bytes32 cid1, bytes32 cid2);
 
     /**
      * @dev     The user can request a job execution.
      *          The job will be sent to the bridge.
-     * @param   cid     The cid of the job.
+     * @param   cid1    The cid of the job (part 1).
+     * @param   cid2    The cid of the job (part 2).
      */
-    function request(string memory cid) public payable {
+    function request(bytes32 cid1, bytes32 cid2) public payable {
         require(msg.value >= 0.1 ether, "Minimum colateral is 0.1TFIL");
         SapoJob job = new SapoJob(msg.sender, bridge);
-        emit JobExecutionRequest(address(job), cid);
+        emit JobExecutionRequest(address(job), cid1, cid2);
         jobs[msg.sender].push(address(job));
 
         payable(bridge).transfer(msg.value);
