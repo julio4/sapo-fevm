@@ -2,17 +2,20 @@ package bridge
 
 import (
 	"errors"
+	"fmt"
 )
 
-func unpack(bytes []byte) string {
-	return string(bytes)
+func unpack(bytes [32]byte) string {
+	return fmt.Sprintf("%x", bytes)
 }
 
 // dummy specs for debugging
-func pack(str string) ([]byte, error) {
+func pack(str string) (res [32]byte, err error) {
 	if len(str) > 32 {
-		return nil, errors.New("String is too large to be packed in bytes32")
+		err = errors.New("String is too large to be packed in bytes32")
+		return
 	}
 
-	return []byte(str), nil
+	copy([]byte(str)[:], res[:32])
+	return
 }
