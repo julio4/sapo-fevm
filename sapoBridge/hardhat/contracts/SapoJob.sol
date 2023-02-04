@@ -22,13 +22,17 @@ contract SapoJob {
     }
 
     /**
-     * @dev     The address of the bridge.
-     *          The bridge is the only one who can set the result.
+     * @dev     The address of wallet of the bridge.
      */
     address private bridge;
 
+    /**
+     * @dev     The address of the bridge contract.
+     */
+    address private owner;
+
     modifier isBridge() {
-        require(msg.sender == bridge, "Caller is not bridge");
+        require(msg.sender == bridge || msg.sender == owner, "Caller is not bridge");
         _;
     }
 
@@ -69,6 +73,7 @@ contract SapoJob {
     constructor(address requestInitiator, address sapoBridge) payable {
         initiator = requestInitiator;
         bridge = sapoBridge;
+        owner = msg.sender;
     }
 
     /**

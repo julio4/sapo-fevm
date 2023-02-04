@@ -79,7 +79,7 @@ contract SapoBridge {
      * @param   result  The job result.
      */
     function saveResult(address job, string memory result) public onlyBridge {
-        job.delegatecall(abi.encodeWithSignature("saveResult(string memory)", result));
+        SapoJob(job).saveResult(result);
     }
 
     /**
@@ -88,7 +88,7 @@ contract SapoBridge {
      * @param   job     The job address.
      */
     function failAndRefund(address job, string memory reason) public onlyBridge {
-        job.delegatecall(abi.encodeWithSignature("failAndRefund(string memory)", reason));
+        SapoJob(job).failAndRefund(reason);
     }
 
     /* Getters */
