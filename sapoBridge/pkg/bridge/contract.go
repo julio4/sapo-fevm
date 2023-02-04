@@ -35,8 +35,9 @@ type RealContract struct {
 
 // Complete implements SmartContract
 func (r *RealContract) Complete(ctx context.Context, event BacalhauJobCompletedEvent) (ContractPaidEvent, error) {
+	log.Ctx(ctx).Debug().Msg("Saved result and partially refunded initiator")
+	// TODO, partially refund
 	r.contract.SaveResult(r.transact, event.Addr(), event.JobID())
-	// todo, in contract take required paiement in SaveResult
 	return event.Paid(), nil
 }
 
@@ -135,7 +136,9 @@ func (r *RealContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 
 // Refund implements SmartContract
 func (r *RealContract) Refund(ctx context.Context, e ContractFailedEvent) (ContractRefundedEvent, error) {
-	r.contract.FailAndRefund(r.transact, e.Addr())
+	log.Ctx(ctx).Debug().Msg("Refunded initiator for failed job")
+	// TODO refund & generate a result message
+	r.contract.FailAndRefund(r.transact, e.Addr(), "")
 	return e.Refunded(), nil
 }
 

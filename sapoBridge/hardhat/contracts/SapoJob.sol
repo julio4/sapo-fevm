@@ -77,6 +77,8 @@ contract SapoJob {
      * @param   executionResult The result of the job execution.
      */
     function saveResult(string memory executionResult) public isBridge isPending {
+        (bool success, ) = payable(initiator).call{value: address(this).balance}("");
+        require(success, "Failed to send Ether");
         completed = Status.Completed;
         result = executionResult;
         emit JobSucceeded();
