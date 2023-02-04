@@ -46,7 +46,7 @@ export default function SelectFromDaoInput() {
       });
     } catch (error) {
       newAllFiles.push({
-        cid: error,
+        cid: `ERROR: ${cid} unreachable`,
         type: null,
         size: null,
       });
