@@ -11,7 +11,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-import AbiSapoBridge from "../../constants/AbiSapoBridge.json";
+import AbiSapoBridge from "@/constants/AbiSapoBridge.json";
 import * as React from "react";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 

@@ -13,6 +13,10 @@ import {
 
 import { useJobContext, } from "../Context/JobContext";
 
+import AbiSapoBridge from "@/constants/AbiSapoBridge.json";
+import AddressSapoBridge from "@/constants/AddressSapoBridge.json";
+import { useContractWrite, usePrepareContractWrite } from "wagmi";
+
 const SpecCard = ({ title, value, desc }: { title: string, value: string, desc: string }) => (
   <FormControl>
     <FormLabel>{title}</FormLabel>
@@ -38,6 +42,22 @@ const SpecCard = ({ title, value, desc }: { title: string, value: string, desc: 
 
 export default function SubmitJob() {
   const { step, setStep, jobRequest, setJobRequest } = useJobContext();
+
+  const { config, error, isError } = usePrepareContractWrite({
+    address: "0x7Eab139cD3e064B225B1d3b9c84d274965e98fB6",
+    abi: AbiSapoBridge,
+    functionName: "request",
+    //args: [jobRequest.input?.cid],
+    args: ["test"]
+  });
+
+  const { data, isLoading, isSuccess, write } = useContractWrite(config);
+
+  const handleSubmit = () => {
+    console.log(data, isLoading, isSuccess, write)
+    write?.();
+  }
+
   return (
     <Flex direction='column' h='full' w='full' p={8}>
       <Box alignContent='center' justifyContent='center' mb={4}>
@@ -95,11 +115,11 @@ export default function SubmitJob() {
               boxShadow: 'md',
               transform: 'scale(1.005)'
             }}
-            onClick={() => {
-              setStep(3);
-            }}>
+            disabled={!write}
+            onClick={handleSubmit}>
             Submit
           </Button>
+          {isError && <Text>Error: {error?.message}</Text>}
         </Box>
       </Flex>
     </Flex>

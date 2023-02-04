@@ -18,8 +18,12 @@ import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { FaWallet } from 'react-icons/fa';
 import { useAccount, useDisconnect } from 'wagmi'
 
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+
 export default function Nav() {
   const { colorMode, toggleColorMode } = useColorMode();
+  const router = useRouter();
 
   // Wallet
   const { address, isConnected } = useAccount()
@@ -35,8 +39,11 @@ export default function Nav() {
         px={4}>
 
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
+          
           <Box>
-            <Heading as='h1' size='xl' ml={2}>🐸 Sapo</Heading>
+            <Link href='/app' replace>
+              <Heading as='h1' size='xl' ml={2}>🐸 Sapo</Heading>
+            </Link>
           </Box>
 
           <Flex alignItems={'center'}>
@@ -67,7 +74,7 @@ export default function Nav() {
                       alignItems={'center'}
                       bg={useColorModeValue('whiteAlpha.500', 'darkAlpha.200')} 
                       backdropFilter='auto'
-                      backdropBlur='2px'
+                      backdropBlur='4px'
                       >
                       <Center>
                         <Text>Wallet</Text>
@@ -79,9 +86,21 @@ export default function Nav() {
                       </Center>
                       <MenuDivider />
                       <MenuItem
+                        _hover={
+                          {bg: useColorModeValue('blackAlpha.50', 'whiteAlpha.300')}
+                        }
+                        onClick={() => router.push('/app/jobsHistory')}
+                        bg='inherit'>
+                          Jobs history
+                      </MenuItem>
+                      <MenuItem
+                        _hover={
+                          {bg: useColorModeValue('blackAlpha.50', 'whiteAlpha.300')}
+                        }
                         onClick={() => disconnect()}
-                        bg='inherit'
-                        >Disconnect</MenuItem>
+                        bg='inherit'>
+                          Disconnect
+                        </MenuItem>
                     </MenuList>
                   </Box>
                   : null

@@ -28,16 +28,6 @@ const JobCard = ({ job, onClick }: { job: Job, onClick: () => void }) => (
             shadow="lg"
             position="relative">
 
-            {/* {data.isNew && (
-          <Circle
-            size="10px"
-            position="absolute"
-            top={2}
-            right={2}
-            bg="red.200"
-          />
-        )} */}
-
             <Box
                 bg={useColorModeValue(
                     (job.category?.color || "gray") + '.100', 
@@ -81,7 +71,7 @@ export default function SelectJob() {
                 </Text>
             </Box>
 
-            <SimpleGrid columns={{xl: 4, lg: 3, md: 2}} spacing={8}>
+            <SimpleGrid columns={{'2xl': 5, xl: 4, lg: 3, md: 2}} spacing={8}>
                 {allJobs.filter((job) => category === null || job.category === category).map((job) => {
                     return (
                         <JobCard key={job.name} job={job} onClick={() => {
