@@ -35,9 +35,15 @@ type RealContract struct {
 
 // Complete implements SmartContract
 func (r *RealContract) Complete(ctx context.Context, event BacalhauJobCompletedEvent) (ContractPaidEvent, error) {
-	log.Ctx(ctx).Debug().Msg("Saved result and partially refunded initiator")
 	// TODO, partially refund
-	r.contract.SaveResult(r.transact, event.Addr(), event.JobID())
+	_, err := r.contract.SaveResult(r.transact, event.Addr(), event.JobID())
+
+	if err != nil {
+		log.Ctx(ctx).Debug().Err(err).Msg("Result saving of completed job has failed")
+		return event, context.Canceled
+	}
+
+	log.Ctx(ctx).Debug().Msg("Saved result and partially refunded initiator")
 	return event.Paid(), nil
 }
 
@@ -136,9 +142,15 @@ func (r *RealContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 
 // Refund implements SmartContract
 func (r *RealContract) Refund(ctx context.Context, e ContractFailedEvent) (ContractRefundedEvent, error) {
-	log.Ctx(ctx).Debug().Msg("Refunded initiator for failed job")
 	// TODO refund & generate a result message
-	r.contract.FailAndRefund(r.transact, e.Addr(), "")
+	_, err := r.contract.FailAndRefund(r.transact, e.Addr(), "")
+
+	if err != nil {
+		log.Ctx(ctx).Debug().Err(err).Msg("Refund of failed job has failed")
+		return e, context.Canceled
+	}
+
+	log.Ctx(ctx).Debug().Msg("Refunded initiator for failed job")
 	return e.Refunded(), nil
 }
 
