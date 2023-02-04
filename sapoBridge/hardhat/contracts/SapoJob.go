@@ -28,23 +28,23 @@ var (
 	_ = event.NewSubscription
 )
 
-// JobMetaData contains all meta data concerning the Job contract.
-var JobMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"requestInitiator\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"sapoBridge\",\"type\":\"address\"}],\"stateMutability\":\"payable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"JobFailed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"JobSucceeded\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"reason\",\"type\":\"string\"}],\"name\":\"failAndRefund\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getBridgeAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getInitiator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getResult\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStatus\",\"outputs\":[{\"internalType\":\"enumSapoJob.Status\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"executionResult\",\"type\":\"string\"}],\"name\":\"saveResult\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
-	Bin: "0x60806040526000600160146101000a81548160ff021916908360028111156200002d576200002c620000e0565b5b02179055506040516200114638038062001146833981810160405281019062000057919062000179565b816000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555080600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505050620001c0565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602160045260246000fd5b600080fd5b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b6000620001418262000114565b9050919050565b620001538162000134565b81146200015f57600080fd5b50565b600081519050620001738162000148565b92915050565b600080604083850312156200019357620001926200010f565b5b6000620001a38582860162000162565b9250506020620001b68582860162000162565b9150509250929050565b610f7680620001d06000396000f3fe608060405234801561001057600080fd5b50600436106100625760003560e01c80634e69d5601461006757806384de1ea514610085578063877db67d146100a3578063b422a51e146100bf578063de292789146100db578063fb32c508146100f9575b600080fd5b61006f610117565b60405161007c919061073b565b60405180910390f35b61008d61012e565b60405161009a9190610797565b60405180910390f35b6100bd60048036038101906100b8919061090c565b610157565b005b6100d960048036038101906100d4919061090c565b6102c6565b005b6100e3610504565b6040516100f091906109d4565b60405180910390f35b61010161069a565b60405161010e9190610797565b60405180910390f35b6000600160149054906101000a900460ff16905090565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905090565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16146101e7576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016101de90610a42565b60405180910390fd5b600060028111156101fb576101fa6106c4565b5b600160149054906101000a900460ff16600281111561021d5761021c6106c4565b5b1461025d576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161025490610aae565b60405180910390fd5b60018060146101000a81548160ff02191690836002811115610282576102816106c4565b5b021790555080600290816102969190610ce4565b507f7d6e73dea3a1d0a15642cc83127e32ad9e9fffb137c1567d352780788aa54e2b60405160405180910390a150565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614610356576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161034d90610a42565b60405180910390fd5b6000600281111561036a576103696106c4565b5b600160149054906101000a900460ff16600281111561038c5761038b6106c4565b5b146103cc576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016103c390610aae565b60405180910390fd5b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff164760405161041390610de7565b60006040518083038185875af1925050503d8060008114610450576040519150601f19603f3d011682016040523d82523d6000602084013e610455565b606091505b5050905080610499576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161049090610e48565b60405180910390fd5b6002600160146101000a81548160ff021916908360028111156104bf576104be6106c4565b5b021790555081600290816104d39190610ce4565b507ff6da0b6aaf5c5b2aa1b43736ef16a25b4809e181c3e882b5e55d00b5bd6ac30e60405160405180910390a15050565b606060008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614610594576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161058b90610eb4565b60405180910390fd5b600060028111156105a8576105a76106c4565b5b600160149054906101000a900460ff1660028111156105ca576105c96106c4565b5b0361060a576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161060190610f20565b60405180910390fd5b6002805461061790610afd565b80601f016020809104026020016040519081016040528092919081815260200182805461064390610afd565b80156106905780601f1061066557610100808354040283529160200191610690565b820191906000526020600020905b81548152906001019060200180831161067357829003601f168201915b5050505050905090565b6000600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905090565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602160045260246000fd5b60038110610704576107036106c4565b5b50565b6000819050610715826106f3565b919050565b600061072582610707565b9050919050565b6107358161071a565b82525050565b6000602082019050610750600083018461072c565b92915050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b600061078182610756565b9050919050565b61079181610776565b82525050565b60006020820190506107ac6000830184610788565b92915050565b6000604051905090565b600080fd5b600080fd5b600080fd5b600080fd5b6000601f19601f8301169050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b610819826107d0565b810181811067ffffffffffffffff82111715610838576108376107e1565b5b80604052505050565b600061084b6107b2565b90506108578282610810565b919050565b600067ffffffffffffffff821115610877576108766107e1565b5b610880826107d0565b9050602081019050919050565b82818337600083830152505050565b60006108af6108aa8461085c565b610841565b9050828152602081018484840111156108cb576108ca6107cb565b5b6108d684828561088d565b509392505050565b600082601f8301126108f3576108f26107c6565b5b813561090384826020860161089c565b91505092915050565b600060208284031215610922576109216107bc565b5b600082013567ffffffffffffffff8111156109405761093f6107c1565b5b61094c848285016108de565b91505092915050565b600081519050919050565b600082825260208201905092915050565b60005b8381101561098f578082015181840152602081019050610974565b60008484015250505050565b60006109a682610955565b6109b08185610960565b93506109c0818560208601610971565b6109c9816107d0565b840191505092915050565b600060208201905081810360008301526109ee818461099b565b905092915050565b7f43616c6c6572206973206e6f7420627269646765000000000000000000000000600082015250565b6000610a2c601483610960565b9150610a37826109f6565b602082019050919050565b60006020820190508181036000830152610a5b81610a1f565b9050919050565b7f4a6f62206973206e6f742070656e64696e670000000000000000000000000000600082015250565b6000610a98601283610960565b9150610aa382610a62565b602082019050919050565b60006020820190508181036000830152610ac781610a8b565b9050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602260045260246000fd5b60006002820490506001821680610b1557607f821691505b602082108103610b2857610b27610ace565b5b50919050565b60008190508160005260206000209050919050565b60006020601f8301049050919050565b600082821b905092915050565b600060088302610b907fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff82610b53565b610b9a8683610b53565b95508019841693508086168417925050509392505050565b6000819050919050565b6000819050919050565b6000610be1610bdc610bd784610bb2565b610bbc565b610bb2565b9050919050565b6000819050919050565b610bfb83610bc6565b610c0f610c0782610be8565b848454610b60565b825550505050565b600090565b610c24610c17565b610c2f818484610bf2565b505050565b5b81811015610c5357610c48600082610c1c565b600181019050610c35565b5050565b601f821115610c9857610c6981610b2e565b610c7284610b43565b81016020851015610c81578190505b610c95610c8d85610b43565b830182610c34565b50505b505050565b600082821c905092915050565b6000610cbb60001984600802610c9d565b1980831691505092915050565b6000610cd48383610caa565b9150826002028217905092915050565b610ced82610955565b67ffffffffffffffff811115610d0657610d056107e1565b5b610d108254610afd565b610d1b828285610c57565b600060209050601f831160018114610d4e5760008415610d3c578287015190505b610d468582610cc8565b865550610dae565b601f198416610d5c86610b2e565b60005b82811015610d8457848901518255600182019150602085019450602081019050610d5f565b86831015610da15784890151610d9d601f891682610caa565b8355505b6001600288020188555050505b505050505050565b600081905092915050565b50565b6000610dd1600083610db6565b9150610ddc82610dc1565b600082019050919050565b6000610df282610dc4565b9150819050919050565b7f4661696c656420746f2073656e64204574686572000000000000000000000000600082015250565b6000610e32601483610960565b9150610e3d82610dfc565b602082019050919050565b60006020820190508181036000830152610e6181610e25565b9050919050565b7f43616c6c6572206973206e6f7420696e69746961746f72000000000000000000600082015250565b6000610e9e601783610960565b9150610ea982610e68565b602082019050919050565b60006020820190508181036000830152610ecd81610e91565b9050919050565b7f4a6f62206973206e6f7420636f6d706c65746564000000000000000000000000600082015250565b6000610f0a601483610960565b9150610f1582610ed4565b602082019050919050565b60006020820190508181036000830152610f3981610efd565b905091905056fea2646970667358221220c6e1d6395916b7526155d5a58e6dab059a8428f8b12edca0e99dddb705f8088964736f6c63430008110033",
+// JobsMetaData contains all meta data concerning the Jobs contract.
+var JobsMetaData = &bind.MetaData{
+	ABI: "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"requestInitiator\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"sapoBridge\",\"type\":\"address\"}],\"stateMutability\":\"payable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"JobFailed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[],\"name\":\"JobSucceeded\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"failAndRefund\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getBridgeAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getInitiator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getResult\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getStatus\",\"outputs\":[{\"internalType\":\"enumSapoJob.Status\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"exResult1\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"exResult2\",\"type\":\"bytes32\"}],\"name\":\"saveResult\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	Bin: "0x60806040526000600260146101000a81548160ff021916908360028111156200002d576200002c62000121565b5b0217905550604051620010c0380380620010c08339818101604052810190620000579190620001ba565b816000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555080600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555033600260006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505062000201565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602160045260246000fd5b600080fd5b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b6000620001828262000155565b9050919050565b620001948162000175565b8114620001a057600080fd5b50565b600081519050620001b48162000189565b92915050565b60008060408385031215620001d457620001d362000150565b5b6000620001e485828601620001a3565b9250506020620001f785828601620001a3565b9150509250929050565b610eaf80620002116000396000f3fe608060405234801561001057600080fd5b50600436106100625760003560e01c80634e69d56014610067578063836fbaca1461008557806384de1ea5146100a15780638c45c865146100bf578063de292789146100c9578063fb32c508146100e7575b600080fd5b61006f610105565b60405161007c91906108bd565b60405180910390f35b61009f600480360381019061009a9190610922565b61011c565b005b6100a96103b1565b6040516100b691906109a3565b60405180910390f35b6100c76103da565b005b6100d161065e565b6040516100de9190610a4e565b60405180910390f35b6100ef61081c565b6040516100fc91906109a3565b60405180910390f35b6000600260149054906101000a900460ff16905090565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614806101c55750600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16145b610204576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016101fb90610abc565b60405180910390fd5b6000600281111561021857610217610846565b5b600260149054906101000a900460ff16600281111561023a57610239610846565b5b1461027a576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161027190610b28565b60405180910390fd5b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16476040516102c190610b79565b60006040518083038185875af1925050503d80600081146102fe576040519150601f19603f3d011682016040523d82523d6000602084013e610303565b606091505b5050905080610347576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161033e90610bda565b60405180910390fd5b6001600260146101000a81548160ff0219169083600281111561036d5761036c610846565b5b021790555082600381905550816004819055507f7d6e73dea3a1d0a15642cc83127e32ad9e9fffb137c1567d352780788aa54e2b60405160405180910390a1505050565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905090565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614806104835750600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16145b6104c2576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016104b990610abc565b60405180910390fd5b600060028111156104d6576104d5610846565b5b600260149054906101000a900460ff1660028111156104f8576104f7610846565b5b14610538576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161052f90610b28565b60405180910390fd5b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff164760405161057f90610b79565b60006040518083038185875af1925050503d80600081146105bc576040519150601f19603f3d011682016040523d82523d6000602084013e6105c1565b606091505b5050905080610605576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016105fc90610bda565b60405180910390fd5b60028060146101000a81548160ff0219169083600281111561062a57610629610846565b5b02179055507ff6da0b6aaf5c5b2aa1b43736ef16a25b4809e181c3e882b5e55d00b5bd6ac30e60405160405180910390a150565b606060008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16146106ee576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016106e590610c46565b60405180910390fd5b6000600281111561070257610701610846565b5b600260149054906101000a900460ff16600281111561072457610723610846565b5b03610764576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161075b90610cb2565b60405180910390fd5b6000600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905060008173ffffffffffffffffffffffffffffffffffffffff16631453d7566003546004546040518363ffffffff1660e01b81526004016107cc929190610ce1565b600060405180830381865afa1580156107e9573d6000803e3d6000fd5b505050506040513d6000823e3d601f19601f820116820180604052508101906108129190610e30565b9050809250505090565b6000600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905090565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602160045260246000fd5b6003811061088657610885610846565b5b50565b600081905061089782610875565b919050565b60006108a782610889565b9050919050565b6108b78161089c565b82525050565b60006020820190506108d260008301846108ae565b92915050565b6000604051905090565b600080fd5b600080fd5b6000819050919050565b6108ff816108ec565b811461090a57600080fd5b50565b60008135905061091c816108f6565b92915050565b60008060408385031215610939576109386108e2565b5b60006109478582860161090d565b92505060206109588582860161090d565b9150509250929050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b600061098d82610962565b9050919050565b61099d81610982565b82525050565b60006020820190506109b86000830184610994565b92915050565b600081519050919050565b600082825260208201905092915050565b60005b838110156109f85780820151818401526020810190506109dd565b60008484015250505050565b6000601f19601f8301169050919050565b6000610a20826109be565b610a2a81856109c9565b9350610a3a8185602086016109da565b610a4381610a04565b840191505092915050565b60006020820190508181036000830152610a688184610a15565b905092915050565b7f43616c6c6572206973206e6f7420627269646765000000000000000000000000600082015250565b6000610aa66014836109c9565b9150610ab182610a70565b602082019050919050565b60006020820190508181036000830152610ad581610a99565b9050919050565b7f4a6f62206973206e6f742070656e64696e670000000000000000000000000000600082015250565b6000610b126012836109c9565b9150610b1d82610adc565b602082019050919050565b60006020820190508181036000830152610b4181610b05565b9050919050565b600081905092915050565b50565b6000610b63600083610b48565b9150610b6e82610b53565b600082019050919050565b6000610b8482610b56565b9150819050919050565b7f4661696c656420746f2073656e64204574686572000000000000000000000000600082015250565b6000610bc46014836109c9565b9150610bcf82610b8e565b602082019050919050565b60006020820190508181036000830152610bf381610bb7565b9050919050565b7f43616c6c6572206973206e6f7420696e69746961746f72000000000000000000600082015250565b6000610c306017836109c9565b9150610c3b82610bfa565b602082019050919050565b60006020820190508181036000830152610c5f81610c23565b9050919050565b7f4a6f62206973206e6f7420636f6d706c65746564000000000000000000000000600082015250565b6000610c9c6014836109c9565b9150610ca782610c66565b602082019050919050565b60006020820190508181036000830152610ccb81610c8f565b9050919050565b610cdb816108ec565b82525050565b6000604082019050610cf66000830185610cd2565b610d036020830184610cd2565b9392505050565b600080fd5b600080fd5b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b610d4c82610a04565b810181811067ffffffffffffffff82111715610d6b57610d6a610d14565b5b80604052505050565b6000610d7e6108d8565b9050610d8a8282610d43565b919050565b600067ffffffffffffffff821115610daa57610da9610d14565b5b610db382610a04565b9050602081019050919050565b6000610dd3610dce84610d8f565b610d74565b905082815260208101848484011115610def57610dee610d0f565b5b610dfa8482856109da565b509392505050565b600082601f830112610e1757610e16610d0a565b5b8151610e27848260208601610dc0565b91505092915050565b600060208284031215610e4657610e456108e2565b5b600082015167ffffffffffffffff811115610e6457610e636108e7565b5b610e7084828501610e02565b9150509291505056fea2646970667358221220f9e080f7b4930658cf3405771fcbd9eff6e5f0cd065755560a342f2da2dc133864736f6c63430008110033",
 }
 
-// JobABI is the input ABI used to generate the binding from.
-// Deprecated: Use JobMetaData.ABI instead.
-var JobABI = JobMetaData.ABI
+// JobsABI is the input ABI used to generate the binding from.
+// Deprecated: Use JobsMetaData.ABI instead.
+var JobsABI = JobsMetaData.ABI
 
-// JobBin is the compiled bytecode used for deploying new contracts.
-// Deprecated: Use JobMetaData.Bin instead.
-var JobBin = JobMetaData.Bin
+// JobsBin is the compiled bytecode used for deploying new contracts.
+// Deprecated: Use JobsMetaData.Bin instead.
+var JobsBin = JobsMetaData.Bin
 
-// DeployJob deploys a new Ethereum contract, binding an instance of Job to it.
-func DeployJob(auth *bind.TransactOpts, backend bind.ContractBackend, requestInitiator common.Address, sapoBridge common.Address) (common.Address, *types.Transaction, *Job, error) {
-	parsed, err := JobMetaData.GetAbi()
+// DeployJobs deploys a new Ethereum contract, binding an instance of Jobs to it.
+func DeployJobs(auth *bind.TransactOpts, backend bind.ContractBackend, requestInitiator common.Address, sapoBridge common.Address) (common.Address, *types.Transaction, *Jobs, error) {
+	parsed, err := JobsMetaData.GetAbi()
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
@@ -52,111 +52,111 @@ func DeployJob(auth *bind.TransactOpts, backend bind.ContractBackend, requestIni
 		return common.Address{}, nil, nil, errors.New("GetABI returned nil")
 	}
 
-	address, tx, contract, err := bind.DeployContract(auth, *parsed, common.FromHex(JobBin), backend, requestInitiator, sapoBridge)
+	address, tx, contract, err := bind.DeployContract(auth, *parsed, common.FromHex(JobsBin), backend, requestInitiator, sapoBridge)
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
-	return address, tx, &Job{JobCaller: JobCaller{contract: contract}, JobTransactor: JobTransactor{contract: contract}, JobFilterer: JobFilterer{contract: contract}}, nil
+	return address, tx, &Jobs{JobsCaller: JobsCaller{contract: contract}, JobsTransactor: JobsTransactor{contract: contract}, JobsFilterer: JobsFilterer{contract: contract}}, nil
 }
 
-// Job is an auto generated Go binding around an Ethereum contract.
-type Job struct {
-	JobCaller     // Read-only binding to the contract
-	JobTransactor // Write-only binding to the contract
-	JobFilterer   // Log filterer for contract events
+// Jobs is an auto generated Go binding around an Ethereum contract.
+type Jobs struct {
+	JobsCaller     // Read-only binding to the contract
+	JobsTransactor // Write-only binding to the contract
+	JobsFilterer   // Log filterer for contract events
 }
 
-// JobCaller is an auto generated read-only Go binding around an Ethereum contract.
-type JobCaller struct {
+// JobsCaller is an auto generated read-only Go binding around an Ethereum contract.
+type JobsCaller struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// JobTransactor is an auto generated write-only Go binding around an Ethereum contract.
-type JobTransactor struct {
+// JobsTransactor is an auto generated write-only Go binding around an Ethereum contract.
+type JobsTransactor struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// JobFilterer is an auto generated log filtering Go binding around an Ethereum contract events.
-type JobFilterer struct {
+// JobsFilterer is an auto generated log filtering Go binding around an Ethereum contract events.
+type JobsFilterer struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// JobSession is an auto generated Go binding around an Ethereum contract,
+// JobsSession is an auto generated Go binding around an Ethereum contract,
 // with pre-set call and transact options.
-type JobSession struct {
-	Contract     *Job              // Generic contract binding to set the session for
+type JobsSession struct {
+	Contract     *Jobs             // Generic contract binding to set the session for
 	CallOpts     bind.CallOpts     // Call options to use throughout this session
 	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
 }
 
-// JobCallerSession is an auto generated read-only Go binding around an Ethereum contract,
+// JobsCallerSession is an auto generated read-only Go binding around an Ethereum contract,
 // with pre-set call options.
-type JobCallerSession struct {
-	Contract *JobCaller    // Generic contract caller binding to set the session for
+type JobsCallerSession struct {
+	Contract *JobsCaller   // Generic contract caller binding to set the session for
 	CallOpts bind.CallOpts // Call options to use throughout this session
 }
 
-// JobTransactorSession is an auto generated write-only Go binding around an Ethereum contract,
+// JobsTransactorSession is an auto generated write-only Go binding around an Ethereum contract,
 // with pre-set transact options.
-type JobTransactorSession struct {
-	Contract     *JobTransactor    // Generic contract transactor binding to set the session for
+type JobsTransactorSession struct {
+	Contract     *JobsTransactor   // Generic contract transactor binding to set the session for
 	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
 }
 
-// JobRaw is an auto generated low-level Go binding around an Ethereum contract.
-type JobRaw struct {
-	Contract *Job // Generic contract binding to access the raw methods on
+// JobsRaw is an auto generated low-level Go binding around an Ethereum contract.
+type JobsRaw struct {
+	Contract *Jobs // Generic contract binding to access the raw methods on
 }
 
-// JobCallerRaw is an auto generated low-level read-only Go binding around an Ethereum contract.
-type JobCallerRaw struct {
-	Contract *JobCaller // Generic read-only contract binding to access the raw methods on
+// JobsCallerRaw is an auto generated low-level read-only Go binding around an Ethereum contract.
+type JobsCallerRaw struct {
+	Contract *JobsCaller // Generic read-only contract binding to access the raw methods on
 }
 
-// JobTransactorRaw is an auto generated low-level write-only Go binding around an Ethereum contract.
-type JobTransactorRaw struct {
-	Contract *JobTransactor // Generic write-only contract binding to access the raw methods on
+// JobsTransactorRaw is an auto generated low-level write-only Go binding around an Ethereum contract.
+type JobsTransactorRaw struct {
+	Contract *JobsTransactor // Generic write-only contract binding to access the raw methods on
 }
 
-// NewJob creates a new instance of Job, bound to a specific deployed contract.
-func NewJob(address common.Address, backend bind.ContractBackend) (*Job, error) {
-	contract, err := bindJob(address, backend, backend, backend)
+// NewJobs creates a new instance of Jobs, bound to a specific deployed contract.
+func NewJobs(address common.Address, backend bind.ContractBackend) (*Jobs, error) {
+	contract, err := bindJobs(address, backend, backend, backend)
 	if err != nil {
 		return nil, err
 	}
-	return &Job{JobCaller: JobCaller{contract: contract}, JobTransactor: JobTransactor{contract: contract}, JobFilterer: JobFilterer{contract: contract}}, nil
+	return &Jobs{JobsCaller: JobsCaller{contract: contract}, JobsTransactor: JobsTransactor{contract: contract}, JobsFilterer: JobsFilterer{contract: contract}}, nil
 }
 
-// NewJobCaller creates a new read-only instance of Job, bound to a specific deployed contract.
-func NewJobCaller(address common.Address, caller bind.ContractCaller) (*JobCaller, error) {
-	contract, err := bindJob(address, caller, nil, nil)
+// NewJobsCaller creates a new read-only instance of Jobs, bound to a specific deployed contract.
+func NewJobsCaller(address common.Address, caller bind.ContractCaller) (*JobsCaller, error) {
+	contract, err := bindJobs(address, caller, nil, nil)
 	if err != nil {
 		return nil, err
 	}
-	return &JobCaller{contract: contract}, nil
+	return &JobsCaller{contract: contract}, nil
 }
 
-// NewJobTransactor creates a new write-only instance of Job, bound to a specific deployed contract.
-func NewJobTransactor(address common.Address, transactor bind.ContractTransactor) (*JobTransactor, error) {
-	contract, err := bindJob(address, nil, transactor, nil)
+// NewJobsTransactor creates a new write-only instance of Jobs, bound to a specific deployed contract.
+func NewJobsTransactor(address common.Address, transactor bind.ContractTransactor) (*JobsTransactor, error) {
+	contract, err := bindJobs(address, nil, transactor, nil)
 	if err != nil {
 		return nil, err
 	}
-	return &JobTransactor{contract: contract}, nil
+	return &JobsTransactor{contract: contract}, nil
 }
 
-// NewJobFilterer creates a new log filterer instance of Job, bound to a specific deployed contract.
-func NewJobFilterer(address common.Address, filterer bind.ContractFilterer) (*JobFilterer, error) {
-	contract, err := bindJob(address, nil, nil, filterer)
+// NewJobsFilterer creates a new log filterer instance of Jobs, bound to a specific deployed contract.
+func NewJobsFilterer(address common.Address, filterer bind.ContractFilterer) (*JobsFilterer, error) {
+	contract, err := bindJobs(address, nil, nil, filterer)
 	if err != nil {
 		return nil, err
 	}
-	return &JobFilterer{contract: contract}, nil
+	return &JobsFilterer{contract: contract}, nil
 }
 
-// bindJob binds a generic wrapper to an already deployed contract.
-func bindJob(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
-	parsed, err := abi.JSON(strings.NewReader(JobABI))
+// bindJobs binds a generic wrapper to an already deployed contract.
+func bindJobs(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
+	parsed, err := abi.JSON(strings.NewReader(JobsABI))
 	if err != nil {
 		return nil, err
 	}
@@ -167,46 +167,46 @@ func bindJob(address common.Address, caller bind.ContractCaller, transactor bind
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Job *JobRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
-	return _Job.Contract.JobCaller.contract.Call(opts, result, method, params...)
+func (_Jobs *JobsRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+	return _Jobs.Contract.JobsCaller.contract.Call(opts, result, method, params...)
 }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
 // its default method if one is available.
-func (_Job *JobRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _Job.Contract.JobTransactor.contract.Transfer(opts)
+func (_Jobs *JobsRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _Jobs.Contract.JobsTransactor.contract.Transfer(opts)
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Job *JobRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
-	return _Job.Contract.JobTransactor.contract.Transact(opts, method, params...)
+func (_Jobs *JobsRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+	return _Jobs.Contract.JobsTransactor.contract.Transact(opts, method, params...)
 }
 
 // Call invokes the (constant) contract method with params as input values and
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Job *JobCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
-	return _Job.Contract.contract.Call(opts, result, method, params...)
+func (_Jobs *JobsCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
+	return _Jobs.Contract.contract.Call(opts, result, method, params...)
 }
 
 // Transfer initiates a plain transaction to move funds to the contract, calling
 // its default method if one is available.
-func (_Job *JobTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _Job.Contract.contract.Transfer(opts)
+func (_Jobs *JobsTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _Jobs.Contract.contract.Transfer(opts)
 }
 
 // Transact invokes the (paid) contract method with params as input values.
-func (_Job *JobTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
-	return _Job.Contract.contract.Transact(opts, method, params...)
+func (_Jobs *JobsTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
+	return _Jobs.Contract.contract.Transact(opts, method, params...)
 }
 
 // GetBridgeAddress is a free data retrieval call binding the contract method 0xfb32c508.
 //
 // Solidity: function getBridgeAddress() view returns(address)
-func (_Job *JobCaller) GetBridgeAddress(opts *bind.CallOpts) (common.Address, error) {
+func (_Jobs *JobsCaller) GetBridgeAddress(opts *bind.CallOpts) (common.Address, error) {
 	var out []interface{}
-	err := _Job.contract.Call(opts, &out, "getBridgeAddress")
+	err := _Jobs.contract.Call(opts, &out, "getBridgeAddress")
 
 	if err != nil {
 		return *new(common.Address), err
@@ -221,23 +221,23 @@ func (_Job *JobCaller) GetBridgeAddress(opts *bind.CallOpts) (common.Address, er
 // GetBridgeAddress is a free data retrieval call binding the contract method 0xfb32c508.
 //
 // Solidity: function getBridgeAddress() view returns(address)
-func (_Job *JobSession) GetBridgeAddress() (common.Address, error) {
-	return _Job.Contract.GetBridgeAddress(&_Job.CallOpts)
+func (_Jobs *JobsSession) GetBridgeAddress() (common.Address, error) {
+	return _Jobs.Contract.GetBridgeAddress(&_Jobs.CallOpts)
 }
 
 // GetBridgeAddress is a free data retrieval call binding the contract method 0xfb32c508.
 //
 // Solidity: function getBridgeAddress() view returns(address)
-func (_Job *JobCallerSession) GetBridgeAddress() (common.Address, error) {
-	return _Job.Contract.GetBridgeAddress(&_Job.CallOpts)
+func (_Jobs *JobsCallerSession) GetBridgeAddress() (common.Address, error) {
+	return _Jobs.Contract.GetBridgeAddress(&_Jobs.CallOpts)
 }
 
 // GetInitiator is a free data retrieval call binding the contract method 0x84de1ea5.
 //
 // Solidity: function getInitiator() view returns(address)
-func (_Job *JobCaller) GetInitiator(opts *bind.CallOpts) (common.Address, error) {
+func (_Jobs *JobsCaller) GetInitiator(opts *bind.CallOpts) (common.Address, error) {
 	var out []interface{}
-	err := _Job.contract.Call(opts, &out, "getInitiator")
+	err := _Jobs.contract.Call(opts, &out, "getInitiator")
 
 	if err != nil {
 		return *new(common.Address), err
@@ -252,23 +252,23 @@ func (_Job *JobCaller) GetInitiator(opts *bind.CallOpts) (common.Address, error)
 // GetInitiator is a free data retrieval call binding the contract method 0x84de1ea5.
 //
 // Solidity: function getInitiator() view returns(address)
-func (_Job *JobSession) GetInitiator() (common.Address, error) {
-	return _Job.Contract.GetInitiator(&_Job.CallOpts)
+func (_Jobs *JobsSession) GetInitiator() (common.Address, error) {
+	return _Jobs.Contract.GetInitiator(&_Jobs.CallOpts)
 }
 
 // GetInitiator is a free data retrieval call binding the contract method 0x84de1ea5.
 //
 // Solidity: function getInitiator() view returns(address)
-func (_Job *JobCallerSession) GetInitiator() (common.Address, error) {
-	return _Job.Contract.GetInitiator(&_Job.CallOpts)
+func (_Jobs *JobsCallerSession) GetInitiator() (common.Address, error) {
+	return _Jobs.Contract.GetInitiator(&_Jobs.CallOpts)
 }
 
 // GetResult is a free data retrieval call binding the contract method 0xde292789.
 //
 // Solidity: function getResult() view returns(string)
-func (_Job *JobCaller) GetResult(opts *bind.CallOpts) (string, error) {
+func (_Jobs *JobsCaller) GetResult(opts *bind.CallOpts) (string, error) {
 	var out []interface{}
-	err := _Job.contract.Call(opts, &out, "getResult")
+	err := _Jobs.contract.Call(opts, &out, "getResult")
 
 	if err != nil {
 		return *new(string), err
@@ -283,23 +283,23 @@ func (_Job *JobCaller) GetResult(opts *bind.CallOpts) (string, error) {
 // GetResult is a free data retrieval call binding the contract method 0xde292789.
 //
 // Solidity: function getResult() view returns(string)
-func (_Job *JobSession) GetResult() (string, error) {
-	return _Job.Contract.GetResult(&_Job.CallOpts)
+func (_Jobs *JobsSession) GetResult() (string, error) {
+	return _Jobs.Contract.GetResult(&_Jobs.CallOpts)
 }
 
 // GetResult is a free data retrieval call binding the contract method 0xde292789.
 //
 // Solidity: function getResult() view returns(string)
-func (_Job *JobCallerSession) GetResult() (string, error) {
-	return _Job.Contract.GetResult(&_Job.CallOpts)
+func (_Jobs *JobsCallerSession) GetResult() (string, error) {
+	return _Jobs.Contract.GetResult(&_Jobs.CallOpts)
 }
 
 // GetStatus is a free data retrieval call binding the contract method 0x4e69d560.
 //
 // Solidity: function getStatus() view returns(uint8)
-func (_Job *JobCaller) GetStatus(opts *bind.CallOpts) (uint8, error) {
+func (_Jobs *JobsCaller) GetStatus(opts *bind.CallOpts) (uint8, error) {
 	var out []interface{}
-	err := _Job.contract.Call(opts, &out, "getStatus")
+	err := _Jobs.contract.Call(opts, &out, "getStatus")
 
 	if err != nil {
 		return *new(uint8), err
@@ -314,62 +314,62 @@ func (_Job *JobCaller) GetStatus(opts *bind.CallOpts) (uint8, error) {
 // GetStatus is a free data retrieval call binding the contract method 0x4e69d560.
 //
 // Solidity: function getStatus() view returns(uint8)
-func (_Job *JobSession) GetStatus() (uint8, error) {
-	return _Job.Contract.GetStatus(&_Job.CallOpts)
+func (_Jobs *JobsSession) GetStatus() (uint8, error) {
+	return _Jobs.Contract.GetStatus(&_Jobs.CallOpts)
 }
 
 // GetStatus is a free data retrieval call binding the contract method 0x4e69d560.
 //
 // Solidity: function getStatus() view returns(uint8)
-func (_Job *JobCallerSession) GetStatus() (uint8, error) {
-	return _Job.Contract.GetStatus(&_Job.CallOpts)
+func (_Jobs *JobsCallerSession) GetStatus() (uint8, error) {
+	return _Jobs.Contract.GetStatus(&_Jobs.CallOpts)
 }
 
-// FailAndRefund is a paid mutator transaction binding the contract method 0xb422a51e.
+// FailAndRefund is a paid mutator transaction binding the contract method 0x8c45c865.
 //
-// Solidity: function failAndRefund(string reason) returns()
-func (_Job *JobTransactor) FailAndRefund(opts *bind.TransactOpts, reason string) (*types.Transaction, error) {
-	return _Job.contract.Transact(opts, "failAndRefund", reason)
+// Solidity: function failAndRefund() returns()
+func (_Jobs *JobsTransactor) FailAndRefund(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _Jobs.contract.Transact(opts, "failAndRefund")
 }
 
-// FailAndRefund is a paid mutator transaction binding the contract method 0xb422a51e.
+// FailAndRefund is a paid mutator transaction binding the contract method 0x8c45c865.
 //
-// Solidity: function failAndRefund(string reason) returns()
-func (_Job *JobSession) FailAndRefund(reason string) (*types.Transaction, error) {
-	return _Job.Contract.FailAndRefund(&_Job.TransactOpts, reason)
+// Solidity: function failAndRefund() returns()
+func (_Jobs *JobsSession) FailAndRefund() (*types.Transaction, error) {
+	return _Jobs.Contract.FailAndRefund(&_Jobs.TransactOpts)
 }
 
-// FailAndRefund is a paid mutator transaction binding the contract method 0xb422a51e.
+// FailAndRefund is a paid mutator transaction binding the contract method 0x8c45c865.
 //
-// Solidity: function failAndRefund(string reason) returns()
-func (_Job *JobTransactorSession) FailAndRefund(reason string) (*types.Transaction, error) {
-	return _Job.Contract.FailAndRefund(&_Job.TransactOpts, reason)
+// Solidity: function failAndRefund() returns()
+func (_Jobs *JobsTransactorSession) FailAndRefund() (*types.Transaction, error) {
+	return _Jobs.Contract.FailAndRefund(&_Jobs.TransactOpts)
 }
 
-// SaveResult is a paid mutator transaction binding the contract method 0x877db67d.
+// SaveResult is a paid mutator transaction binding the contract method 0x836fbaca.
 //
-// Solidity: function saveResult(string executionResult) returns()
-func (_Job *JobTransactor) SaveResult(opts *bind.TransactOpts, executionResult string) (*types.Transaction, error) {
-	return _Job.contract.Transact(opts, "saveResult", executionResult)
+// Solidity: function saveResult(bytes32 exResult1, bytes32 exResult2) returns()
+func (_Jobs *JobsTransactor) SaveResult(opts *bind.TransactOpts, exResult1 [32]byte, exResult2 [32]byte) (*types.Transaction, error) {
+	return _Jobs.contract.Transact(opts, "saveResult", exResult1, exResult2)
 }
 
-// SaveResult is a paid mutator transaction binding the contract method 0x877db67d.
+// SaveResult is a paid mutator transaction binding the contract method 0x836fbaca.
 //
-// Solidity: function saveResult(string executionResult) returns()
-func (_Job *JobSession) SaveResult(executionResult string) (*types.Transaction, error) {
-	return _Job.Contract.SaveResult(&_Job.TransactOpts, executionResult)
+// Solidity: function saveResult(bytes32 exResult1, bytes32 exResult2) returns()
+func (_Jobs *JobsSession) SaveResult(exResult1 [32]byte, exResult2 [32]byte) (*types.Transaction, error) {
+	return _Jobs.Contract.SaveResult(&_Jobs.TransactOpts, exResult1, exResult2)
 }
 
-// SaveResult is a paid mutator transaction binding the contract method 0x877db67d.
+// SaveResult is a paid mutator transaction binding the contract method 0x836fbaca.
 //
-// Solidity: function saveResult(string executionResult) returns()
-func (_Job *JobTransactorSession) SaveResult(executionResult string) (*types.Transaction, error) {
-	return _Job.Contract.SaveResult(&_Job.TransactOpts, executionResult)
+// Solidity: function saveResult(bytes32 exResult1, bytes32 exResult2) returns()
+func (_Jobs *JobsTransactorSession) SaveResult(exResult1 [32]byte, exResult2 [32]byte) (*types.Transaction, error) {
+	return _Jobs.Contract.SaveResult(&_Jobs.TransactOpts, exResult1, exResult2)
 }
 
-// JobJobFailedIterator is returned from FilterJobFailed and is used to iterate over the raw logs and unpacked data for JobFailed events raised by the Job contract.
-type JobJobFailedIterator struct {
-	Event *JobJobFailed // Event containing the contract specifics and raw log
+// JobsJobFailedIterator is returned from FilterJobFailed and is used to iterate over the raw logs and unpacked data for JobFailed events raised by the Jobs contract.
+type JobsJobFailedIterator struct {
+	Event *JobsJobFailed // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -383,7 +383,7 @@ type JobJobFailedIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *JobJobFailedIterator) Next() bool {
+func (it *JobsJobFailedIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -392,7 +392,7 @@ func (it *JobJobFailedIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(JobJobFailed)
+			it.Event = new(JobsJobFailed)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -407,7 +407,7 @@ func (it *JobJobFailedIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(JobJobFailed)
+		it.Event = new(JobsJobFailed)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -423,40 +423,40 @@ func (it *JobJobFailedIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *JobJobFailedIterator) Error() error {
+func (it *JobsJobFailedIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *JobJobFailedIterator) Close() error {
+func (it *JobsJobFailedIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// JobJobFailed represents a JobFailed event raised by the Job contract.
-type JobJobFailed struct {
+// JobsJobFailed represents a JobFailed event raised by the Jobs contract.
+type JobsJobFailed struct {
 	Raw types.Log // Blockchain specific contextual infos
 }
 
 // FilterJobFailed is a free log retrieval operation binding the contract event 0xf6da0b6aaf5c5b2aa1b43736ef16a25b4809e181c3e882b5e55d00b5bd6ac30e.
 //
 // Solidity: event JobFailed()
-func (_Job *JobFilterer) FilterJobFailed(opts *bind.FilterOpts) (*JobJobFailedIterator, error) {
+func (_Jobs *JobsFilterer) FilterJobFailed(opts *bind.FilterOpts) (*JobsJobFailedIterator, error) {
 
-	logs, sub, err := _Job.contract.FilterLogs(opts, "JobFailed")
+	logs, sub, err := _Jobs.contract.FilterLogs(opts, "JobFailed")
 	if err != nil {
 		return nil, err
 	}
-	return &JobJobFailedIterator{contract: _Job.contract, event: "JobFailed", logs: logs, sub: sub}, nil
+	return &JobsJobFailedIterator{contract: _Jobs.contract, event: "JobFailed", logs: logs, sub: sub}, nil
 }
 
 // WatchJobFailed is a free log subscription operation binding the contract event 0xf6da0b6aaf5c5b2aa1b43736ef16a25b4809e181c3e882b5e55d00b5bd6ac30e.
 //
 // Solidity: event JobFailed()
-func (_Job *JobFilterer) WatchJobFailed(opts *bind.WatchOpts, sink chan<- *JobJobFailed) (event.Subscription, error) {
+func (_Jobs *JobsFilterer) WatchJobFailed(opts *bind.WatchOpts, sink chan<- *JobsJobFailed) (event.Subscription, error) {
 
-	logs, sub, err := _Job.contract.WatchLogs(opts, "JobFailed")
+	logs, sub, err := _Jobs.contract.WatchLogs(opts, "JobFailed")
 	if err != nil {
 		return nil, err
 	}
@@ -466,8 +466,8 @@ func (_Job *JobFilterer) WatchJobFailed(opts *bind.WatchOpts, sink chan<- *JobJo
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(JobJobFailed)
-				if err := _Job.contract.UnpackLog(event, "JobFailed", log); err != nil {
+				event := new(JobsJobFailed)
+				if err := _Jobs.contract.UnpackLog(event, "JobFailed", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -491,18 +491,18 @@ func (_Job *JobFilterer) WatchJobFailed(opts *bind.WatchOpts, sink chan<- *JobJo
 // ParseJobFailed is a log parse operation binding the contract event 0xf6da0b6aaf5c5b2aa1b43736ef16a25b4809e181c3e882b5e55d00b5bd6ac30e.
 //
 // Solidity: event JobFailed()
-func (_Job *JobFilterer) ParseJobFailed(log types.Log) (*JobJobFailed, error) {
-	event := new(JobJobFailed)
-	if err := _Job.contract.UnpackLog(event, "JobFailed", log); err != nil {
+func (_Jobs *JobsFilterer) ParseJobFailed(log types.Log) (*JobsJobFailed, error) {
+	event := new(JobsJobFailed)
+	if err := _Jobs.contract.UnpackLog(event, "JobFailed", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
 	return event, nil
 }
 
-// JobJobSucceededIterator is returned from FilterJobSucceeded and is used to iterate over the raw logs and unpacked data for JobSucceeded events raised by the Job contract.
-type JobJobSucceededIterator struct {
-	Event *JobJobSucceeded // Event containing the contract specifics and raw log
+// JobsJobSucceededIterator is returned from FilterJobSucceeded and is used to iterate over the raw logs and unpacked data for JobSucceeded events raised by the Jobs contract.
+type JobsJobSucceededIterator struct {
+	Event *JobsJobSucceeded // Event containing the contract specifics and raw log
 
 	contract *bind.BoundContract // Generic contract to use for unpacking event data
 	event    string              // Event name to use for unpacking event data
@@ -516,7 +516,7 @@ type JobJobSucceededIterator struct {
 // Next advances the iterator to the subsequent event, returning whether there
 // are any more events found. In case of a retrieval or parsing error, false is
 // returned and Error() can be queried for the exact failure.
-func (it *JobJobSucceededIterator) Next() bool {
+func (it *JobsJobSucceededIterator) Next() bool {
 	// If the iterator failed, stop iterating
 	if it.fail != nil {
 		return false
@@ -525,7 +525,7 @@ func (it *JobJobSucceededIterator) Next() bool {
 	if it.done {
 		select {
 		case log := <-it.logs:
-			it.Event = new(JobJobSucceeded)
+			it.Event = new(JobsJobSucceeded)
 			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 				it.fail = err
 				return false
@@ -540,7 +540,7 @@ func (it *JobJobSucceededIterator) Next() bool {
 	// Iterator still in progress, wait for either a data or an error event
 	select {
 	case log := <-it.logs:
-		it.Event = new(JobJobSucceeded)
+		it.Event = new(JobsJobSucceeded)
 		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
 			it.fail = err
 			return false
@@ -556,40 +556,40 @@ func (it *JobJobSucceededIterator) Next() bool {
 }
 
 // Error returns any retrieval or parsing error occurred during filtering.
-func (it *JobJobSucceededIterator) Error() error {
+func (it *JobsJobSucceededIterator) Error() error {
 	return it.fail
 }
 
 // Close terminates the iteration process, releasing any pending underlying
 // resources.
-func (it *JobJobSucceededIterator) Close() error {
+func (it *JobsJobSucceededIterator) Close() error {
 	it.sub.Unsubscribe()
 	return nil
 }
 
-// JobJobSucceeded represents a JobSucceeded event raised by the Job contract.
-type JobJobSucceeded struct {
+// JobsJobSucceeded represents a JobSucceeded event raised by the Jobs contract.
+type JobsJobSucceeded struct {
 	Raw types.Log // Blockchain specific contextual infos
 }
 
 // FilterJobSucceeded is a free log retrieval operation binding the contract event 0x7d6e73dea3a1d0a15642cc83127e32ad9e9fffb137c1567d352780788aa54e2b.
 //
 // Solidity: event JobSucceeded()
-func (_Job *JobFilterer) FilterJobSucceeded(opts *bind.FilterOpts) (*JobJobSucceededIterator, error) {
+func (_Jobs *JobsFilterer) FilterJobSucceeded(opts *bind.FilterOpts) (*JobsJobSucceededIterator, error) {
 
-	logs, sub, err := _Job.contract.FilterLogs(opts, "JobSucceeded")
+	logs, sub, err := _Jobs.contract.FilterLogs(opts, "JobSucceeded")
 	if err != nil {
 		return nil, err
 	}
-	return &JobJobSucceededIterator{contract: _Job.contract, event: "JobSucceeded", logs: logs, sub: sub}, nil
+	return &JobsJobSucceededIterator{contract: _Jobs.contract, event: "JobSucceeded", logs: logs, sub: sub}, nil
 }
 
 // WatchJobSucceeded is a free log subscription operation binding the contract event 0x7d6e73dea3a1d0a15642cc83127e32ad9e9fffb137c1567d352780788aa54e2b.
 //
 // Solidity: event JobSucceeded()
-func (_Job *JobFilterer) WatchJobSucceeded(opts *bind.WatchOpts, sink chan<- *JobJobSucceeded) (event.Subscription, error) {
+func (_Jobs *JobsFilterer) WatchJobSucceeded(opts *bind.WatchOpts, sink chan<- *JobsJobSucceeded) (event.Subscription, error) {
 
-	logs, sub, err := _Job.contract.WatchLogs(opts, "JobSucceeded")
+	logs, sub, err := _Jobs.contract.WatchLogs(opts, "JobSucceeded")
 	if err != nil {
 		return nil, err
 	}
@@ -599,8 +599,8 @@ func (_Job *JobFilterer) WatchJobSucceeded(opts *bind.WatchOpts, sink chan<- *Jo
 			select {
 			case log := <-logs:
 				// New log arrived, parse the event and forward to the user
-				event := new(JobJobSucceeded)
-				if err := _Job.contract.UnpackLog(event, "JobSucceeded", log); err != nil {
+				event := new(JobsJobSucceeded)
+				if err := _Jobs.contract.UnpackLog(event, "JobSucceeded", log); err != nil {
 					return err
 				}
 				event.Raw = log
@@ -624,9 +624,9 @@ func (_Job *JobFilterer) WatchJobSucceeded(opts *bind.WatchOpts, sink chan<- *Jo
 // ParseJobSucceeded is a log parse operation binding the contract event 0x7d6e73dea3a1d0a15642cc83127e32ad9e9fffb137c1567d352780788aa54e2b.
 //
 // Solidity: event JobSucceeded()
-func (_Job *JobFilterer) ParseJobSucceeded(log types.Log) (*JobJobSucceeded, error) {
-	event := new(JobJobSucceeded)
-	if err := _Job.contract.UnpackLog(event, "JobSucceeded", log); err != nil {
+func (_Jobs *JobsFilterer) ParseJobSucceeded(log types.Log) (*JobsJobSucceeded, error) {
+	event := new(JobsJobSucceeded)
+	if err := _Jobs.contract.UnpackLog(event, "JobSucceeded", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log
