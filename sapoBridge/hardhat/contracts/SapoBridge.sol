@@ -8,7 +8,7 @@ import "./SapoJob.sol";
  * @dev     Collect bacalhau jobs requests and send them to a bridge.
  */
 contract SapoBridge {
-    uint constant MAX_UINT = 115792089237316195423570985008687907853269984665640564039457584007913129639935;
+    bytes32 constant MAX_BYTES32 = 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
 
     /**
      * @dev     The owner of the contract.
@@ -117,29 +117,34 @@ contract SapoBridge {
     function bytes64ToString(bytes32 x, bytes32 y) public pure returns (string memory) {
         bytes memory bytesString = new bytes(64);
         uint charCount = 0;
+        bytes32 mask = MAX_BYTES32;
+        uint shift = 0;
 
         for (uint j = 0; j < 32; j++) {
-            uint shift = 8 * j;
-            uint andOp = shift == 0 ? MAX_UINT : 2 ** (256 - 8 * j) - 1;
-            uint timesOp = 2 ** shift;
-            bytes1 char = bytes1(bytes32(uint(x & bytes32(andOp)) * timesOp));
+            bytes1 char = bytes1((x & mask) << shift);
 
             if (char != 0) {
                 bytesString[charCount] = char;
                 charCount++;
             }
+
+            shift += 8;
+            mask = mask >> 8;
         }
 
+        mask = MAX_BYTES32;
+        shift = 0;
+
         for (uint j = 0; j < 32; j++) {
-            uint shift = 8 * j;
-            uint andOp = shift == 0 ? MAX_UINT : 2 ** (256 - 8 * j) - 1;
-            uint timesOp = 2 ** shift;
-            bytes1 char = bytes1(bytes32(uint(y & bytes32(andOp)) * timesOp));
+            bytes1 char = bytes1((y & mask) << shift);
 
             if (char != 0) {
                 bytesString[charCount] = char;
                 charCount++;
             }
+
+            shift += 8;
+            mask = mask >> 8;
         }
 
         bytes memory bytesStringTrimmed = new bytes(charCount);
