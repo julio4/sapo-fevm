@@ -12,7 +12,7 @@ import { useContractRead } from "wagmi";
 export default function Home() {
   return (
     <Layout>
-      <Flex w="25%">
+      <Flex w="70%">
         <DaoNavBar />
       </Flex>
       <Flex w="50%" direction="column" p={12} rounded={6} alignItems="center">
