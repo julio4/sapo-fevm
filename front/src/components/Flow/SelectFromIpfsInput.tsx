@@ -69,7 +69,15 @@ export default function SelectFromDaoInput() {
           placeholder="Enter CID"
         ></Input>
       </Flex>
-      <Button onClick={() => setCid(cidInput)}>Load</Button>
+      <Button
+        bgGradient={useColorModeValue(
+          "linear(to-r, teal.100, green.100)",
+          "linear(to-r, teal.900, green.900)"
+        )}
+        onClick={() => setCid(cidInput)}
+      >
+        Load
+      </Button>
     </Flex>
   );
 }

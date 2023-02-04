@@ -113,7 +113,16 @@ export default function SelectFromDaoInput() {
           placeholder="Enter DAO Address"
         ></Input>
       </Flex>
-      <Button onClick={() => setdaoAddress(daoInput)}>Load</Button>
+      <Button
+        bgGradient={useColorModeValue(
+          "linear(to-r, teal.100, green.100)",
+          "linear(to-r, teal.900, green.900)"
+        )}
+        color={useColorModeValue("gray.700", "gray.200")}
+        onClick={() => setdaoAddress(daoInput)}
+      >
+        Load
+      </Button>
     </Flex>
   );
 }
