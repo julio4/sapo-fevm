@@ -65,7 +65,15 @@ func test_call() {
 		log.Fatal(err)
 	}
 
-	tx, err := contract.Request(opts, "cid here")
+	var cid1 [32]byte
+	var cid2 [32]byte
+	cid1[0] = 'h'
+	cid1[1] = 'e'
+	cid1[2] = 'l'
+	cid1[3] = 'l'
+	cid2[0] = 'o'
+
+	tx, err := contract.Request(opts, cid1, cid2)
 	if err != nil {
 		log.Fatal(err)
 	}
