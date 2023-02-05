@@ -3,36 +3,18 @@ import { useState } from "react";
 import { JobProvider } from "@/components/Context/JobContext";
 import Layout from "@/components/Layout/layout";
 import {
-  Text,
   Flex,
-  Box,
-  useColorModeValue,
-  Heading,
-  Divider,
-  Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
 } from "@chakra-ui/react";
 
-import { CheckCircleIcon, TimeIcon, WarningIcon } from "@chakra-ui/icons";
 import { useContractRead, useAccount } from "wagmi";
-import { useDisclosure, defineStyleConfig } from "@chakra-ui/react";
-import JobResult from "@/components/Jobs/JobResult";
 import JobsList from "@/components/Jobs/JobsList";
 import JobDetails from "@/components/Jobs/JobDetails";
 import JobSummary from "@/components/Jobs/JobSummary";
+import AddressSapoBridge from "@/constants/AddressSapoBridge.json";
 
 export default function JobsHistory() {
   const [selectedJob, setSelectedJob] = useState<JobSummary | null>(null);
-  const [listJobsAddress, setListJobsAddress] = useState<string[]>([]);
-  const [currentJobAddress, setCurrentJobAddress] = useState<string>("");
   const { address, isConnecting, isDisconnected } = useAccount();
-  const bridgeAddress = "0x40cBC46277b1a875027649D97239f65e5090D86B";
 
   // const jobsList: JobResult[] = [];
 
@@ -42,7 +24,7 @@ export default function JobsHistory() {
   // Step 4: Push new job result object to jobsList
 
   let { data, isError, isLoading } = useContractRead({
-    address: bridgeAddress,
+    address: AddressSapoBridge.address,
     abi: [
       {
         inputs: [{ internalType: "address", name: "user", type: "address" }],
