@@ -11,8 +11,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-import Image from "next/image";
-import AbiSapoBridge from "../../constants/AbiSapoBridge.json";
+import AbiSapoBridge from "@/constants/AbiSapoBridge.json";
 import * as React from "react";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 
@@ -23,15 +22,14 @@ export default function OcrCard() {
   const [cidImage, setCidImage] = React.useState("");
   const [cidText, setCidText] = React.useState("");
   const [showCid, setShowCid] = React.useState(false);
-  const [imgArg, setImgArg] = React.useState("");
 
   const handleClick = async () => {};
 
   const { config } = usePrepareContractWrite({
-    address: "0x3225Da4Be30547E9a5c1cb6b47851B8f3BCeF7ba",
+    address: "0x91c66B42bAC7b0d28Dd350a98DE327d8B07A31ad",
     abi: AbiSapoBridge,
     functionName: "request",
-    args: [cid, imgArg],
+    args: [cid],
   });
   const { data, isLoading, isSuccess, write } = useContractWrite(config);
 
@@ -52,10 +50,6 @@ export default function OcrCard() {
           <Input
             onChange={(e) => setCid(e.target.value)}
             placeholder="Enter CID to process"
-          />
-          <Input
-            onChange={(e) => setImgArg(e.target.value)}
-            placeholder="Enter Image"
           />
         </CardBody>
 

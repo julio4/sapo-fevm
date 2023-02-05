@@ -1,11 +1,15 @@
-import Layout from '../../components/layout'
-
-import { Text } from '@chakra-ui/react'
+import { JobProvider } from '@/components/Context/JobContext'
+import Layout from '@/components/Layout/layout'
+import Sidebar from '@/components/Sidebars/JobsSidebar'
+import JobRequestFlow from '@/components/Flow/JobRequestFlow'
 
 export default function Home() {
   return (
-    <Layout>
-      <Text>Home</Text>
-    </Layout>
+      <JobProvider>
+        <Layout>
+          <Sidebar />
+          <JobRequestFlow />
+        </Layout>
+      </JobProvider>
   )
 }

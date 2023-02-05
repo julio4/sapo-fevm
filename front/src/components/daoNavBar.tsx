@@ -13,68 +13,85 @@ import {
   Flex,
 } from "@chakra-ui/react";
 
-import TextModal from "./textModal";
-import ImageModal from "./imageModal";
 import { useContractRead } from "wagmi";
 
-import * as React from "react";
+import { useEffect, useState } from "react";
 
 export default function DaoNavBar() {
-  const [daoAddress, setdaoAddress] = React.useState("");
-  const [cids, setCids] = React.useState<string[]>([]);
-  const [imgCids, setImgCids] = React.useState<string[]>([]);
-  const [textCids, setTextCids] = React.useState<string[]>([]);
+  const [daoAddress, setdaoAddress] = useState("");
+  const [daoInput, setdaoInput] = useState("");
+
+  const [cids, setCids] = useState<string[]>([]);
+  const [rawCids, setRawCids] = useState<string[]>([]);
+  const [cidType, setCidType] = useState<string[][]>([]);
+
 
   let { data, isError, isLoading } = useContractRead({
     address: daoAddress,
     abi: [
       {
-        name: "getCidStored",
-        type: "function",
-        stateMutability: "view",
         inputs: [],
+        name: "getAllCids",
         outputs: [
           {
-            internalType: "string[]",
+            internalType: "bytes[]",
             name: "",
-            type: "string[]",
+            type: "bytes[]",
           },
         ],
+        stateMutability: "view",
+        type: "function",
       },
     ],
-    functionName: "getCidStored",
-  });
-
-  const sortAndFormatCids = async () => {
-    let newImgCids: string[] = [];
-    let newTextCids: string[] = [];
-    for (const cid of cids) {
-      const requestURL =
-        "https://olive-absolute-silverfish-298.mypinata.cloud/ipfs/" + cid;
-      const cidUriResponse = await (await fetch(requestURL)).json();
-      if (cidUriResponse.image) {
-        console.log("its an image");
-        newImgCids = newImgCids.concat(cid);
-      } else if (cidUriResponse.text) {
-        console.log("its a text");
-
-        newTextCids = newTextCids.concat(cid);
-      }
+    functionName: "getAllCids",
+    onSuccess(data) {
+      setRawCids([...data]);
     }
-    setImgCids(newImgCids);
-    setTextCids(newTextCids);
+  })
+
+  function hex2a(h: any) {
+    var hex: string = h.toString(); //force conversion
+    var str = "";
+    for (var i = 0; i < hex.length; i += 2)
+      str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    return str.substring(1);
+  }
+
+  const convertToCids = () => {
+    let newCids: string[] = [];
+    rawCids.forEach((raw) => {
+      newCids.push(hex2a(raw));
+    });
+    setCids(newCids);
   };
 
-  React.useEffect(() => {
-    if (data) {
-      setCids([...data]);
-    }
-    sortAndFormatCids;
-  }, [data]);
+  const getCidType = async () => {
+    let newTypeCids: string[][] = [];
 
-  const discoverDAO = async () => {
-    await sortAndFormatCids();
+    cids.forEach(async (cid) => {
+      let file = "https://ipfs.io/ipfs/" + cid;
+      var req = await fetch(file, { method: "HEAD" });
+      let type = req.headers.get("content-type");
+      type = type || "undefined";
+      newTypeCids.push([cid, type]);
+    });
+    setCidType(newTypeCids);
   };
+
+  useEffect(() => {
+    console.log("Raw CIDS: ", rawCids);
+    convertToCids();
+  }, [rawCids]);
+
+  useEffect(() => {
+    console.log("Clean CIDS: ", cids);
+    getCidType();
+  }, [cids]);
+
+  useEffect(() => {
+    console.log("Cid types:", cidType);
+  }, [cidType]);
+  
   return (
     <Card overflow="hidden">
       <CardHeader>
@@ -89,37 +106,29 @@ export default function DaoNavBar() {
             </Heading>
             <Input
               mb={3}
-              onChange={(e) => setdaoAddress(e.target.value)}
+              onChange={(e) => setdaoInput(e.target.value)}
               placeholder="Enter DAO Adress"
             />
-            <Button onClick={discoverDAO}>See CIDs</Button>
+            <Button onClick={() => setdaoAddress(daoInput)}>See CIDs</Button>
           </Box>
+
           <Box overflow="hidden">
             <Heading size="s" mb={3} textTransform="uppercase">
-              Text Cids
+              Raw Cids
             </Heading>
             <Flex direction="column" p={0} rounded={6} alignItems="start">
-              {textCids.map((cid, index) => (
-                <React.Fragment key={index}>
-                  <Text fontSize="sm">{cid} </Text>
-                </React.Fragment>
+              {cids.map((cid, index) => (
+                <Text fontSize="sm" key={index}>
+                  {index}. {cid}{" "}
+                </Text>
               ))}
             </Flex>
           </Box>
+
           <Box overflow="hidden">
-            <Heading size="s" textTransform="uppercase" mb={3}>
-              Image CIDs
+            <Heading size="s" mb={3} textTransform="uppercase">
+              Type Cids
             </Heading>
-            {/* <Text pt="2" fontSize="sm">
-              See a detailed analysis of all your business clients.
-            </Text> */}
-            <Flex direction="column" p={0} rounded={6} alignItems="start">
-              {imgCids.map((cid, index) => (
-                <React.Fragment key={index}>
-                  <Text fontSize="sm">{cid} </Text>
-                </React.Fragment>
-              ))}
-            </Flex>
           </Box>
         </Stack>
       </CardBody>

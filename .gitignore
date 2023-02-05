@@ -1,6 +1,9 @@
 front/.next/*
 front/node_modules/*
 front/package-lock.json
-sapoBridge/sapoBridge
 
+sapoBridge/sapoBridge
+sapoBridge/wallets/bridgeaccount
+sapoBridge/sapoBridge
 bridgeaccount
+front/next.config.js
