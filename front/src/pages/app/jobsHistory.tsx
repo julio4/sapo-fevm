@@ -22,7 +22,7 @@ import {
 } from "@chakra-ui/react";
 
 import { CheckCircleIcon, TimeIcon, WarningIcon } from "@chakra-ui/icons";
-
+import { useContractRead, useAccount } from "wagmi";
 import { useDisclosure, defineStyleConfig } from "@chakra-ui/react";
 
 const statusText = {
@@ -138,13 +138,7 @@ const JobsList = ({
           Jobs List
         </Heading>
       </Box>
-      <Button
-        onClick={() => {
-          console.log("allResults", jobs);
-        }}
-      >
-        TEST
-      </Button>
+
       <Divider />
 
       {jobs.map((job) => (
@@ -196,8 +190,6 @@ const JobDetails = ({ job }: { job: JobResult | null }) => {
   const [modalContent, setModalContent] = useState("");
 
   function handleClickShow(from: string) {
-    console.log("from:", from);
-    console.log(from === "outputs");
     if (from == "result") {
       setModalTitle("Result");
       setModalContent(job?.result);
@@ -338,6 +330,79 @@ const JobDetails = ({ job }: { job: JobResult | null }) => {
 
 export default function JobsHistory() {
   const [job, setJob] = useState<JobResult | null>(null);
+  const [listJobsAddress, setListJobsAddress] = useState<string[]>([]);
+  const [currentJobAddress, setCurrentJobAddress] = useState<string>("");
+  const { address, isConnecting, isDisconnected } = useAccount();
+  // const jobsList: JobResult[] = [];
+
+  // Step 1: Get list of jobs address with readContract getJobs
+  // Step 2: Get job result (cid) with readContract getResult
+  // Step 3: Create a new job result object with all data, and result is cid
+  // Step 4: Push new job result object to jobsList
+
+  function handleGetResultSuccess(result: string) {
+    let newJobResult = {
+      id: job?.id,
+      address: job?.address,
+      status: job?.status,
+      result: result,
+      exitCode: job?.exitCode,
+      outputs: job?.outputs,
+      stderr: job?.stderr,
+      stdout: job?.stdout,
+    };
+    // jobsList.push(newJobResult);
+    console.log("newJobResult", newJobResult);
+  }
+
+  function handleSuccessRead(data) {
+    setListJobsAddress(data);
+    listJobsAddress.forEach((jobAddress) => {
+      setCurrentJobAddress(jobAddress);
+      console.log("jobAddress", jobAddress);
+    });
+  }
+
+  let { result, isError, isLoading } = useContractRead({
+    address: currentJobAddress,
+    abi: [
+      {
+        inputs: [],
+        name: "getResult",
+        outputs: [
+          {
+            internalType: "string",
+            name: "",
+            type: "string",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+    ],
+    functionName: "getResult",
+    onSuccess(result) {
+      handleGetResultSuccess(result);
+    },
+  });
+
+  let { data } = useContractRead({
+    address: "0x0621B6d8d05CA0158429371ADCE09586965BA299",
+    abi: [
+      {
+        inputs: [{ internalType: "address", name: "user", type: "address" }],
+        name: "getJobs",
+        outputs: [{ internalType: "address[]", name: "", type: "address[]" }],
+        stateMutability: "view",
+        type: "function",
+      },
+    ],
+    args: [address],
+    functionName: "getJobs",
+    onSuccess(data) {
+      handleSuccessRead(data);
+    },
+  });
 
   return (
     <JobProvider>
