@@ -20,7 +20,6 @@ const HeroItem = ({ page, img, imgDark, heading, desc, left }) => (
     alignItems="center"
     transform={"translateY(-" + (page*100).toString() + "%)"}
     transition="transform 0.5s"
-    bgGradient={useColorModeValue("","radial(green.800 5%, whiteAlpha.200 95%)")}
   >
     <Flex direction="row" p={12} rounded={6} alignItems="center" justifyContent="space-evenly" w="full" gap={4}>
       {left ? <Image src={useColorModeValue(img, imgDark)} alt="Connected" width={600} /> : null}
@@ -82,12 +81,13 @@ export default function HeroPage() {
   }, [thresold]);
 
   return (
-    <>
+    <Box height={"200vh"}
+        bgGradient={useColorModeValue("radial(green.100 5%, whiteAlpha.200 95%)","radial(green.800 5%, whiteAlpha.200 95%)")}
+        >
       <Flex
         height="100vh"
         justifyContent="center"
         alignItems="center"
-        bgGradient={useColorModeValue("radial(green.100 5%, whiteAlpha.200 95%)","radial(green.800 5%, whiteAlpha.200 95%)")}
         transform={"translateY(-" + (page*100).toString() + "%)"}
         transition="transform 0.5s"
         >
@@ -155,6 +155,6 @@ export default function HeroPage() {
         p={4}>
         <ModeToggler />
       </Box>
-    </>
+    </Box>
   )
 }

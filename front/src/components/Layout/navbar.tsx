@@ -31,7 +31,7 @@ export default function Nav() {
   return (
     <>
       <Box
-        bgGradient={useColorModeValue('linear(to-r, teal.100, green.100)', 'linear(to-r, teal.900, green.900)')}
+        bgGradient={useColorModeValue('linear(to-r, teal.100, green.100)', 'linear(to-r, teal.800, green.800)')}
         borderBottomWidth={1}
         borderStyle={'solid'}
         borderColor={useColorModeValue('gray.200', 'gray.900')}
@@ -41,7 +41,7 @@ export default function Nav() {
           
           <Box>
             <Link href='/app' replace>
-              <Heading as='h1' size='xl' ml={2}>🐸 Sapo</Heading>
+              <Heading as='h1' fontFamily='system-ui' size='xl' ml={2}>🐸 Sapo</Heading>
             </Link>
           </Box>
 

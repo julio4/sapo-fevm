@@ -5,11 +5,11 @@ import JobRequestFlow from '@/components/Flow/JobRequestFlow'
 
 export default function Home() {
   return (
-    <JobProvider>
-      <Layout>
-        <Sidebar />
-        <JobRequestFlow />
-      </Layout>
-    </JobProvider>
+      <JobProvider>
+        <Layout>
+          <Sidebar />
+          <JobRequestFlow />
+        </Layout>
+      </JobProvider>
   )
 }
