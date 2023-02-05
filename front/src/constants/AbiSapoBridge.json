@@ -21,13 +21,43 @@
       },
       {
         "indexed": false,
-        "internalType": "string",
-        "name": "cid",
-        "type": "string"
+        "internalType": "bytes32",
+        "name": "cid1",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "cid2",
+        "type": "bytes32"
       }
     ],
     "name": "JobExecutionRequest",
     "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "x",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "y",
+        "type": "bytes32"
+      }
+    ],
+    "name": "bytes64ToString",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
   },
   {
     "inputs": [
@@ -40,6 +70,19 @@
     "name": "failAndRefund",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getBridgeAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -64,14 +107,19 @@
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "cid",
-        "type": "string"
+        "internalType": "bytes32",
+        "name": "cid1",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "cid2",
+        "type": "bytes32"
       }
     ],
     "name": "request",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -82,9 +130,14 @@
         "type": "address"
       },
       {
-        "internalType": "string",
-        "name": "result",
-        "type": "string"
+        "internalType": "bytes32",
+        "name": "result1",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "result2",
+        "type": "bytes32"
       }
     ],
     "name": "saveResult",

@@ -76,7 +76,7 @@ export default function SelectFromDaoInput() {
       const timeoutPromise = new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve({ cid: `ERROR: ${cid}`, size: null, type: null });
-        }, 1000);
+        }, 5000);
       });
 
       const result = await Promise.race([fetchPromise, timeoutPromise]);
