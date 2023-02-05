@@ -80,6 +80,22 @@ const FilesTable = ({ files }) => {
     return 1;
   };
 
+  const sortFiles = (files) => {
+    return files.sort((a, b) => {
+      if (a.cid.includes("ERROR")) {
+        return 1;
+      } else if (b.cid.includes("ERROR")) {
+        return -1;
+      }
+      if (!a.type.includes(job.inputTypes)) {
+        return 1;
+      } else if (!b.type.includes(job.inputTypes)) {
+        return -1;
+      }
+      return 0;
+    });
+  };
+
   return (
     <TableContainer>
       <Table size="sm">
@@ -92,7 +108,7 @@ const FilesTable = ({ files }) => {
           </Tr>
         </Thead>
         <Tbody>
-          {files
+          {sortFiles(files)
             .filter((file) => {
               if (seeIncompatibleFiles) {
                 return true;
