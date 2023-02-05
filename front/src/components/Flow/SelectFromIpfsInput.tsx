@@ -31,19 +31,23 @@ export default function SelectFromDaoInput() {
       const fetchPromise = fetch(file, { method: "HEAD" });
       const timeoutPromise = new Promise((resolve, reject) => {
         setTimeout(() => {
-          reject(`ERROR: ${cid}`);
+          reject(new Error(`ERROR: ${cid}`));
         }, 2000);
       });
       const result = await Promise.race([fetchPromise, timeoutPromise]);
-      let size = result.headers.get("content-length");
-      size = size || null;
-      let type = result.headers.get("content-type");
-      type = type || "undefined";
-      newAllFiles.push({
-        cid,
-        type,
-        size,
-      });
+      if (result.ok) {
+        let size = result.headers.get("content-length");
+        size = size || null;
+        let type = result.headers.get("content-type");
+        type = type || "undefined";
+        newAllFiles.push({
+          cid,
+          type,
+          size,
+        });
+      } else {
+        throw new Error(`ERROR: ${cid}`);
+      }
     } catch (error) {
       newAllFiles.push({
         cid: `ERROR: ${cid}`,
@@ -51,7 +55,6 @@ export default function SelectFromDaoInput() {
         size: null,
       });
     }
-
     setAllFiles(newAllFiles);
   };
 
