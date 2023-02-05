@@ -106,12 +106,11 @@ func (r *RealContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 		}
 
 		// Get specs from cid
-		// TODO make this asynchronous
-		// lightSpecs, err := parseSpecs(recvEvent.Cid) // TODO: uncomment
-		lightSpecs, err := dummySpecs(cid)
+		// lightSpecs, err := ParseSpecs(cid)
+		lightSpecs, err := DummySpecs(cid) // TODO: delete
 
 		if err != nil { // retry?
-			log.Ctx(ctx).Error().Err(err).Send()
+			log.Ctx(ctx).Error().Err(err).Msg("Input CID parsing failed")
 			continue
 		}
 
@@ -120,15 +119,15 @@ func (r *RealContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 			Verifier:  model.VerifierNoop,
 			Publisher: model.PublisherIpfs,
 			Docker: model.JobSpecDocker{
-				Image:      lightSpecs.image,
-				Entrypoint: lightSpecs.params,
+				Image:      lightSpecs.Image,
+				Entrypoint: lightSpecs.RunParams,
 			},
 			Inputs: []model.StorageSpec{
 				{
 					StorageSource: model.StorageSourceIPFS,
 					Name:          "inputs",
 					Path:          "/inputs",
-					CID:           lightSpecs.inputsCid,
+					CID:           lightSpecs.InputsCid,
 				},
 			},
 			Outputs: []model.StorageSpec{
