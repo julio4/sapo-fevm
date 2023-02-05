@@ -17,6 +17,13 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
 } from "@chakra-ui/react";
 
 import {
@@ -30,6 +37,7 @@ import SelectFromDaoInput from "@/components/Flow/SelectFromDaoInput";
 import SelectFromIpfsInput from "@/components/Flow/SelectFromIpfsInput";
 import { useJobContext, File } from "@/components/Context/JobContext";
 import { useEffect, useState } from "react";
+import { useDisclosure } from "@chakra-ui/react";
 
 const NoFileFound = () => {
   return (
@@ -69,7 +77,10 @@ const FilesTable = ({ files }) => {
     seeIncompatibleFiles,
     setSeeIncompatibleFiles,
   } = useJobContext();
-  const [showWarning, setShowWarning] = useState(false);
+  const [showWarning, setShowWarning] = useState(true);
+  const [warningTitle, setWarningTitle] = useState("");
+  const [warningMessage, setWarningMessage] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const getOpacity = (file, job) => {
     if (file.cid.includes("ERROR")) {
@@ -105,8 +116,61 @@ const FilesTable = ({ files }) => {
     );
   }
 
+  const handleClick = (file) => {
+    if (!job) return;
+    if (showWarning) {
+      if (file.cid.includes("ERROR")) {
+        setWarningTitle("Warning !");
+        setWarningMessage(
+          "This file is not reachable, it may have been deleted or moved"
+        );
+        onOpen();
+        return;
+      } else if (!file.type?.includes(job?.inputTypes)) {
+        setWarningTitle("Warning !");
+        setWarningMessage(
+          "This file is not compatible with the job, please select another file"
+        );
+        onOpen();
+        return;
+      }
+    }
+    setJobRequest({
+      ...jobRequest,
+      job: job,
+      usrInput: file,
+    });
+    setStep(2);
+  };
+
   return (
     <TableContainer>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{warningTitle}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text>{warningMessage}</Text>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setShowWarning(false);
+                onClose();
+              }}
+            >
+              Do not show me again
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
       <Table size="sm">
         <Thead>
           <Tr>
@@ -134,31 +198,7 @@ const FilesTable = ({ files }) => {
                   cursor: "pointer",
                   bg: useColorModeValue("green.100", "green.900"),
                 }}
-                onClick={() => {
-                  if (!job) return;
-                  if (file.cid.includes("ERROR")) {
-                    if (!showWarning) {
-                      alert("Warning, this file is not reachable");
-                      setShowWarning(true);
-                      return;
-                    }
-                  }
-                  if (!file.type?.includes(job?.inputTypes)) {
-                    if (!showWarning) {
-                      alert(
-                        "Warning, this file is not compatible with the job"
-                      );
-                      setShowWarning(true);
-                      return;
-                    }
-                  }
-                  setJobRequest({
-                    ...jobRequest,
-                    job: job,
-                    usrInput: file,
-                  });
-                  setStep(2);
-                }}
+                onClick={() => handleClick(file)}
               >
                 <Td
                   _hover={{ transform: "scale(1.01)" }}
