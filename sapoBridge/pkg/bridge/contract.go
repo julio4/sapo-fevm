@@ -44,14 +44,21 @@ func (r *RealContract) Complete(ctx context.Context, event BacalhauJobCompletedE
 		return event, context.Canceled
 	}
 
+	log.Ctx(ctx).Debug().
+		Str("jobAddress", event.Addr().Hex()).
+		Bytes("jobId1", jobId1[:]).
+		Bytes("jobId2", jobId2[:]).
+		Msg("Saving results refunding initiator")
+
 	_, err := r.contract.SaveResult(r.transact, event.Addr(), jobId1, jobId2)
 
 	if err != nil {
-		log.Ctx(ctx).Debug().Err(err).Msg("Result saving of completed job has failed")
+		log.Ctx(ctx).Debug().
+			Err(err).
+			Msg("Result saving of completed job has failed")
 		return event, context.Canceled
 	}
 
-	log.Ctx(ctx).Debug().Msg("Saved result and partially refunded initiator")
 	return event.Paid(), nil
 }
 

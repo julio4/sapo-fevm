@@ -70,7 +70,7 @@ func test_call() {
 
 	log.Print("Preparing transaction")
 
-	jobAddr := common.HexToAddress("0x3025090DD29f20B9308AD1eBC87aAf22Fb47B428")
+	jobAddr := common.HexToAddress("0x49e6dce29e388e2d8944e644d63754cF4A5cCEea")
 	jobId := "aaaabaaacaaadaaaeaaafaaagaaahaaaiaaajaaakaaal"
 	cid1, err1 := bridge.Pack(jobId[:32])
 	cid2, err2 := bridge.Pack(jobId[32:])
@@ -88,6 +88,7 @@ func test_call() {
 	tx, err := contract.SaveResult(opts, jobAddr, cid1, cid2)
 
 	if err != nil {
+		log.Print("Error has occurred during transaction ", tx)
 		log.Fatal(err)
 	}
 
