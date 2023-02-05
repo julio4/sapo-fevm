@@ -50,14 +50,16 @@ func (r *RealContract) Complete(ctx context.Context, event BacalhauJobCompletedE
 		return event, context.Canceled
 	}
 
-	_, err := r.contract.SaveResult(r.transact, event.Addr(), jobId1, jobId2)
+	tx, err := r.contract.SaveResult(r.transact, event.Addr(), jobId1, jobId2)
 
 	if err != nil {
 		log.Ctx(localCtx).Err(err).Msg("Error in saveResult transaction")
 		return event, context.Canceled
 	}
 
-	log.Ctx(localCtx).Debug().Msg("Successfully completed saveResult transaction")
+	log.Ctx(localCtx).Debug().
+		Stringer("transactionId", tx.Hash()).
+		Msg("Successfully completed saveResult transaction")
 
 	return event.Paid(), nil
 }
@@ -106,8 +108,8 @@ func (r *RealContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 		}
 
 		// Get specs from cid
-		// lightSpecs, err := ParseSpecs(cid)
-		lightSpecs, err := DummySpecs(cid) // TODO: delete
+		lightSpecs, err := ParseSpecs(cid)
+		// lightSpecs, err := DummySpecs(cid) // TODO: delete
 
 		if err != nil { // retry?
 			log.Ctx(ctx).Error().Err(err).Msg("Input CID parsing failed")
@@ -160,7 +162,7 @@ func (r *RealContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 // Refund implements SmartContract
 func (r *RealContract) Refund(ctx context.Context, e ContractFailedEvent) (ContractRefundedEvent, error) {
 	// TODO refund
-	_, err := r.contract.FailAndRefund(r.transact, e.Addr())
+	tx, err := r.contract.FailAndRefund(r.transact, e.Addr())
 
 	localCtx := log.Ctx(ctx).With().
 		Str("jobAddress", e.Addr().Hex()).
@@ -171,7 +173,10 @@ func (r *RealContract) Refund(ctx context.Context, e ContractFailedEvent) (Contr
 		return e, context.Canceled
 	}
 
-	log.Ctx(localCtx).Debug().Msg("Job failed. Successfully refunded user")
+	log.Ctx(localCtx).Debug().
+		Stringer("transactionId", tx.Hash()).
+		Msg("Job failed. Successfully refunded user")
+
 	return e.Refunded(), nil
 }
 
