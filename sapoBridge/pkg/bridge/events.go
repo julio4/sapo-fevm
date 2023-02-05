@@ -36,6 +36,7 @@ func OrderStates() [7]OrderState {
 type Event interface {
 	OrderId() common.Hash
 	OrderState() OrderState
+	Addr() common.Address
 }
 
 type Retryable interface {
@@ -54,7 +55,6 @@ type ContractSubmittedEvent interface {
 
 	Failed() ContractFailedEvent
 	JobCreated(*model.Job) BacalhauJobRunningEvent
-	Addr() common.Address
 }
 
 type BacalhauJobRunningEvent interface {

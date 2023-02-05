@@ -156,6 +156,7 @@ func (workflow *Workflow) ProcessEvent(ctx context.Context, event Event) (result
 	ctx = log.Ctx(ctx).With().
 		Stringer("id", event.OrderId()).
 		Stringer("state", event.OrderState()).
+		Str("job address", event.Addr().Hex()).
 		Logger().WithContext(ctx)
 
 	log.Ctx(ctx).Trace().Msg("Process event")
