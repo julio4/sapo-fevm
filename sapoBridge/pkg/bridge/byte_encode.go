@@ -4,7 +4,8 @@ import (
 	"errors"
 )
 
-func unpack(bytes [32]byte) string {
+// Unpack a byte array into a string (ignore \x00)
+func Unpack(bytes [32]byte) string {
 	var res string = ""
 
 	for _, b := range bytes {
@@ -16,13 +17,15 @@ func unpack(bytes [32]byte) string {
 	return res
 }
 
-// dummy specs for debugging
-func pack(str string) (res [32]byte, err error) {
+// Pack a string in a byte array. Returns an error
+// if the string is longer than 32 characters
+func Pack(str string) (res [32]byte, err error) {
 	if len(str) > 32 {
 		err = errors.New("String is too large to be packed in bytes32")
 		return
 	}
 
-	copy([]byte(str)[:], res[:32])
+	bytes := []byte(str)
+	copy(res[:32], bytes[:])
 	return
 }
