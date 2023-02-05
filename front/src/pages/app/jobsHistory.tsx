@@ -32,6 +32,7 @@ export default function JobsHistory() {
   const [listJobsAddress, setListJobsAddress] = useState<string[]>([]);
   const [currentJobAddress, setCurrentJobAddress] = useState<string>("");
   const { address, isConnecting, isDisconnected } = useAccount();
+  const bridgeAddress = "0x40cBC46277b1a875027649D97239f65e5090D86B";
 
   // const jobsList: JobResult[] = [];
 
@@ -41,7 +42,7 @@ export default function JobsHistory() {
   // Step 4: Push new job result object to jobsList
 
   let { data, isError, isLoading } = useContractRead({
-    address: "0x0621B6d8d05CA0158429371ADCE09586965BA299",
+    address: bridgeAddress,
     abi: [
       {
         inputs: [{ internalType: "address", name: "user", type: "address" }],
@@ -51,7 +52,7 @@ export default function JobsHistory() {
         type: "function",
       },
     ],
-    args: ["0x07705e0fFdc102e6144e22261477B4cE46Da350A"],
+    args: [address],
     functionName: "getJobs",
   });
 

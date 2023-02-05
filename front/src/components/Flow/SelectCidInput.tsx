@@ -86,8 +86,7 @@ const FilesTable = ({ files }) => {
     if (file.cid.includes("ERROR")) {
       return 0.4;
     } else if (
-      !file.type.includes(job.inputTypes) &&
-      "all" in job?.inputTypes
+      !(job.inputTypes.includes("all") || job.inputTypes.some(ft => file.type.includes(ft)))
     ) {
       return 0.4;
     }
@@ -130,8 +129,7 @@ const FilesTable = ({ files }) => {
         onOpen();
         return;
       } else if (
-        !file.type?.includes(job?.inputTypes) &&
-        "all" in job?.inputTypes
+        !(job.inputTypes.includes("all") || job.inputTypes.some(ft => file.type.includes(ft)))
       ) {
         setWarningTitle("Warning !");
         setWarningMessage(
@@ -195,7 +193,7 @@ const FilesTable = ({ files }) => {
                 return false;
               }
               return (
-                file.type?.includes(job?.inputTypes) ||
+                job?.inputTypes.some(ft => file.type?.includes(ft)) ||
                 job?.inputTypes.includes("all")
               );
             })
@@ -218,11 +216,10 @@ const FilesTable = ({ files }) => {
                 >
                   {file.cid.includes("ERROR") ? (
                     <WarningTwoIcon size="20px" color={"red.500"} />
-                  ) : !file.type.includes(job.inputTypes) &&
-                    "all" in job?.inputTypes ? (
-                    <WarningIcon size="20px" color={"yellow.500"} />
-                  ) : (
+                  ) : (job.inputTypes.includes("all") || job.inputTypes.some(ft => file.type.includes(ft))) ? (
                     <CheckIcon size="20px" color={"green.500"} />
+                  ) : (
+                    <WarningIcon size="20px" color={"yellow.500"} />
                   )}
                 </Td>
                 <Td

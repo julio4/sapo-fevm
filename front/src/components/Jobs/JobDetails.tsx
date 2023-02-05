@@ -26,15 +26,15 @@ const statusTextIcon = [
   (
     <>
       {" "}
-      Completed
-      <CheckCircleIcon ml={2} size="20px" color={"green.500"} />
+      Pending
+      <TimeIcon ml={2} size="20px" color={"blue.500"} />
     </>
   ),
   (
     <>
       {" "}
-      Pending
-      <TimeIcon ml={2} size="20px" color={"blue.500"} />
+      Completed
+      <CheckCircleIcon ml={2} size="20px" color={"green.500"} />
     </>
   ),
   (
@@ -46,7 +46,7 @@ const statusTextIcon = [
   ),
 ];
 
-const JobDetails = ({ job }: { job: JobResult | null }) => {
+const JobDetails = ({ job }: { job: JobSummary | null }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [modalTitle, setModalTitle] = useState("");
   const [modalContent, setModalContent] = useState("");
@@ -90,7 +90,7 @@ const JobDetails = ({ job }: { job: JobResult | null }) => {
 
       <Box px={4} py={2}>
         <Text>
-          <span style={styleDetail}>Job ID:</span> {job?.id}
+          <span style={styleDetail}>Job ID:</span> {job ? job.id : "no job"}
         </Text>
         <Text>
           <span style={styleDetail}>Job Address:</span> {job?.address}

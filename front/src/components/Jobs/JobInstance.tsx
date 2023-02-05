@@ -65,15 +65,15 @@ const jobsList: JobResult[] = [
 
 
 const statusText: string[] = [
-  "Completed",
   "Pending",
+  "Completed",
   "Failed",
   "Loading...",
 ];
 
 const statusColor: string[] = [
-  "green",
   "blue",
+  "green",
   "red",
   "orange",
 ]
@@ -82,16 +82,16 @@ const JobInstance = ({
   onSelect,
   jobAddress,
   selected,
-  key,
+  id,
 }: {
   onSelect: (select: JobSummary) => void;
   jobAddress: `0x${string}`;
   selected: `0x${string}` | null;
-  key: number;
+  id: number;
 }) => {
   // TODO Bacalhau
   let [job, setJob] = useState<JobResult>({
-    id: key,
+    id: id,
     address: jobAddress,
     exitCode: 1,
     outputs: ["Loading..."],
@@ -119,7 +119,7 @@ const JobInstance = ({
     functionName: "getResult",
   });
 
-  let { data: status, isLoading: statusIsLoading } = useContractRead({
+  let res = useContractRead({
     address: jobAddress,
     abi: [
       {
@@ -139,7 +139,8 @@ const JobInstance = ({
     functionName: "getStatus",
   });
 
-  console.log("test: ", { jobAddress, job });
+  let { data: status, isLoading: statusIsLoading } = res;
+  // console.log("test: ", { jobAddress, job, res, key: id });
 
   return (
     <Box
@@ -154,11 +155,14 @@ const JobInstance = ({
         bg: useColorModeValue("blackAlpha.100", "blackAlpha.400"),
         cursor: "pointer",
       }}
-      onClick={() => onSelect({
-        ...job,
-        jobId: (jobId ? jobId : null),
-        status: (status ? status : null),
-      })}
+      onClick={() => {
+        console.log("Sending selection", {job, jobId, status})
+        onSelect({
+          ...job,
+          jobId: (jobId ? jobId : null),
+          status: (status ? status : null),
+        })
+      }}
     >
       <Flex px={4} py={2} justifyContent="space-between" paddingX="5%">
         <Text>{job.id}</Text>

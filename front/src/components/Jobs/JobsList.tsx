@@ -42,7 +42,10 @@ const JobsList = ({
 
       <Divider />
 
-      {Object.entries(jobAddresses).map(([key, jobAddress]) => <JobInstance {...{ onSelect, jobAddress, selected, key }} />)}
+      {Object.entries(jobAddresses).map((tab) => {
+        let [key, jobAddress] = tab;
+        return <JobInstance {...{ onSelect, jobAddress, selected, id: parseInt(key), key }} />
+      })}
     </Box>
   );
 };
