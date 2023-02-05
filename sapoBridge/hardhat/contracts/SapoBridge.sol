@@ -69,11 +69,9 @@ contract SapoBridge {
      */
     function request(bytes32 cid1, bytes32 cid2) public payable {
         require(msg.value >= 0.1 ether, "Minimum colateral is 0.1TFIL");
-        SapoJob job = new SapoJob(msg.sender, bridge);
+        SapoJob job = (new SapoJob){value:msg.value}(msg.sender, bridge);
         emit JobExecutionRequest(address(job), cid1, cid2);
         jobs[msg.sender].push(address(job));
-
-        payable(bridge).transfer(msg.value);
     }
 
     /**

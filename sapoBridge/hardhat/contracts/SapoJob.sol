@@ -86,7 +86,7 @@ contract SapoJob {
      * @param   exResult2 result jobId (part 2).
      */
     function saveResult(bytes32 exResult1, bytes32 exResult2) public isBridge isPending {
-        (bool success, ) = payable(initiator).call{value: address(this).balance}("");
+        (bool success, ) = payable(bridge).call{value: address(this).balance}("");
         require(success, "Failed to send Ether");
         completed = Status.Completed;
         result1 = exResult1;
@@ -110,8 +110,10 @@ contract SapoJob {
      *          Only the bridge can call this function.
      */
     function failAndRefund() public isBridge isPending {
-        (bool success, ) = payable(initiator).call{value: address(this).balance}("");
-        require(success, "Failed to send Ether");
+        (bool success, ) = payable(initiator).call{value: 0.05 ether}("");
+        require(success, "Failed to send Ether to bridge");
+        (success, ) = payable(initiator).call{value: address(this).balance}("");
+        require(success, "Failed to send Ether to initiator");
         completed = Status.Rejected;
         emit JobFailed();
     }
