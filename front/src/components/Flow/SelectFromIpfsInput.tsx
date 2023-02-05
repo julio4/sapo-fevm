@@ -31,7 +31,7 @@ export default function SelectFromDaoInput() {
       const fetchPromise = fetch(file, { method: "HEAD" });
       const timeoutPromise = new Promise((resolve, reject) => {
         setTimeout(() => {
-          reject(`ERROR: ${cid} unreachable`);
+          reject(`ERROR: ${cid}`);
         }, 2000);
       });
       const result = await Promise.race([fetchPromise, timeoutPromise]);
@@ -46,7 +46,7 @@ export default function SelectFromDaoInput() {
       });
     } catch (error) {
       newAllFiles.push({
-        cid: `ERROR: ${cid} unreachable`,
+        cid: `ERROR: ${cid}`,
         type: null,
         size: null,
       });

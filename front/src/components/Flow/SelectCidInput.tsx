@@ -85,7 +85,10 @@ const FilesTable = ({ files }) => {
   const getOpacity = (file, job) => {
     if (file.cid.includes("ERROR")) {
       return 0.4;
-    } else if (!file.type.includes(job.inputTypes)) {
+    } else if (
+      !file.type.includes(job.inputTypes) &&
+      "all" in job?.inputTypes
+    ) {
       return 0.4;
     }
     return 1;
@@ -126,7 +129,10 @@ const FilesTable = ({ files }) => {
         );
         onOpen();
         return;
-      } else if (!file.type?.includes(job?.inputTypes)) {
+      } else if (
+        !file.type?.includes(job?.inputTypes) &&
+        "all" in job?.inputTypes
+      ) {
         setWarningTitle("Warning !");
         setWarningMessage(
           "This file is not compatible with the job, please select another file"
@@ -185,8 +191,13 @@ const FilesTable = ({ files }) => {
             .filter((file) => {
               if (seeIncompatibleFiles) {
                 return true;
+              } else if (file.cid.includes("ERROR")) {
+                return false;
               }
-              return file.type?.includes(job?.inputTypes);
+              return (
+                file.type?.includes(job?.inputTypes) ||
+                job?.inputTypes.includes("all")
+              );
             })
             .map((file) => (
               <Box
@@ -207,7 +218,8 @@ const FilesTable = ({ files }) => {
                 >
                   {file.cid.includes("ERROR") ? (
                     <WarningTwoIcon size="20px" color={"red.500"} />
-                  ) : !file.type.includes(job.inputTypes) ? (
+                  ) : !file.type.includes(job.inputTypes) &&
+                    "all" in job?.inputTypes ? (
                     <WarningIcon size="20px" color={"yellow.500"} />
                   ) : (
                     <CheckIcon size="20px" color={"green.500"} />
@@ -246,6 +258,7 @@ export default function SelectCidInput() {
   const { allFiles } = useJobContext();
   const [sourceInput, setSourceInput] = useState("");
   const { seeIncompatibleFiles, setSeeIncompatibleFiles } = useJobContext();
+  const [menuSelected, setMenuSelected] = useState("");
 
   return (
     <Flex direction="column" h="full" w="full" p={8}>
@@ -263,11 +276,23 @@ export default function SelectCidInput() {
       <Box alignContent="center" justifyContent="center" mb={4}>
         <Menu>
           <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-            Import from
+            Import from {menuSelected}
           </MenuButton>
           <MenuList>
-            <MenuItem onClick={() => setSourceInput("ipfs")}>IPFS</MenuItem>
-            <MenuItem onClick={() => setSourceInput("datadao")}>
+            <MenuItem
+              onClick={() => {
+                setMenuSelected("IPFS");
+                setSourceInput("ipfs");
+              }}
+            >
+              IPFS
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                setMenuSelected("DataDAO");
+                setSourceInput("datadao");
+              }}
+            >
               DataDAO
             </MenuItem>
           </MenuList>

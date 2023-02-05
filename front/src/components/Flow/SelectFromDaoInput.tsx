@@ -75,7 +75,7 @@ export default function SelectFromDaoInput() {
       const fetchPromise = fetch(file, { method: "HEAD" });
       const timeoutPromise = new Promise((resolve, reject) => {
         setTimeout(() => {
-          resolve({ cid: `ERROR: ${cid} unreachable`, size: null, type: null });
+          resolve({ cid: `ERROR: ${cid}`, size: null, type: null });
         }, 1000);
       });
 
