@@ -7,6 +7,11 @@ import (
 
 func main() {
 	convertToBytes()
+
+	// ipfsShell := ipfsapi.NewLocalShell()
+	// out, _ := ipfsShell.Cat("QmPCVpJLVjTdDPEq3B5g7KVAS1ozJ8vT4p3toaxV8q5YVk")
+	// a, _ := io.ReadAll(out)
+	// log.Print(string(a))
 }
 
 func convertToBytes() {
