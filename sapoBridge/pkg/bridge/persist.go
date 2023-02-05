@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/ethereum/go-ethereum/common"
 	_ "modernc.org/sqlite"
 )
 
@@ -49,7 +50,10 @@ func (repo *sqlRepository) Reload(state OrderState) ([]Event, error) {
 	for rows.Next() {
 		var e event
 		var lastAttemptString string
-		err = rows.Scan(&e.eventId, &e.orderId, &e.attempts, &lastAttemptString, &e.state, &e.jobSpec, &e.jobId)
+		var jobAddr string
+		err = rows.Scan(&e.eventId, &e.orderId, &e.attempts, &lastAttemptString, &e.state, &e.jobSpec, &e.jobId, &jobAddr)
+		e.jobAddr = common.HexToAddress(jobAddr)
+
 		if err != nil {
 			break
 		}
@@ -76,6 +80,7 @@ func (repo *sqlRepository) Save(in Event) error {
 		sql.Named("state", e.state),
 		sql.Named("jobSpec", e.jobSpec),
 		sql.Named("jobId", e.jobId),
+		sql.Named("jobAddr", e.jobAddr.Hex()),
 	)
 	return err
 }

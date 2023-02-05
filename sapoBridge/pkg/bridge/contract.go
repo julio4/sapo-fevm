@@ -39,25 +39,25 @@ func (r *RealContract) Complete(ctx context.Context, event BacalhauJobCompletedE
 	jobId1, err1 := Pack(event.JobID()[:32])
 	jobId2, err2 := Pack(event.JobID()[32:])
 
-	if err1 != nil || err2 != nil {
-		log.Ctx(ctx).Debug().Err(err1).Err(err2).Msg("Result saving of completed job has failed")
-		return event, context.Canceled
-	}
-
-	log.Ctx(ctx).Debug().
+	localCtx := log.Ctx(ctx).With().
 		Str("jobAddress", event.Addr().Hex()).
 		Bytes("jobId1", jobId1[:]).
 		Bytes("jobId2", jobId2[:]).
-		Msg("Saving results refunding initiator")
+		Logger().WithContext(ctx)
+
+	if err1 != nil || err2 != nil {
+		log.Ctx(localCtx).Debug().Err(err1).Err(err2).Msg("Result saving of completed job has failed")
+		return event, context.Canceled
+	}
 
 	_, err := r.contract.SaveResult(r.transact, event.Addr(), jobId1, jobId2)
 
 	if err != nil {
-		log.Ctx(ctx).Debug().
-			Err(err).
-			Msg("Result saving of completed job has failed")
+		log.Ctx(localCtx).Err(err).Msg("Error in saveResult transaction")
 		return event, context.Canceled
 	}
+
+	log.Ctx(localCtx).Debug().Msg("Successfully completed saveResult transaction")
 
 	return event.Paid(), nil
 }
@@ -160,15 +160,19 @@ func (r *RealContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 
 // Refund implements SmartContract
 func (r *RealContract) Refund(ctx context.Context, e ContractFailedEvent) (ContractRefundedEvent, error) {
-	// TODO refund & generate a result message
+	// TODO refund
 	_, err := r.contract.FailAndRefund(r.transact, e.Addr())
 
+	localCtx := log.Ctx(ctx).With().
+		Str("jobAddress", e.Addr().Hex()).
+		Logger().WithContext(ctx)
+
 	if err != nil {
-		log.Ctx(ctx).Debug().Err(err).Msg("Refund of failed job has failed")
+		log.Ctx(localCtx).Err(err).Msg("Error in failAndRefund transaction")
 		return e, context.Canceled
 	}
 
-	log.Ctx(ctx).Debug().Msg("Refunded initiator for failed job")
+	log.Ctx(localCtx).Debug().Msg("Job failed. Successfully refunded user")
 	return e.Refunded(), nil
 }
 

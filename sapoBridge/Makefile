@@ -59,3 +59,6 @@ clean:
 	-$(RM) contracts/*.bin
 	-$(RM) contracts/*.go
 	-${RM} ${BINARY}
+
+reset:
+	rm lilypad.sqlite
