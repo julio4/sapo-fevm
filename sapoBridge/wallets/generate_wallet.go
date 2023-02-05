@@ -7,6 +7,7 @@ import (
 	"math/big"
 	"os"
 	"sapoBridge/hardhat/contracts"
+	"sapoBridge/pkg/bridge"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/accounts/keystore"
@@ -30,8 +31,10 @@ func generate() {
 
 // test_call is a test function to call the smart contract from the bridge
 func test_call() {
-	wallet_file := "wallet file here"
-	addr := common.HexToAddress("bridge contract address here")
+	log.Print("Instantiating environment")
+
+	wallet_file := "./bridgeaccount"
+	addr := common.HexToAddress("0x21d4659bc8b766CEA18Fa47206f9BA6Df091de68")
 
 	client, err := ethclient.Dial("wss://ws-filecoin-hyperspace.chainstacklabs.com/rpc/v0")
 	if err != nil {
@@ -65,15 +68,25 @@ func test_call() {
 		log.Fatal(err)
 	}
 
-	var cid1 [32]byte
-	var cid2 [32]byte
-	cid1[0] = 'h'
-	cid1[1] = 'e'
-	cid1[2] = 'l'
-	cid1[3] = 'l'
-	cid2[0] = 'o'
+	log.Print("Preparing transaction")
 
-	tx, err := contract.Request(opts, cid1, cid2)
+	jobAddr := common.HexToAddress("0x3025090DD29f20B9308AD1eBC87aAf22Fb47B428")
+	jobId := "aaaabaaacaaadaaaeaaafaaagaaahaaaiaaajaaakaaal"
+	cid1, err1 := bridge.Pack(jobId[:32])
+	cid2, err2 := bridge.Pack(jobId[32:])
+
+	if err1 != nil || err2 != nil {
+		log.Print(err1)
+		log.Fatal(err2)
+	}
+
+	log.Print("Launching transaction")
+	log.Print("jobAddr ", jobAddr)
+	log.Print("cid1 ", cid1)
+	log.Print("cid2 ", cid2)
+
+	tx, err := contract.SaveResult(opts, jobAddr, cid1, cid2)
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -82,5 +95,5 @@ func test_call() {
 }
 
 func main() {
-	// test_call()
+	test_call()
 }

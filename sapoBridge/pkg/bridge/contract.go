@@ -36,8 +36,8 @@ type RealContract struct {
 // Complete implements SmartContract
 func (r *RealContract) Complete(ctx context.Context, event BacalhauJobCompletedEvent) (ContractPaidEvent, error) {
 	// TODO, partially refund
-	jobId1, err1 := pack(event.JobID()[:32])
-	jobId2, err2 := pack(event.JobID()[32:])
+	jobId1, err1 := Pack(event.JobID()[:32])
+	jobId2, err2 := Pack(event.JobID()[32:])
 
 	if err1 != nil || err2 != nil {
 		log.Ctx(ctx).Debug().Err(err1).Err(err2).Msg("Result saving of completed job has failed")
@@ -84,7 +84,7 @@ func (r *RealContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 	for logs.Next() {
 		recvEvent := logs.Event
 
-		cid := unpack(recvEvent.Cid1) + unpack(recvEvent.Cid2)
+		cid := Unpack(recvEvent.Cid1) + Unpack(recvEvent.Cid2)
 
 		log.Ctx(ctx).Debug().
 			Stringer("txn", recvEvent.Raw.TxHash).
