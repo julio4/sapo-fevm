@@ -25,10 +25,10 @@ import { useDisclosure, defineStyleConfig } from "@chakra-ui/react";
 import JobResult from "@/components/Jobs/JobResult";
 import JobsList from "@/components/Jobs/JobsList";
 import JobDetails from "@/components/Jobs/JobDetails";
+import JobSummary from "@/components/Jobs/JobSummary";
 
 export default function JobsHistory() {
-  const [job, setJob] = useState<JobResult | null>(null);
-  const [jobAddress, setJobAddress] = useState<JobResult | null>(null);
+  const [selectedJob, setSelectedJob] = useState<JobSummary | null>(null);
   const [listJobsAddress, setListJobsAddress] = useState<string[]>([]);
   const [currentJobAddress, setCurrentJobAddress] = useState<string>("");
   const { address, isConnecting, isDisconnected } = useAccount();
@@ -62,10 +62,10 @@ export default function JobsHistory() {
           <Flex w="full">
             <JobsList
               jobAddresses={data}
-              onSelect={(selected) => setJob(selected)}
-              selected={jobAddress}
+              onSelect={(selected) => setSelectedJob(selected)}
+              selected={selectedJob ? selectedJob.address : null}
             />
-            {job && <JobDetails job={job} />}
+            {selectedJob && <JobDetails job={selectedJob} />}
           </Flex>
         )}
       </Layout>

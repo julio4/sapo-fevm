@@ -10,6 +10,7 @@ import {
 import JobInstance from "./JobInstance";
 
 import JobResult from "./JobResult";
+import JobSummary from "./JobSummary";
 
 const JobsList = ({
   jobAddresses,
@@ -17,8 +18,8 @@ const JobsList = ({
   onSelect,
 }: {
   jobAddresses: readonly `0x${string}`[];
-  onSelect: (job: JobResult) => void;
-  selected: JobResult | null;
+  onSelect: (job: JobSummary) => void;
+  selected: `0x${string}` | null;
 }) => {
   return (
     <Box
