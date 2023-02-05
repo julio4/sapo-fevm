@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import {
+  Spinner,
   Box,
   Flex,
   Text,
@@ -84,6 +85,10 @@ export default function SubmitJob() {
 
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
+    onSuccess: () => {
+      setJobRequest(request);
+      setStep(3);
+    },
   })
 
   const handleSubmit = async () => {
@@ -106,7 +111,7 @@ export default function SubmitJob() {
         type: "application/json",
         size: parseInt(jobSpecInput.data.Size.toString())
       }
-    })
+    }))
   }
 
   useEffect(() => {
@@ -118,7 +123,7 @@ export default function SubmitJob() {
   return (
     <Flex direction='column' h='full' w='full' p={8}>
       <Box alignContent='center' justifyContent='center' mb={4}>
-        <Text align='center' fontSize="2xl" fontFamily="monospace" fontWeight="bold">
+        <Text align='center' fontSize="2xl" fontFamily="system-ui" fontWeight="bold">
           Submit Job
         </Text>
       </Box>
@@ -176,11 +181,25 @@ export default function SubmitJob() {
             onClick={handleSubmit}>
             Submit
           </Button>
-
-          {isLoading && <Text maxW={500}>Waiting for transaction...</Text>}
-          {isSuccess && <Text maxW={500}>Transaction success! TODO goto next step</Text>}
-          {isError && <Text maxW={500}>Error: {error?.message}</Text>}
         </Box>
+
+        {isLoading &&
+          <Flex my={8} direction='column' alignContent='center' justifyContent='center'>
+            <Spinner
+              alignSelf='center'
+              thickness='4px'
+              speed='0.65s'
+              emptyColor='gray.200'
+              color='green.500'
+              size='xl'
+            />
+            <Text color={useColorModeValue('gray.600', 'gray.400')}
+            mt={4} align='center' fontSize="xl" fontFamily="system-ui" fontWeight="bold">
+              Waiting for transaction confirmation...
+            </Text>
+          </Flex>
+        }
+
       </Flex>
     </Flex>
   );
