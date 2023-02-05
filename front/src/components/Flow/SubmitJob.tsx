@@ -16,6 +16,7 @@ import { useJobContext, } from "../Context/JobContext";
 import AbiSapoBridge from "@/constants/AbiSapoBridge.json";
 import AddressSapoBridge from "@/constants/AddressSapoBridge.json";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import lighthouse from '@lighthouse-web3/sdk';
 
 const SpecCard = ({ title, value, desc }: { title: string, value: string, desc: string }) => (
   <FormControl>
@@ -53,9 +54,29 @@ export default function SubmitJob() {
 
   const { data, isLoading, isSuccess, write } = useContractWrite(config);
 
-  const handleSubmit = () => {
-    console.log(data, isLoading, isSuccess, write)
-    write?.();
+  const handleSubmit = async () => {
+    // Wrap Job spec in a IPFS object
+    const jobSpec = {
+      "image": jobRequest.job?.image,
+      "inputsCid": jobRequest.input?.cid,
+      "runParams": jobRequest.job?.runParams
+    }
+    const jobSpecInput = await lighthouse.uploadText(
+      JSON.stringify(jobSpec),
+      process.env.lightHouseApi
+    );
+    setJobRequest({
+      ...jobRequest,
+      input: {
+        cid: jobSpecInput.data.Hash,
+        type: "application/json",
+        size: parseInt(jobSpecInput.data.Size.toString())
+      }
+    })
+    console.log(jobSpecInput.data.Hash);
+
+    // Call contract
+    //write?.();
   }
 
   return (
@@ -119,7 +140,7 @@ export default function SubmitJob() {
             onClick={handleSubmit}>
             Submit
           </Button>
-          {isError && <Text>Error: {error?.message}</Text>}
+          {isError && <Text maxW={500}>Error: {error?.message}</Text>}
         </Box>
       </Flex>
     </Flex>

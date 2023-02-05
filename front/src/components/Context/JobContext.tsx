@@ -34,8 +34,8 @@ type Job = {
   name: string;
   category: Category | null;
   image: string;
-  generateInput: (file: File) => File;
   inputTypes: string[];
+  runParams: string[];
 };
 
 type JobRequest = {
@@ -133,48 +133,41 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
     },
   ]);
 
-  const mockGenerateInput = (file: File) => {
-    return {
-      cid: file.cid,
-      type: "img",
-      size: file.size,
-    };
-  };
   const [allJobs, setAllJobs] = useState<Job[]>([
     {
       name: "Image to Image",
       category: allCategories[0],
       image: "ubuntu:latest",
-      generateInput: mockGenerateInput,
       inputTypes: ["image"],
+      runParams: []
     },
     {
       name: "EasyOCR (OCR)",
       category: allCategories[0],
       image: "ubuntu:latest",
-      generateInput: mockGenerateInput,
       inputTypes: ["image"],
+      runParams: []
     },
     {
       name: "Stable diffusion (GAN)",
       category: allCategories[2],
       image: "ubuntu:latest",
-      generateInput: mockGenerateInput,
       inputTypes: ["text"],
+      runParams: []
     },
     {
       name: "Custom (Docker)",
       category: allCategories[4],
       image: "ubuntu:latest",
-      generateInput: mockGenerateInput,
       inputTypes: ["all"],
+      runParams: []
     },
     {
       name: "Custom (Python)",
       category: allCategories[4],
       image: "ubuntu:latest",
-      generateInput: mockGenerateInput,
       inputTypes: ["all"],
+      runParams: []
     },
   ]);
   const [allFiles, setAllFiles] = useState<File[]>([]);
