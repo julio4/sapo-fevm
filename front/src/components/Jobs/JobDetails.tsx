@@ -19,6 +19,7 @@ import {
 import { useDisclosure } from "@chakra-ui/react";
 import JobResult from "./JobResult";
 import { CheckCircleIcon, TimeIcon, WarningIcon } from "@chakra-ui/icons";
+import JobSummary from "./JobSummary";
 
 const styleDetail = { fontWeight: "bold", marginRight: "1ex" };
 
