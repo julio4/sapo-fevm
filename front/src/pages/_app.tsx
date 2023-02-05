@@ -1,7 +1,7 @@
 import type { AppProps } from 'next/app'
 
 // Style
-import { Box, ChakraProvider, useColorModeValue } from '@chakra-ui/react'
+import { ChakraProvider, useColorMode } from '@chakra-ui/react'
 import '@rainbow-me/rainbowkit/styles.css';
 import '../styles/globals.css'
 
@@ -60,12 +60,13 @@ const wagmiClient = createClient({
 });
 
 function App({ Component, pageProps }: AppProps) {
+  const { colorMode } = useColorMode();
   return (
     <ChakraProvider>
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider
           chains={chains}
-          //theme={useColorModeValue(lightTheme, darkTheme)}
+          theme={colorMode == "dark" ? darkTheme() : lightTheme()}
           >
           <Component {...pageProps} />
         </RainbowKitProvider>

@@ -11,18 +11,17 @@ import {
   MenuDivider,
   useColorModeValue,
   Stack,
-  useColorMode,
   Center,
 } from '@chakra-ui/react';
-import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+
 import { FaWallet } from 'react-icons/fa';
 import { useAccount, useDisconnect } from 'wagmi'
 
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import ModeToggler from './modeToggler';
 
 export default function Nav() {
-  const { colorMode, toggleColorMode } = useColorMode();
   const router = useRouter();
 
   // Wallet
@@ -48,14 +47,7 @@ export default function Nav() {
 
           <Flex alignItems={'center'}>
             <Stack direction={'row'} spacing={3}>
-              <Button 
-                bg={useColorModeValue('green.50', 'whiteAlpha.200')}
-                _hover={{
-                  bg: useColorModeValue('whiteAlpha.600', 'whiteAlpha.300'),
-                }}
-                onClick={toggleColorMode}>
-                {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
-              </Button>
+              <ModeToggler />
 
               <Menu>
                 {isConnected ? 
@@ -100,7 +92,7 @@ export default function Nav() {
                         onClick={() => disconnect()}
                         bg='inherit'>
                           Disconnect
-                        </MenuItem>
+                      </MenuItem>
                     </MenuList>
                   </Box>
                   : null
