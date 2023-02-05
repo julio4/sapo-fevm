@@ -22,6 +22,7 @@
     "eslint-config-next": "13.1.6",
     "ethers": "^5.7.2",
     "framer-motion": "^8.5.4",
+    "ipfs-core": "^0.18.0",
     "next": "13.1.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",

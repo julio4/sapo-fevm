@@ -1,6 +1,6 @@
 import {
   Box,
-  Button,
+  Tooltip,
   chakra,
   Flex,
   Stack,
@@ -13,6 +13,7 @@ import { FaGithub, FaEthereum } from 'react-icons/fa';
 import { ReactNode } from 'react';
 
 import { useJobContext } from '../Context/JobContext';
+import { useIpfsContext } from '@/services/ipfs';
 
 const SocialButton = ({
   children,
@@ -47,7 +48,7 @@ const SocialButton = ({
 };
 
 export default function Footer() {
- const { step, category, job, jobRequest } = useJobContext();
+ const { id, version, isOnline } = useIpfsContext();
   return (
     <Box
       bgGradient={useColorModeValue('linear(to-r, teal.100, green.100)', 'linear(to-r, teal.900, green.900)')}
@@ -65,15 +66,40 @@ export default function Footer() {
           direction={{ base: 'column', md: 'row' }}
           justify={{ base: 'center', md: 'space-between' }}
           align={{ base: 'center', md: 'center' }}>
+
+
+          {/* Debug */}
+          <Tooltip label={isOnline 
+            ? `Connected to local ipfs node ${id}` 
+            : 'Error, can\'t create local ipfs node'}>
+            <Flex gap={3} alignItems='center'>
+              <Box
+                as="div"
+                h="10px"
+                w="10px"
+                ml={4}
+                position="relative"
+                bgColor={isOnline ? 'green.500' : 'red.500'}
+                borderRadius="50%"
+                _before={{
+                  content: "''",
+                  position: 'relative',
+                  display: 'block',
+                  width: '300%',
+                  height: '300%',
+                  boxSizing: 'border-box',
+                  marginLeft: '-100%',
+                  marginTop: '-100%',
+                  borderRadius: '50%',
+                }}
+              />            
+              <Text fontSize='sm'>v{version}</Text>
+            </Flex>
+          </Tooltip>
+
           <Text
             color={useColorModeValue('gray.600', 'gray.100')}
             fontSize='sm' pl='20px'>© 2023 KS. All rights reserved</Text>
-
-          {/* Debug */}
-          <Box>
-            Step: {step}, Category:{category?.name}, Job:{`${job?.name}(image: ${job?.image}))`}`,
-            JobRequest:{`${jobRequest.input?.cid} custom:${jobRequest.custom}`}
-          </Box>
 
           <Stack direction={'row'} spacing={6} pr="20px">
             <SocialButton label={'Github'} href={'https://github.com/julio4/sapo-fevm/'}>

@@ -3,13 +3,17 @@ import Layout from '@/components/Layout/layout'
 import Sidebar from '@/components/Sidebars/JobsSidebar'
 import JobRequestFlow from '@/components/Flow/JobRequestFlow'
 
+import { IpfsProvider } from '@/services/ipfs'
+
 export default function Home() {
   return (
-    <JobProvider>
-      <Layout>
-        <Sidebar />
-        <JobRequestFlow />
-      </Layout>
-    </JobProvider>
+    <IpfsProvider>
+      <JobProvider>
+        <Layout>
+          <Sidebar />
+          <JobRequestFlow />
+        </Layout>
+      </JobProvider>
+    </IpfsProvider>
   )
 }
