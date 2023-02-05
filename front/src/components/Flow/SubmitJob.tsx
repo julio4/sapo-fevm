@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -11,12 +12,13 @@ import {
   FormHelperText,
 } from "@chakra-ui/react";
 
-import { useJobContext, } from "../Context/JobContext";
+import { JobRequest, useJobContext, } from "../Context/JobContext";
 
 import AbiSapoBridge from "@/constants/AbiSapoBridge.json";
 import AddressSapoBridge from "@/constants/AddressSapoBridge.json";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from "wagmi";
 import lighthouse from '@lighthouse-web3/sdk';
+import { ethers } from "ethers";
 
 const SpecCard = ({ title, value, desc }: { title: string, value: string, desc: string }) => (
   <FormControl>
@@ -41,18 +43,48 @@ const SpecCard = ({ title, value, desc }: { title: string, value: string, desc: 
   </FormControl>
 )
 
+function byteArrayToHex(byteArray) {
+  let hexString = '0x';
+  for (const byte of byteArray) {
+    hexString += byte.toString(16).padStart(2, '0');
+  }
+  return hexString;
+}
+
+const cidToHex = (cid: string) => {
+  const encoder = new TextEncoder();
+  const bArr = encoder.encode(cid);
+  const bArr1 = bArr.slice(0, 32);
+  let bArr2 = bArr.slice(32);
+
+  if (bArr2.length < 32) {
+    bArr2 = [...bArr2, ...Array(32 - bArr2.length).fill(0)];
+  }
+
+  return [byteArrayToHex(bArr1) , byteArrayToHex(bArr2)];
+}
+
 export default function SubmitJob() {
   const { step, setStep, jobRequest, setJobRequest } = useJobContext();
 
+  const [ request, setRequest ] = useState<JobRequest>(jobRequest);
+
   const { config, error, isError } = usePrepareContractWrite({
-    address: "0x7Eab139cD3e064B225B1d3b9c84d274965e98fB6",
+    address: AddressSapoBridge.address,
     abi: AbiSapoBridge,
     functionName: "request",
-    //args: [jobRequest.input?.cid],
-    args: ["test"]
+    args: cidToHex(request.input?.cid || ""),
+    overrides: {
+      gasLimit: ethers.BigNumber.from(1000000000),
+      value: ethers.utils.parseEther('0.1'),
+    }
   });
 
-  const { data, isLoading, isSuccess, write } = useContractWrite(config);
+  const { data, write } = useContractWrite(config);
+
+  const { isLoading, isSuccess } = useWaitForTransaction({
+    hash: data?.hash,
+  })
 
   const handleSubmit = async () => {
     // Wrap Job spec in a IPFS object
@@ -65,19 +97,23 @@ export default function SubmitJob() {
       JSON.stringify(jobSpec),
       process.env.lightHouseApi
     );
-    setJobRequest({
-      ...jobRequest,
+
+    // Update request state, trigger write
+    setRequest((prev) => ({
+      ...prev,
       input: {
         cid: jobSpecInput.data.Hash,
         type: "application/json",
         size: parseInt(jobSpecInput.data.Size.toString())
       }
     })
-    console.log(jobSpecInput.data.Hash);
-
-    // Call contract
-    //write?.();
   }
+
+  useEffect(() => {
+    if (request.input?.cid) {
+      write?.();
+    }
+  }, [request])
 
   return (
     <Flex direction='column' h='full' w='full' p={8}>
@@ -117,8 +153,8 @@ export default function SubmitJob() {
 
           <SpecCard 
             title="Approximate price" 
-            value='TODO ~0.2 FIL'
-            desc="TODO: Job complexity + Input Size + Retry)?" />
+            value='~0.1 FIL'
+            desc="If the job fail, you'll be refunded atleast 50%" />
         </SimpleGrid>
 
         <Box p={4}>
@@ -140,10 +176,12 @@ export default function SubmitJob() {
             onClick={handleSubmit}>
             Submit
           </Button>
+
+          {isLoading && <Text maxW={500}>Waiting for transaction...</Text>}
+          {isSuccess && <Text maxW={500}>Transaction success! TODO goto next step</Text>}
           {isError && <Text maxW={500}>Error: {error?.message}</Text>}
         </Box>
       </Flex>
     </Flex>
-
   );
 }
