@@ -5,7 +5,6 @@ import SubmitJob from "@/components/Flow/SubmitJob";
 import JobSubmitted from "@/components/Flow/JobSubmitted";
 
 import { Box, Progress, useColorModeValue } from "@chakra-ui/react";
-import { useState } from "react";
 
 export default function JobRequestFlow() {
   const { step } = useJobContext();
@@ -22,7 +21,7 @@ export default function JobRequestFlow() {
       <Box
         h="full"
         w="full"
-        bg={useColorModeValue("whiteAlpha.700", "blackAlpha.700")}
+        bg={useColorModeValue("white", "whiteAlpha.200")}
         backdropFilter="auto"
         backdropBlur="2px"
         border="1px"

@@ -37,7 +37,7 @@ export default function JobsSidebar() {
     <>
       <Box
         flexShrink="0"
-        bg={useColorModeValue("whiteAlpha.800", "blackAlpha.600")}
+        bg={useColorModeValue("white", "whiteAlpha.200")}
         backdropFilter="blur(20px)"
         borderRight="1px"
         borderRightColor={useColorModeValue("gray.200", "gray.700")}
@@ -59,7 +59,7 @@ export default function JobsSidebar() {
             mx="8"
             justifyContent="space-between"
           >
-            <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
+            <Text fontSize="2xl" fontFamily="system-ui" fontWeight="bold">
               Category
             </Text>
           </Flex>

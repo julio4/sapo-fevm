@@ -51,7 +51,7 @@ export default function Footer() {
  const { id, version, isOnline } = useIpfsContext();
   return (
     <Box
-      bgGradient={useColorModeValue('linear(to-r, teal.100, green.100)', 'linear(to-r, teal.900, green.900)')}
+      bgGradient={useColorModeValue('linear(to-r, teal.100, green.100)', 'linear(to-r, teal.800, green.800)')}
       color={useColorModeValue('gray.700', 'gray.200')}
       width="100%"
       bottom="0"
@@ -60,19 +60,17 @@ export default function Footer() {
       <Box
         borderTopWidth={1}
         borderStyle={'solid'}
-        borderColor={useColorModeValue('gray.200', 'gray.900')}>
+        borderColor={useColorModeValue('gray.200', 'gray.700')}>
         <Flex
           minH={'60px'}
           direction={{ base: 'column', md: 'row' }}
           justify={{ base: 'center', md: 'space-between' }}
           align={{ base: 'center', md: 'center' }}>
 
-
-          {/* Debug */}
           <Tooltip label={isOnline 
             ? `Connected to local ipfs node ${id}` 
             : 'Error, can\'t create local ipfs node'}>
-            <Flex gap={3} alignItems='center'>
+            <Flex cursor='pointer' gap={3} alignItems='center'>
               <Box
                 as="div"
                 h="10px"
@@ -98,6 +96,7 @@ export default function Footer() {
           </Tooltip>
 
           <Text
+            cursor='default'
             color={useColorModeValue('gray.600', 'gray.100')}
             fontSize='sm' pl='20px'>© 2023 KS. All rights reserved</Text>
 

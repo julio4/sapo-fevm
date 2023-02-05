@@ -266,7 +266,7 @@ export default function SelectCidInput() {
         <Text
           align="center"
           fontSize="2xl"
-          fontFamily="monospace"
+          fontFamily="system-ui"
           fontWeight="bold"
         >
           Select input file
@@ -315,7 +315,7 @@ export default function SelectCidInput() {
       <Box
         h="full"
         w="full"
-        bg={useColorModeValue("whiteAlpha.700", "blackAlpha.700")}
+        bg={useColorModeValue("whiteAlpha.700", "blackAlpha.400")}
         backdropFilter="auto"
         backdropBlur="2px"
         border="1px"

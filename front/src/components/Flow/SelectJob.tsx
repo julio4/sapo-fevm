@@ -31,7 +31,7 @@ const JobCard = ({ job, onClick }: { job: Job, onClick: () => void }) => (
             <Box
                 bg={useColorModeValue(
                     (job.category?.color || "gray") + '.100', 
-                    (job.category?.color || "gray") + '.900')}
+                    (job.category?.color || "blackAlpha") + '.700')}
                 height="100px"
                 roundedTop="lg"
             />
@@ -47,7 +47,7 @@ const JobCard = ({ job, onClick }: { job: Job, onClick: () => void }) => (
                 </Flex>
                 <Flex mt="1" justifyContent="space-between" alignContent="center">
                     <Box
-                        fontSize="2xl"
+                        fontSize="xl"
                         fontWeight="semibold"
                         as="h4"
                         lineHeight="tight"
@@ -66,7 +66,7 @@ export default function SelectJob() {
     return (
         <Flex direction='column' h='full' w='full' p={8}>
             <Box alignContent='center' justifyContent='center' mb={4}>
-                <Text align='center' fontSize="2xl" fontFamily="monospace" fontWeight="bold">
+                <Text align='center' fontSize="2xl" fontFamily="system-ui" fontWeight="bold">
                     Select a job
                 </Text>
             </Box>

@@ -11,9 +11,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   const { isConnected } = useAccount()
   return (
     <Flex flexDir='column' h='100vh'
-    //bgImage={useColorModeValue("","url('abstract.jpg')")}
-    //bgPosition="center"
-    bgGradient={useColorModeValue("radial(green.100 5%, whiteAlpha.200 95%)","unset")}
+    bg={useColorModeValue('blackAlpha.50', 'blackAlpha.600')}
     >
       <Navbar />
       {isConnected ?
