@@ -19,7 +19,12 @@ import {
   MenuItem,
 } from "@chakra-ui/react";
 
-import { ChevronDownIcon, CheckIcon, WarningTwoIcon } from "@chakra-ui/icons";
+import {
+  ChevronDownIcon,
+  CheckIcon,
+  WarningTwoIcon,
+  WarningIcon,
+} from "@chakra-ui/icons";
 
 import SelectFromDaoInput from "@/components/Flow/SelectFromDaoInput";
 import SelectFromIpfsInput from "@/components/Flow/SelectFromIpfsInput";
@@ -64,6 +69,16 @@ const FilesTable = ({ files }) => {
     seeIncompatibleFiles,
     setSeeIncompatibleFiles,
   } = useJobContext();
+  const [showWarning, setShowWarning] = useState(false);
+
+  const getOpacity = (file, job) => {
+    if (file.cid.includes("ERROR")) {
+      return 0.4;
+    } else if (!file.type.includes(job.inputTypes)) {
+      return 0.4;
+    }
+    return 1;
+  };
 
   return (
     <TableContainer>
@@ -96,6 +111,22 @@ const FilesTable = ({ files }) => {
                 }}
                 onClick={() => {
                   if (!job) return;
+                  if (file.cid.includes("ERROR")) {
+                    if (!showWarning) {
+                      alert("Warning, this file is not reachable");
+                      setShowWarning(true);
+                      return;
+                    }
+                  }
+                  if (!file.type?.includes(job?.inputTypes)) {
+                    if (!showWarning) {
+                      alert(
+                        "Warning, this file is not compatible with the job"
+                      );
+                      setShowWarning(true);
+                      return;
+                    }
+                  }
                   setJobRequest({
                     ...jobRequest,
                     job: job,
@@ -107,9 +138,12 @@ const FilesTable = ({ files }) => {
                 <Td
                   _hover={{ transform: "scale(1.01)" }}
                   transition={"all 0.2s ease-in-out"}
+                  opacity={getOpacity(file, job) + 0.2}
                 >
                   {file.cid.includes("ERROR") ? (
                     <WarningTwoIcon size="20px" color={"red.500"} />
+                  ) : !file.type.includes(job.inputTypes) ? (
+                    <WarningIcon size="20px" color={"yellow.500"} />
                   ) : (
                     <CheckIcon size="20px" color={"green.500"} />
                   )}
@@ -117,18 +151,21 @@ const FilesTable = ({ files }) => {
                 <Td
                   _hover={{ transform: "scale(1.01)" }}
                   transition={"all 0.2s ease-in-out"}
+                  opacity={getOpacity(file, job)}
                 >
                   {file.cid}
                 </Td>
                 <Td
                   _hover={{ transform: "scale(1.01)" }}
                   transition={"all 0.2s ease-in-out"}
+                  opacity={getOpacity(file, job)}
                 >
                   {file.type ? file.type : "Unknown"}
                 </Td>
                 <Td
                   _hover={{ transform: "scale(1.01)" }}
                   transition={"all 0.2s ease-in-out"}
+                  opacity={getOpacity(file, job)}
                 >
                   {file.size ? file.size : "Not Specified"}
                 </Td>
