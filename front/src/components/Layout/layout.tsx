@@ -29,7 +29,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   if (!connected) {
     return (
       <Flex flexDir='column' h='100vh'
-      bg={useColorModeValue('blackAlpha.50', 'blackAlpha.600')}
+      bg={useColorModeValue('blackAlpha.200', 'blackAlpha.600')}
     >
       <Navbar />
       {!connected && <Connect />}
@@ -40,7 +40,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   return (
     <Flex flexDir='column' h='100vh'
-      bg={useColorModeValue('blackAlpha.50', 'blackAlpha.600')}
+      bg={useColorModeValue('blackAlpha.200', 'blackAlpha.600')}
     >
       <Navbar />
       <Flex grow={1}>
