@@ -37,6 +37,7 @@ type Job = {
   inputTypes: string[];
   runParams: string[];
   desc: string;
+  needInput: boolean;
 };
 
 type JobRequest = {
@@ -122,7 +123,7 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
     },
     {
       id: 4,
-      name: "Simulation",
+      name: "Script",
       icon: FaRegObjectGroup,
       color: "yellow",
     },
@@ -136,44 +137,76 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
 
   const [allJobs, setAllJobs] = useState<Job[]>([
     {
-      name: "Image to Image",
-      category: allCategories[0],
-      image: "ubuntu:latest",
-      inputTypes: ["image"],
-      runParams: [],
-      desc: "Convert an image to another image",
+      name: "Python Hello World",
+      category: allCategories[3],
+      image: "python:3.10-slim",
+      inputTypes: [],
+      runParams: ["python3", "-c", "print(\"Hello, world\")"],
+      desc: "Print Hello world in python",
+      needInput: false,
     },
     {
-      name: "EasyOCR (OCR)",
-      category: allCategories[0],
-      image: "ubuntu:latest",
-      inputTypes: ["image"],
-      runParams: [],
-      desc: "Convert an image to text",
-    },
-    {
-      name: "Stable diffusion (GAN)",
-      category: allCategories[2],
-      image: "ubuntu:latest",
+      name: "Python script",
+      category: allCategories[3],
+      image: "python:3.10-slim",
       inputTypes: ["text"],
-      runParams: [],
-      desc: "Convert text to an image",
+      runParams: ["python3", "/inputs"],
+      desc: "Execute python script (input: .py)",
+      needInput: true,
     },
     {
-      name: "Custom (Docker)",
-      category: allCategories[4],
-      image: "ubuntu:latest",
-      inputTypes: ["all"],
-      runParams: [],
-      desc: "Custom job",
+      name: "Pandas script",
+      category: allCategories[3],
+      image: "amancevice/pandas",
+      inputTypes: ["text"],
+      runParams: ["python3", "/inputs"],
+      desc: "Execute python script with pandas (input: .py)",
+      needInput: true,
     },
     {
-      name: "Custom (Python)",
+      name: "R script",
       category: allCategories[4],
-      image: "ubuntu:latest",
-      inputTypes: ["all"],
-      runParams: [],
-      desc: "Custom job",
+      image: "r-base",
+      inputTypes: ["text"],
+      runParams: ["Rscript", "/inputs"],
+      desc: "Execute R script (input: .r)",
+      needInput: true,
+    },
+    {
+      name: "Sparkov credit card",
+      category: allCategories[1],
+      image: "jsacex/sparkov-data-generation",
+      inputTypes: [],
+      runParams: [
+        "python3", 
+        "datagen.py", 
+        "-n", 
+        "1000", 
+        "-o", 
+        "../outputs", 
+        "01-01-2023", 
+        "10-01-2023"
+      ],
+      desc: "synthetic credit card transaction data generation using Sparkov",
+      needInput: false,
+    },
+    {
+      name: "Batch image resizing",
+      category: allCategories[0],
+      image: "dpokidov/imagemagick:7.1.0-47-ubuntu",
+      inputTypes: ["text/html"],
+      runParams: ["magick", "mogrify", "-resize 100x100", "-quality", "100", "-path", "/outputs", "'/inputs/*.jpg'"],
+      desc: "Resize a batch of jpg to 100x100 (input: ./*.jpg)",
+      needInput: true,
+    },
+    {
+      name: "Stable Diffusion",
+      category: allCategories[2],
+      image: "ghcr.io/bacalhau-project/examples/stable-diffusion-cpu:0.0.1",
+      inputTypes: ["txt"],
+      runParams: ["python", "demo.py", "--prompt", "\"$(cat /inputs)\"", "--output", "../outputs/output.png"],
+      desc: "Stable diffusion image generation from prompt (input: .txt)",
+      needInput: true,
     },
   ]);
   const [allFiles, setAllFiles] = useState<File[]>([]);
