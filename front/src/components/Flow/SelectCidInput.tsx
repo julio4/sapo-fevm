@@ -313,7 +313,7 @@ export default function SelectCidInput() {
               <Text mb={3}>
                 You can use our DataDAO example address to test:
                 <Code borderRadius={2} padding={1} px={2}>
-                  0x7Fe72FD86FA4fe3ac2916a6965B3C0309dCB0CF9
+                  0xC9605dAe1a25598d3FC548336693aBedEe77a58A
                 </Code>
               </Text>
               <Text fontSize="md" fontStyle={"italic"}>
