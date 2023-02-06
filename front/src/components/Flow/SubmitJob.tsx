@@ -18,8 +18,9 @@ import { JobRequest, useJobContext, } from "../Context/JobContext";
 import AbiSapoBridge from "@/constants/AbiSapoBridge.json";
 import AddressSapoBridge from "@/constants/AddressSapoBridge.json";
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from "wagmi";
-import lighthouse from '@lighthouse-web3/sdk';
 import { ethers } from "ethers";
+
+import lighthouse from '@lighthouse-web3/sdk';
 
 const SpecCard = ({ title, value, desc }: { title: string, value: string, desc: string }) => (
   <FormControl>
@@ -67,10 +68,11 @@ const cidToHex = (cid: string) => {
 
 export default function SubmitJob() {
   const { step, setStep, jobRequest, setJobRequest } = useJobContext();
+  const [ isSubmitting, setIsSubmitting] = useState(false)
 
   const [ request, setRequest ] = useState<JobRequest>(jobRequest);
 
-  const { config, error, isError } = usePrepareContractWrite({
+  const { config } = usePrepareContractWrite({
     address: AddressSapoBridge.address,
     abi: AbiSapoBridge,
     functionName: "request",
@@ -83,8 +85,11 @@ export default function SubmitJob() {
 
   const { data, write } = useContractWrite(config);
 
-  const { isLoading, isSuccess } = useWaitForTransaction({
+  const { isLoading } = useWaitForTransaction({
     hash: data?.hash,
+    onError: () => {
+      setIsSubmitting(false)
+    },
     onSuccess: () => {
       setJobRequest(request);
       setStep(3);
@@ -92,18 +97,18 @@ export default function SubmitJob() {
   })
 
   const handleSubmit = async () => {
+    setIsSubmitting(true)
     // Wrap Job spec in a IPFS object
     const jobSpec = {
       "image": jobRequest.job?.image,
-      "inputsCid": jobRequest.input?.cid,
+      "inputsCid": jobRequest.usrInput?.cid,
       "runParams": jobRequest.job?.runParams
     }
+
     const jobSpecInput = await lighthouse.uploadText(
       JSON.stringify(jobSpec),
       process.env.lightHouseApi
     );
-
-    console.log("wrapped input to pinned ", jobSpecInput)
 
     // Update request state, trigger write
     setRequest((prev) => ({
@@ -117,8 +122,8 @@ export default function SubmitJob() {
   }
 
   useEffect(() => {
-    console.log("trying to confirm tx", request)
     if (request.input?.cid) {
+      console.log("trying to confirm tx", request)
       write?.();
     }
   }, [request])
@@ -169,6 +174,7 @@ export default function SubmitJob() {
 
         <Box p={4}>
           <Button
+            isLoading={!write && isSubmitting}
             fontFamily={'heading'}
             mt={8}
             w={'full'}
@@ -182,8 +188,8 @@ export default function SubmitJob() {
               boxShadow: 'md',
               transform: 'scale(1.005)'
             }}
-            disabled={!write}
-            onClick={handleSubmit}>
+            onClick={handleSubmit}
+            >
             Submit
           </Button>
         </Box>

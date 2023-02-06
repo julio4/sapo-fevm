@@ -34,7 +34,7 @@ export default function JobRequestFlow() {
           borderRadius="lg"
           value={step * 34}
         />
-        <Box>{Step}</Box>
+        {Step}
       </Box>
     </Box>
   );
