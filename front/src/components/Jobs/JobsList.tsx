@@ -9,8 +9,10 @@ import {
 } from "@chakra-ui/react";
 import JobInstance from "./JobInstance";
 
+import { useRouter } from "next/router";
 import JobResult from "./JobResult";
 import JobSummary from "./JobSummary";
+import { CloseIcon } from "@chakra-ui/icons";
 
 const JobsList = ({
   jobAddresses,
@@ -21,6 +23,7 @@ const JobsList = ({
   onSelect: (job: JobSummary) => void;
   selected: `0x${string}` | null;
 }) => {
+  const router = useRouter();
   return (
     <Box
       w="full"
@@ -35,8 +38,25 @@ const JobsList = ({
       borderRadius="lg"
     >
       <Box px={4}>
-        <Heading size="md" mb={2}>
-          Jobs List
+        <Heading
+          size="md"
+          mb={2}
+          display={"flex"}
+          justifyContent={"space-between"}
+          px={6}
+        >
+          <Text>Jobs History</Text>
+          <CloseIcon
+            onClick={() => {
+              console.log("click");
+              router.push("/app/");
+            }}
+            size="20px"
+            _hover={{
+              cursor: "pointer",
+            }}
+            color={"teal.500"}
+          />
         </Heading>
       </Box>
 
@@ -44,7 +64,12 @@ const JobsList = ({
 
       {Object.entries(jobAddresses).map((tab) => {
         let [key, jobAddress] = tab;
-        return <JobInstance {...{ onSelect, jobAddress, selected, id: parseInt(key) }} key={key} />
+        return (
+          <JobInstance
+            {...{ onSelect, jobAddress, selected, id: parseInt(key) }}
+            key={key}
+          />
+        );
       })}
     </Box>
   );

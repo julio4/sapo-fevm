@@ -24,27 +24,21 @@ import JobSummary from "./JobSummary";
 const styleDetail = { fontWeight: "bold", marginRight: "1ex" };
 
 const statusTextIcon = [
-  (
-    <>
-      {" "}
-      Pending
-      <TimeIcon ml={2} size="20px" color={"blue.500"} />
-    </>
-  ),
-  (
-    <>
-      {" "}
-      Completed
-      <CheckCircleIcon ml={2} size="20px" color={"green.500"} />
-    </>
-  ),
-  (
-    <>
-      {" "}
-      Failed
-      <WarningIcon ml={2} size="20px" color={"red.500"} />
-    </>
-  ),
+  <>
+    {" "}
+    Pending
+    <TimeIcon ml={2} size="20px" color={"blue.500"} />
+  </>,
+  <>
+    {" "}
+    Completed
+    <CheckCircleIcon ml={2} size="20px" color={"green.500"} />
+  </>,
+  <>
+    {" "}
+    Failed
+    <WarningIcon ml={2} size="20px" color={"red.500"} />
+  </>,
 ];
 
 const JobDetails = ({ job }: { job: JobSummary | null }) => {
@@ -72,8 +66,8 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
   const jobBgGradient = useColorModeValue(
     "linear(to-r, blue.200, blue.200)",
     "linear(to-r, blue.900, blue.900)"
-  )
-  const jobColor = useColorModeValue("gray.700", "gray.200")
+  );
+  const jobColor = useColorModeValue("gray.700", "gray.200");
 
   return (
     <Box
@@ -89,7 +83,12 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
       borderRadius="lg"
     >
       <Box px={4}>
-        <Heading size="md" mb={2}>
+        <Heading
+          size="md"
+          mb={2}
+          display={"flex"}
+          justifyContent={"space-between"}
+        >
           Job Detail
         </Heading>
       </Box>
