@@ -99,7 +99,7 @@ contract SapoJob {
      *          Only the initiator can call this function.
      * @return  The result of the job execution.
      */
-    function getResult() public view isInitiator isDone returns (string memory) {
+    function getResult() public view isDone returns (string memory) {
         SapoBridge sb = SapoBridge(owner);
         string memory resString = sb.bytes64ToString(result1, result2);
         return resString;
