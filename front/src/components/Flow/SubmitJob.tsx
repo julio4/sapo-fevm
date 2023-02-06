@@ -98,10 +98,11 @@ export default function SubmitJob() {
 
   const handleSubmit = async () => {
     setIsSubmitting(true)
+
     // Wrap Job spec in a IPFS object
     const jobSpec = {
       "image": jobRequest.job?.image,
-      "inputsCid": jobRequest.usrInput?.cid,
+      "inputsCid": jobRequest.job?.needInput ? jobRequest.usrInput?.cid : null,
       "runParams": jobRequest.job?.runParams
     }
 
@@ -163,12 +164,12 @@ export default function SubmitJob() {
 
           <SpecCard 
             title="Input file" 
-            value={jobRequest.usrInput?.cid || ""} 
+            value={jobRequest.job?.needInput ? jobRequest.usrInput?.cid : "No input for this job"} 
             desc="Source file from IPFS/Filecoin CID" />
 
           <SpecCard 
             title="Approximate price" 
-            value='~0.1 FIL'
+            value='~0.15 FIL'
             desc="If the job fail, you'll be refunded atleast 50%" />
         </SimpleGrid>
 

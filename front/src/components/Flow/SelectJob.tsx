@@ -65,7 +65,7 @@ const JobCard = ({ job, onClick }: { job: Job, onClick: () => void }) => (
 )
 
 export default function SelectJob() {
-    const { category, allJobs, setJob, setStep } = useJobContext();
+    const { category, jobRequest, allJobs, setJob, setStep, setJobRequest } = useJobContext();
     return (
         <Flex direction='column' h='full' w='full' p={8}>
             <Box alignContent='center' justifyContent='center' mb={4}>
@@ -79,7 +79,11 @@ export default function SelectJob() {
                     return (
                         <JobCard key={job.name} job={job} onClick={() => {
                             setJob(job);
-                            setStep(1);
+                            setJobRequest({
+                                ...jobRequest,
+                                job: job
+                            })
+                            setStep(job.needInput ? 1 : 2);
                         }} />
                     )
                 })}
