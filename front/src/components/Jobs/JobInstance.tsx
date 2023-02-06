@@ -96,10 +96,10 @@ const JobInstance = ({
     exitCode: 1,
     outputs: ["Loading..."],
     stderr: "Loading...",
-    stdout: "hi world",
+    stdout: "Loading...",
   });
 
-  let { data: jobId, isLoading: jobIdIsLoading } = useContractRead({
+  let { data: jobId, isLoading: jobIdIsLoading, isError: jobIdIsError } = useContractRead({
     address: jobAddress,
     abi: [
       {
@@ -109,11 +109,11 @@ const JobInstance = ({
           {
             internalType: "string",
             name: "",
-            type: "string",
-          },
+            type: "string"
+          }
         ],
         stateMutability: "view",
-        type: "function",
+        type: "function"
       },
     ],
     functionName: "getResult",
@@ -140,11 +140,11 @@ const JobInstance = ({
   });
 
   let { data: status, isLoading: statusIsLoading } = res;
-  // console.log("test: ", { jobAddress, job, res, key: id });
+  console.log("test: ", { job, jobId, status, jobIdIsLoading, statusIsLoading, jobIdIsError });
 
   const unselectedColor = useColorModeValue("whiteAlpha.700", "transparent")
   const selectedColor = useColorModeValue("teal.50", "teal.800")
-  
+
   return (
     <Box
       key={job.id}
@@ -159,7 +159,7 @@ const JobInstance = ({
         cursor: "pointer",
       }}
       onClick={() => {
-        console.log("Sending selection", {job, jobId, status})
+        console.log("Sending selection", {job, jobId, jobIdIsLoading, status, statusIsLoading})
         onSelect({
           ...job,
           jobId: (jobId ? jobId : null),

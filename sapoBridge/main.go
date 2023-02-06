@@ -26,7 +26,7 @@ func main() {
 		return
 	}
 
-	addr := common.HexToAddress("0xD0986C8bcAead7c326539b9e31b34db123A0DbB7")
+	addr := common.HexToAddress("0xd2C1F24A633f4adE362d55E2D830441B76a401C8")
 	wallet_filename := "./wallets/bridgeaccount"
 	contract, err := bridge.NewContract(addr, wallet_filename)
 	if err != nil {
