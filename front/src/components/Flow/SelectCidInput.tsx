@@ -24,6 +24,7 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  Code,
 } from "@chakra-ui/react";
 
 import {
@@ -31,6 +32,7 @@ import {
   CheckIcon,
   WarningTwoIcon,
   WarningIcon,
+  QuestionIcon,
 } from "@chakra-ui/icons";
 
 import SelectFromDaoInput from "@/components/Flow/SelectFromDaoInput";
@@ -86,7 +88,10 @@ const FilesTable = ({ files }) => {
     if (file.cid.includes("ERROR")) {
       return 0.4;
     } else if (
-      !(job.inputTypes.includes("all") || job.inputTypes.some(ft => file.type.includes(ft)))
+      !(
+        job.inputTypes.includes("all") ||
+        job.inputTypes.some((ft) => file.type.includes(ft))
+      )
     ) {
       return 0.4;
     }
@@ -129,7 +134,10 @@ const FilesTable = ({ files }) => {
         onOpen();
         return;
       } else if (
-        !(job.inputTypes.includes("all") || job.inputTypes.some(ft => file.type.includes(ft)))
+        !(
+          job.inputTypes.includes("all") ||
+          job.inputTypes.some((ft) => file.type.includes(ft))
+        )
       ) {
         setWarningTitle("Warning !");
         setWarningMessage(
@@ -147,21 +155,29 @@ const FilesTable = ({ files }) => {
     setStep(2);
   };
 
-  const fileBg = useColorModeValue("green.100", "green.900")
+  const fileBg = useColorModeValue("green.100", "green.900");
 
   return (
     <TableContainer>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{warningTitle}</ModalHeader>
+          <ModalHeader
+            textAlign={"center"}
+            color={
+              warningMessage.includes("reachable") ? "red.500" : "yellow.500"
+            }
+            fontWeight={"semibold"}
+          >
+            {warningTitle}
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Text>{warningMessage}</Text>
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button colorScheme="teal" mr={3} onClick={onClose}>
               Close
             </Button>
             <Button
@@ -195,7 +211,7 @@ const FilesTable = ({ files }) => {
                 return false;
               }
               return (
-                job?.inputTypes.some(ft => file.type?.includes(ft)) ||
+                job?.inputTypes.some((ft) => file.type?.includes(ft)) ||
                 job?.inputTypes.includes("all")
               );
             })
@@ -218,7 +234,8 @@ const FilesTable = ({ files }) => {
                 >
                   {file.cid.includes("ERROR") ? (
                     <WarningTwoIcon size="20px" color={"red.500"} />
-                  ) : (job.inputTypes.includes("all") || job.inputTypes.some(ft => file.type.includes(ft))) ? (
+                  ) : job.inputTypes.includes("all") ||
+                    job.inputTypes.some((ft) => file.type.includes(ft)) ? (
                     <CheckIcon size="20px" color={"green.500"} />
                   ) : (
                     <WarningIcon size="20px" color={"yellow.500"} />
@@ -258,9 +275,80 @@ export default function SelectCidInput() {
   const [sourceInput, setSourceInput] = useState("");
   const { seeIncompatibleFiles, setSeeIncompatibleFiles } = useJobContext();
   const [menuSelected, setMenuSelected] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Flex direction="column" h="full" w="full" p={8}>
+      <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader
+            textAlign={"center"}
+            fontWeight={"bold"}
+            fontSize={"2xl"}
+          >
+            {"How to import your CID"}
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text mb={5}>
+              <Heading size={"md"} mb={1}>
+                {"From your DataDAO"}
+              </Heading>
+              <Text mb={2}>
+                CIDs should be stored as bytes in your Smart Contract. <br />
+                You should have a public view function named{" "}
+                <Code>getAllCids</Code> that returns an array of all your cids.
+              </Text>
+              <Code p={3} borderRadius={6} mb={2}>
+                {" "}
+                function getAllCids() public view returns (bytes[] memory ){
+                  "{"
+                }{" "}
+                <br />
+                return cids;
+                {"}"}{" "}
+              </Code>
+              <Text mb={3}>
+                You can use our DataDAO example address to test:
+                <Code borderRadius={2} padding={1} px={2}>
+                  0x7Fe72FD86FA4fe3ac2916a6965B3C0309dCB0CF9
+                </Code>
+              </Text>
+              <Text fontSize="md" fontStyle={"italic"}>
+                Possibility to import with strings is coming soon
+              </Text>
+            </Text>
+            <Text mb={4}>
+              <Heading size={"sm"}>{"From a single IPFS CID"}</Heading>
+              <Text>
+                When importing a single CID, user simply needs to enter the CID
+                of the file.
+              </Text>
+            </Text>
+            <Text>
+              <Heading size={"sm"} mb={1}>
+                {"More information"}
+              </Heading>
+              <Text>
+                A file is designated as inaccessible when no response has been
+                received after a 5 second waiting period. If you are confident
+                that the file is present on the IPFS network, you can attempt to
+                reload it.
+                <br />
+                Check the box to view files that are incompatible with the
+                selected job.
+              </Text>
+            </Text>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="teal" mr={3} onClick={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       <Box alignContent="center" justifyContent="center">
         <Text
           align="center"
@@ -274,7 +362,11 @@ export default function SelectCidInput() {
 
       <Box alignContent="center" justifyContent="center" mb={4}>
         <Menu>
-          <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+          <MenuButton
+            bg={useColorModeValue("green.100", "teal.700")}
+            as={Button}
+            rightIcon={<ChevronDownIcon />}
+          >
             Import from {menuSelected}
           </MenuButton>
           <MenuList>
@@ -296,6 +388,17 @@ export default function SelectCidInput() {
             </MenuItem>
           </MenuList>
         </Menu>
+
+        <Button
+          ml={6}
+          borderRadius={10}
+          bg={useColorModeValue("teal.50", "whiteAlpha.400")}
+          pt={1}
+          onClick={() => onOpen()}
+        >
+          How to import{" "}
+          <QuestionIcon size="20px" color={"blue.400"} ml={3} mb={1} />
+        </Button>
 
         {sourceInput == "datadao" ? <SelectFromDaoInput /> : <div></div>}
         {sourceInput == "ipfs" ? <SelectFromIpfsInput /> : <div></div>}
