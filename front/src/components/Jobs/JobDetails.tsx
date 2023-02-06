@@ -49,16 +49,17 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
   function handleClickShow(from: string) {
     if (from == "result") {
       setModalTitle("Result");
-      setModalContent(job?.jobId);
+      setModalContent("Not yet implemented");
     } else if (from == "outputs") {
-      setModalTitle("outputs");
-      setModalContent(job?.outputs.join(", "));
+      setModalTitle("Outputs");
+      setModalContent("Not yet implemented");
     } else if (from === "stderr") {
       setModalTitle("Stderr");
-      setModalContent(job?.stderr);
+      setModalContent("Not yet implemented");
     } else if (from === "stdout") {
       setModalTitle("Stdout");
-      setModalContent(job?.stdout);
+      setModalContent("Not yet implemented");
+
     }
     onOpen();
   }
@@ -112,8 +113,8 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
           <span style={styleDetail}>Exit Code:</span> {job?.exitCode}
         </Text>
         <Text display="flex" alignItems="center" mb={2}>
-          <span style={styleDetail}>Outputs: </span> {job?.outputs}
-          {!(job?.status === 1) ? (
+          <span style={styleDetail}>Outputs: </span> {job && job.status === 0 ? job.stderr : "Not yet implemented"}
+          {!(job?.status === 0) ? (
             <Button
               mb={1}
               ml={6}
@@ -130,12 +131,12 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
           )}
         </Text>
         <Text display="flex" alignItems="center" mb={2}>
-          <span style={styleDetail}>Stderr:</span> {job?.stderr}
-          {!(job?.status === 1) ? (
+          <span style={styleDetail}>Stderr:</span> {job && job.status === 0 ? job.stderr : "Not yet implemented"}
+          {!(job?.status === 0) ? (
             <Button
               mb={1}
               ml={6}
-              onClick={() => handleClickShow("outputs")}
+              onClick={() => handleClickShow("stderr")}
               size="xs"
               bgGradient={jobBgGradient}
               color={jobColor}
@@ -148,12 +149,12 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
           )}
         </Text>
         <Text display="flex" alignItems="center" mb={2}>
-          <span style={styleDetail}>Stdout:</span> {job?.stdout}
-          {!(job?.status === 1) ? (
+          <span style={styleDetail}>Stdout:</span> {job && job.status === 0 ? job.stderr : "Not yet implemented"}
+          {!(job?.status === 0) ? (
             <Button
               mb={1}
               ml={6}
-              onClick={() => handleClickShow("outputs")}
+              onClick={() => handleClickShow("stdout")}
               size="xs"
               bgGradient={jobBgGradient}
               color={jobColor}
