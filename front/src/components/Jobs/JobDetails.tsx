@@ -113,8 +113,8 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
           <span style={styleDetail}>Exit Code:</span> {job?.exitCode}
         </Text>
         <Text display="flex" alignItems="center" mb={2}>
-          <span style={styleDetail}>Outputs: </span> {job && job.status === 0 ? job.stderr : "Not yet implemented"}
-          {!(job?.status === 0) ? (
+          <span style={styleDetail}>Outputs: </span> {(!job || (job.status === 0 || job.status === null)) ? job?.outputs : "Not yet implemented"}
+          {job?.status === 1 ? (
             <Button
               mb={1}
               ml={6}
@@ -131,8 +131,8 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
           )}
         </Text>
         <Text display="flex" alignItems="center" mb={2}>
-          <span style={styleDetail}>Stderr:</span> {job && job.status === 0 ? job.stderr : "Not yet implemented"}
-          {!(job?.status === 0) ? (
+          <span style={styleDetail}>Stderr:</span> {(!job || (job.status === 0 || job.status === null)) ? job?.stderr : "Not yet implemented"}
+          {job?.status === 1 ? (
             <Button
               mb={1}
               ml={6}
@@ -149,8 +149,8 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
           )}
         </Text>
         <Text display="flex" alignItems="center" mb={2}>
-          <span style={styleDetail}>Stdout:</span> {job && job.status === 0 ? job.stderr : "Not yet implemented"}
-          {!(job?.status === 0) ? (
+          <span style={styleDetail}>Stdout:</span> {(!job || (job.status === 0 || job.status === null)) ? job?.stdout : "Not yet implemented"}
+          {job?.status === 1 ? (
             <Button
               mb={1}
               ml={6}

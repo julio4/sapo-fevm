@@ -94,9 +94,9 @@ const JobInstance = ({
     id: id,
     address: jobAddress,
     exitCode: 1,
-    outputs: ["Loading..."],
-    stderr: "Loading...",
-    stdout: "Loading...",
+    outputs: [""],
+    stderr: "",
+    stdout: "",
   });
 
   let { data: jobId, isLoading: jobIdIsLoading, isError: jobIdIsError } = useContractRead({
