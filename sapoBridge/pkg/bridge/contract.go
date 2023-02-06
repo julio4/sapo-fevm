@@ -108,7 +108,7 @@ func (r *RealContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 		}
 
 		// Get specs from cid
-		lightSpecs, err := ParseSpecs(cid)
+		lightSpecs, err := ParseSpecs(ctx, cid)
 		// lightSpecs, err := DummySpecs(cid) // TODO: delete
 
 		if err != nil { // retry?
@@ -116,32 +116,55 @@ func (r *RealContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 			continue
 		}
 
-		spec, err := json.Marshal(model.Spec{
-			Engine:    model.EngineDocker,
-			Verifier:  model.VerifierNoop,
-			Publisher: model.PublisherIpfs,
-			Docker: model.JobSpecDocker{
-				Image:      lightSpecs.Image,
-				Entrypoint: lightSpecs.RunParams,
-			},
-			Inputs: []model.StorageSpec{
-				{
-					StorageSource: model.StorageSourceIPFS,
-					Name:          "inputs",
-					Path:          "/inputs",
-					CID:           lightSpecs.InputsCid,
+		var spec []byte
+
+		if len(lightSpecs.InputsCid) > 5 {
+			spec, err = json.Marshal(model.Spec{
+				Engine:    model.EngineDocker,
+				Verifier:  model.VerifierNoop,
+				Publisher: model.PublisherIpfs,
+				Docker: model.JobSpecDocker{
+					Image:      lightSpecs.Image,
+					Entrypoint: lightSpecs.RunParams,
 				},
-			},
-			Outputs: []model.StorageSpec{
-				{
-					Name: "outputs",
-					Path: "/outputs",
+				Inputs: []model.StorageSpec{
+					{
+						StorageSource: model.StorageSourceIPFS,
+						Name:          "inputs",
+						Path:          "/inputs",
+						CID:           lightSpecs.InputsCid,
+					},
 				},
-			},
-			Deal: model.Deal{
-				Concurrency: 1,
-			},
-		})
+				Outputs: []model.StorageSpec{
+					{
+						Name: "outputs",
+						Path: "/outputs",
+					},
+				},
+				Deal: model.Deal{
+					Concurrency: 1,
+				},
+			})
+		} else {
+			spec, err = json.Marshal(model.Spec{
+				Engine:    model.EngineDocker,
+				Verifier:  model.VerifierNoop,
+				Publisher: model.PublisherIpfs,
+				Docker: model.JobSpecDocker{
+					Image:      lightSpecs.Image,
+					Entrypoint: lightSpecs.RunParams,
+				},
+				Outputs: []model.StorageSpec{
+					{
+						Name: "outputs",
+						Path: "/outputs",
+					},
+				},
+				Deal: model.Deal{
+					Concurrency: 1,
+				},
+			})
+		}
 
 		if err != nil {
 			log.Ctx(ctx).Error().Err(err).Send()

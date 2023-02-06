@@ -3,15 +3,17 @@ package main
 import (
 	"log"
 	"sapoBridge/pkg/bridge"
+	// ipfsapi "github.com/ipfs/go-ipfs-api"
 )
 
 func main() {
-	convertToBytes()
+	// convertToBytes()
 
 	// ipfsShell := ipfsapi.NewLocalShell()
-	// out, _ := ipfsShell.Cat("QmPCVpJLVjTdDPEq3B5g7KVAS1ozJ8vT4p3toaxV8q5YVk")
-	// a, _ := io.ReadAll(out)
-	// log.Print(string(a))
+	// out, _ := ipfsShell.Cat("bafybeic4tveejbvbm5frqohfhi64rzbvjv3iknq5xr4ng46laa3gsfdqgi")
+
+	// log.Print(string(str))
+
 }
 
 func convertToBytes() {
