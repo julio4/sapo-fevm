@@ -103,6 +103,8 @@ export default function SubmitJob() {
       process.env.lightHouseApi
     );
 
+    console.log("wrapped input to pinned ", jobSpecInput)
+
     // Update request state, trigger write
     setRequest((prev) => ({
       ...prev,
@@ -115,10 +117,11 @@ export default function SubmitJob() {
   }
 
   useEffect(() => {
+    console.log("trying to confirm tx", request)
     if (request.input?.cid) {
       write?.();
     }
-  }, [request, write])
+  }, [request])
 
   const descriptionText = useColorModeValue('gray.600', 'gray.400')
 
@@ -146,7 +149,7 @@ export default function SubmitJob() {
           <SpecCard 
             title="Job name" 
             value={jobRequest.job?.name || (jobRequest.custom && "Custom") || ""} 
-            desc={(jobRequest.custom && "Your custom job") || "TODO Job desc"} />
+            desc={(jobRequest.custom && "Your custom job") || jobRequest.job?.desc} />
 
           <SpecCard 
             title="Docker image" 

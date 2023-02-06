@@ -65,8 +65,7 @@ export default function Nav() {
               <ModeToggler />
 
               <Menu>
-                {connected ?
-                  <Box>
+                  <Box visibility={connected ? 'visible' : 'hidden'}>
                     <MenuButton
                       as={Button}
                       color="green.400"
@@ -110,8 +109,6 @@ export default function Nav() {
                       </MenuItem>
                     </MenuList>
                   </Box>
-                  : <></>
-                }
               </Menu>
             </Stack>
           </Flex>

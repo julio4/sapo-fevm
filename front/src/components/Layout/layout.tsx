@@ -26,17 +26,26 @@ export default function Layout({ children }: { children: ReactNode }) {
   //   console.log('connected', connected)
   // }, [])
 
+  if (!connected) {
+    return (
+      <Flex flexDir='column' h='100vh'
+      bg={useColorModeValue('blackAlpha.50', 'blackAlpha.600')}
+    >
+      <Navbar />
+      {!connected && <Connect />}
+      <Footer />
+    </Flex>
+    )
+  }
+
   return (
     <Flex flexDir='column' h='100vh'
       bg={useColorModeValue('blackAlpha.50', 'blackAlpha.600')}
     >
       <Navbar />
-      <Flex grow={1}
-        visibility={connected ? 'visible' : 'hidden'}
-      >
+      <Flex grow={1}>
         {children}
       </Flex>
-      {!connected && <Connect />}
       <Footer />
     </Flex>
   )

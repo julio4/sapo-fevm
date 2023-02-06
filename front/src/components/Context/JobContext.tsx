@@ -140,35 +140,40 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
       category: allCategories[0],
       image: "ubuntu:latest",
       inputTypes: ["image"],
-      runParams: []
+      runParams: [],
+      desc: "Convert an image to another image",
     },
     {
       name: "EasyOCR (OCR)",
       category: allCategories[0],
       image: "ubuntu:latest",
       inputTypes: ["image"],
-      runParams: []
+      runParams: [],
+      desc: "Convert an image to text",
     },
     {
       name: "Stable diffusion (GAN)",
       category: allCategories[2],
       image: "ubuntu:latest",
       inputTypes: ["text"],
-      runParams: []
+      runParams: [],
+      desc: "Convert text to an image",
     },
     {
       name: "Custom (Docker)",
       category: allCategories[4],
       image: "ubuntu:latest",
       inputTypes: ["all"],
-      runParams: []
+      runParams: [],
+      desc: "Custom job",
     },
     {
       name: "Custom (Python)",
       category: allCategories[4],
       image: "ubuntu:latest",
       inputTypes: ["all"],
-      runParams: []
+      runParams: [],
+      desc: "Custom job",
     },
   ]);
   const [allFiles, setAllFiles] = useState<File[]>([]);
