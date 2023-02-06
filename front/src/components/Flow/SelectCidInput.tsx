@@ -192,80 +192,81 @@ const FilesTable = ({ files }) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-
-      <Table size="sm">
-        <Thead>
-          <Tr>
-            <Th />
-            <Th>CID</Th>
-            <Th>File type</Th>
-            <Th>Size</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {sortFiles(files)
-            .filter((file) => {
-              if (seeIncompatibleFiles) {
-                return true;
-              } else if (file.cid.includes("ERROR")) {
-                return false;
-              }
-              return (
-                job?.inputTypes.some((ft) => file.type?.includes(ft)) ||
-                job?.inputTypes.includes("all")
-              );
-            })
-            .map((file) => (
-              <Box
-                key={file.cid}
-                transition={"all 0.2s ease-in-out"}
-                as="tr"
-                borderRadius="md"
-                _hover={{
-                  cursor: "pointer",
-                  bg: fileBg,
-                }}
-                onClick={() => handleClick(file)}
-              >
-                <Td
-                  _hover={{ transform: "scale(1.01)" }}
+      <Box overflowY="auto" maxHeight="50vh">
+        <Table size="sm">
+          <Thead>
+            <Tr>
+              <Th />
+              <Th>CID</Th>
+              <Th>File type</Th>
+              <Th>Size</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {sortFiles(files)
+              .filter((file) => {
+                if (seeIncompatibleFiles) {
+                  return true;
+                } else if (file.cid.includes("ERROR")) {
+                  return false;
+                }
+                return (
+                  job?.inputTypes.some((ft) => file.type?.includes(ft)) ||
+                  job?.inputTypes.includes("all")
+                );
+              })
+              .map((file) => (
+                <Box
+                  key={file.cid}
                   transition={"all 0.2s ease-in-out"}
-                  opacity={getOpacity(file, job) + 0.2}
+                  as="tr"
+                  borderRadius="md"
+                  _hover={{
+                    cursor: "pointer",
+                    bg: fileBg,
+                  }}
+                  onClick={() => handleClick(file)}
                 >
-                  {file.cid.includes("ERROR") ? (
-                    <WarningTwoIcon size="20px" color={"red.500"} />
-                  ) : job.inputTypes.includes("all") ||
-                    job.inputTypes.some((ft) => file.type.includes(ft)) ? (
-                    <CheckIcon size="20px" color={"green.500"} />
-                  ) : (
-                    <WarningIcon size="20px" color={"yellow.500"} />
-                  )}
-                </Td>
-                <Td
-                  _hover={{ transform: "scale(1.01)" }}
-                  transition={"all 0.2s ease-in-out"}
-                  opacity={getOpacity(file, job)}
-                >
-                  {file.cid}
-                </Td>
-                <Td
-                  _hover={{ transform: "scale(1.01)" }}
-                  transition={"all 0.2s ease-in-out"}
-                  opacity={getOpacity(file, job)}
-                >
-                  {file.type ? file.type : "Unknown"}
-                </Td>
-                <Td
-                  _hover={{ transform: "scale(1.01)" }}
-                  transition={"all 0.2s ease-in-out"}
-                  opacity={getOpacity(file, job)}
-                >
-                  {file.size ? humanFileSize(file.size) : "Not Specified"}
-                </Td>
-              </Box>
-            ))}
-        </Tbody>
-      </Table>
+                  <Td
+                    _hover={{ transform: "scale(1.01)" }}
+                    transition={"all 0.2s ease-in-out"}
+                    opacity={getOpacity(file, job) + 0.2}
+                  >
+                    {file.cid.includes("ERROR") ? (
+                      <WarningTwoIcon size="20px" color={"red.500"} />
+                    ) : job.inputTypes.includes("all") ||
+                      job.inputTypes.some((ft) => file.type.includes(ft)) ? (
+                      <CheckIcon size="20px" color={"green.500"} />
+                    ) : (
+                      <WarningIcon size="20px" color={"yellow.500"} />
+                    )}
+                  </Td>
+                  <Td
+                    _hover={{ transform: "scale(1.01)" }}
+                    transition={"all 0.2s ease-in-out"}
+                    opacity={getOpacity(file, job)}
+                  >
+                    {file.cid}
+                  </Td>
+                  <Td
+                    _hover={{ transform: "scale(1.01)" }}
+                    transition={"all 0.2s ease-in-out"}
+                    opacity={getOpacity(file, job)}
+                  >
+                    {file.type ? file.type : "Unknown"}
+                  </Td>
+                  <Td
+                    _hover={{ transform: "scale(1.01)" }}
+                    transition={"all 0.2s ease-in-out"}
+                    opacity={getOpacity(file, job)}
+                  >
+                    {file.size ? humanFileSize(file.size) : "Not Specified"}
+                  </Td>
+                </Box>
+              ))}
+          </Tbody>
+        </Table>
+      </Box>
     </TableContainer>
   );
 };
