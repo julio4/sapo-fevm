@@ -10,10 +10,10 @@ export default function JobRequestFlow() {
   const { step } = useJobContext();
 
   const Step: JSX.Element = [
-    <SelectJob />,
-    <SelectCidInput />,
-    <SubmitJob />,
-    <JobSubmitted />,
+    <SelectJob key={0}/>,
+    <SelectCidInput key={1}/>,
+    <SubmitJob key={2}/>,
+    <JobSubmitted key={3}/>,
   ][step];
 
   return (
@@ -34,7 +34,7 @@ export default function JobRequestFlow() {
           borderRadius="lg"
           value={step * 34}
         />
-        {Step}
+        <Box>{Step}</Box>
       </Box>
     </Box>
   );

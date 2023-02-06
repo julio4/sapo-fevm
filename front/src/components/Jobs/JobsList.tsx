@@ -44,7 +44,7 @@ const JobsList = ({
 
       {Object.entries(jobAddresses).map((tab) => {
         let [key, jobAddress] = tab;
-        return <JobInstance {...{ onSelect, jobAddress, selected, id: parseInt(key), key }} />
+        return <JobInstance {...{ onSelect, jobAddress, selected, id: parseInt(key) }} key={key} />
       })}
     </Box>
   );

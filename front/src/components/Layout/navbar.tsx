@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Box,
   Text,
@@ -22,11 +23,25 @@ import { useRouter } from 'next/router'
 import ModeToggler from './modeToggler';
 
 export default function Nav() {
+  const [connected, setConnected] = useState(false)
   const router = useRouter();
 
   // Wallet
-  const { address, isConnected } = useAccount()
+  const { isConnected, address } = useAccount({
+    onConnect: () => {
+      setConnected(true)
+    },
+    onDisconnect: () => {
+      setConnected(false)
+    }
+  })
+
   const { disconnect } = useDisconnect()
+
+  const buttonBg = useColorModeValue('green.50', 'whiteAlpha.200')
+  const buttonBgHover = useColorModeValue('whiteAlpha.600', 'whiteAlpha.300')
+  const menuBg = useColorModeValue('whiteAlpha.500', 'darkAlpha.200')
+  const itemBgHover = useColorModeValue('blackAlpha.50', 'whiteAlpha.300')
 
   return (
     <>
@@ -38,7 +53,7 @@ export default function Nav() {
         px={4}>
 
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
-          
+
           <Box>
             <Link href='/app' replace>
               <Heading as='h1' fontFamily='system-ui' size='xl' ml={2}>🐸 Sapo</Heading>
@@ -50,52 +65,52 @@ export default function Nav() {
               <ModeToggler />
 
               <Menu>
-                {isConnected ? 
+                {connected ?
                   <Box>
                     <MenuButton
                       as={Button}
                       color="green.400"
-                      bg={useColorModeValue('green.50', 'whiteAlpha.200')}
+                      bg={buttonBg}
                       _hover={{
-                        bg: useColorModeValue('whiteAlpha.600', 'whiteAlpha.300'),
+                        bg: buttonBgHover,
                       }}
                       cursor={'pointer'}>
-                        <FaWallet />
+                      <FaWallet />
                     </MenuButton>
                     <MenuList
                       alignItems={'center'}
-                      bg={useColorModeValue('whiteAlpha.500', 'darkAlpha.200')} 
+                      bg={menuBg}
                       backdropFilter='auto'
                       backdropBlur='4px'
-                      >
+                    >
                       <Center>
                         <Text>Wallet</Text>
                       </Center>
                       <Center>
                         <Text fontSize='md' as='b'>{
-                        address?.slice(0,4) + "..." + address?.slice(address.length - 4, address.length)
+                          address?.slice(0, 4) + "..." + address?.slice(address.length - 4, address.length)
                         }</Text>
                       </Center>
                       <MenuDivider />
                       <MenuItem
                         _hover={
-                          {bg: useColorModeValue('blackAlpha.50', 'whiteAlpha.300')}
+                          { bg: itemBgHover }
                         }
                         onClick={() => router.push('/app/jobsHistory')}
                         bg='inherit'>
-                          Jobs history
+                        Jobs history
                       </MenuItem>
                       <MenuItem
                         _hover={
-                          {bg: useColorModeValue('blackAlpha.50', 'whiteAlpha.300')}
+                          { bg: itemBgHover }
                         }
                         onClick={() => disconnect()}
                         bg='inherit'>
-                          Disconnect
+                        Disconnect
                       </MenuItem>
                     </MenuList>
                   </Box>
-                  : null
+                  : <></>
                 }
               </Menu>
             </Stack>

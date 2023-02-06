@@ -29,7 +29,7 @@ export default function JobsSidebar() {
 
   useEffect(() => {
     onOpen();
-  }, []);
+  }, [onOpen]);
 
   const allCat = { name: "All", id: 0, icon: FaBorderAll, color: null };
 
@@ -78,6 +78,7 @@ export default function JobsSidebar() {
 
           {allCategories.map((cat) => (
             <NavItem
+              key={cat.id}
               cat={cat}
               current={category}
               onClick={() => {
@@ -117,6 +118,10 @@ const NavItem = ({
   current: Category | null;
   onClick: any;
 }) => {
+  const gradient = useColorModeValue(
+    "linear(to-r, teal.600, green.400)",
+    "linear(to-r, teal.300, green.100)"
+  )
   return (
     <Box onClick={onClick}>
       <Flex
@@ -139,10 +144,7 @@ const NavItem = ({
         }}
         {...(current?.id === cat.id
           ? {
-              bgGradient: useColorModeValue(
-                "linear(to-r, teal.600, green.400)",
-                "linear(to-r, teal.300, green.100)"
-              ),
+              bgGradient: gradient,
               bgClip: "text",
               borderColor: "teal.400",
             }

@@ -142,14 +142,17 @@ const JobInstance = ({
   let { data: status, isLoading: statusIsLoading } = res;
   // console.log("test: ", { jobAddress, job, res, key: id });
 
+  const unselectedColor = useColorModeValue("whiteAlpha.700", "transparent")
+  const selectedColor = useColorModeValue("teal.50", "teal.800")
+  
   return (
     <Box
       key={job.id}
       transition="all 0.2s ease-in"
       bg={
         selected && selected === jobAddress
-          ? useColorModeValue("teal.50", "teal.800")
-          : useColorModeValue("whiteAlpha.700", "transparent")
+          ? selectedColor
+          : unselectedColor
       }
       _hover={{
         bg: useColorModeValue("blackAlpha.100", "blackAlpha.400"),

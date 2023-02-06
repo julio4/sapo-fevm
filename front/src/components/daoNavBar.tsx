@@ -57,33 +57,33 @@ export default function DaoNavBar() {
     return str.substring(1);
   }
 
-  const convertToCids = () => {
-    let newCids: string[] = [];
-    rawCids.forEach((raw) => {
-      newCids.push(hex2a(raw));
-    });
-    setCids(newCids);
-  };
-
-  const getCidType = async () => {
-    let newTypeCids: string[][] = [];
-
-    cids.forEach(async (cid) => {
-      let file = "https://ipfs.io/ipfs/" + cid;
-      var req = await fetch(file, { method: "HEAD" });
-      let type = req.headers.get("content-type");
-      type = type || "undefined";
-      newTypeCids.push([cid, type]);
-    });
-    setCidType(newTypeCids);
-  };
-
   useEffect(() => {
+    const convertToCids = () => {
+      let newCids: string[] = [];
+      rawCids.forEach((raw) => {
+        newCids.push(hex2a(raw));
+      });
+      setCids(newCids);
+    };
+
     console.log("Raw CIDS: ", rawCids);
     convertToCids();
   }, [rawCids]);
 
   useEffect(() => {
+    const getCidType = async () => {
+      let newTypeCids: string[][] = [];
+  
+      cids.forEach(async (cid) => {
+        let file = "https://ipfs.io/ipfs/" + cid;
+        var req = await fetch(file, { method: "HEAD" });
+        let type = req.headers.get("content-type");
+        type = type || "undefined";
+        newTypeCids.push([cid, type]);
+      });
+      setCidType(newTypeCids);
+    };
+  
     console.log("Clean CIDS: ", cids);
     getCidType();
   }, [cids]);

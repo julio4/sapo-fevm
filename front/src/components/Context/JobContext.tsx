@@ -36,6 +36,7 @@ type Job = {
   image: string;
   inputTypes: string[];
   runParams: string[];
+  desc: string;
 };
 
 type JobRequest = {

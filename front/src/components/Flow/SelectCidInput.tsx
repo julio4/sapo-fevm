@@ -147,6 +147,8 @@ const FilesTable = ({ files }) => {
     setStep(2);
   };
 
+  const fileBg = useColorModeValue("green.100", "green.900")
+
   return (
     <TableContainer>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -205,7 +207,7 @@ const FilesTable = ({ files }) => {
                 borderRadius="md"
                 _hover={{
                   cursor: "pointer",
-                  bg: useColorModeValue("green.100", "green.900"),
+                  bg: fileBg,
                 }}
                 onClick={() => handleClick(file)}
               >

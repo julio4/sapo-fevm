@@ -69,6 +69,12 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
     onOpen();
   }
 
+  const jobBgGradient = useColorModeValue(
+    "linear(to-r, blue.200, blue.200)",
+    "linear(to-r, blue.900, blue.900)"
+  )
+  const jobColor = useColorModeValue("gray.700", "gray.200")
+
   return (
     <Box
       w={job ? "full" : "0"}
@@ -114,11 +120,8 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
               ml={6}
               onClick={() => handleClickShow("outputs")}
               size="xs"
-              bgGradient={useColorModeValue(
-                "linear(to-r, blue.200, blue.200)",
-                "linear(to-r, blue.900, blue.900)"
-              )}
-              color={useColorModeValue("gray.700", "gray.200")}
+              bgGradient={jobBgGradient}
+              color={jobColor}
               fontWeight="bold"
             >
               Show
@@ -135,11 +138,8 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
               ml={6}
               onClick={() => handleClickShow("outputs")}
               size="xs"
-              bgGradient={useColorModeValue(
-                "linear(to-r, blue.200, blue.200)",
-                "linear(to-r, blue.900, blue.900)"
-              )}
-              color={useColorModeValue("gray.700", "gray.200")}
+              bgGradient={jobBgGradient}
+              color={jobColor}
               fontWeight="bold"
             >
               Show
@@ -156,11 +156,8 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
               ml={6}
               onClick={() => handleClickShow("outputs")}
               size="xs"
-              bgGradient={useColorModeValue(
-                "linear(to-r, blue.200, blue.200)",
-                "linear(to-r, blue.900, blue.900)"
-              )}
-              color={useColorModeValue("gray.700", "gray.200")}
+              bgGradient={jobBgGradient}
+              color={jobColor}
               fontWeight="bold"
             >
               Show

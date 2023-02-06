@@ -13,26 +13,29 @@ import GrowthDark from '../../public/growthDark.svg'
 
 import ModeToggler from '@/components/Layout/modeToggler'
 
-const HeroItem = ({ page, img, imgDark, heading, desc, left }) => (
-  <Flex
-    height="100vh"
-    justifyContent="center"
-    alignItems="center"
-    transform={"translateY(-" + (page*100).toString() + "%)"}
-    transition="transform 0.5s"
-  >
-    <Flex direction="row" p={12} rounded={6} alignItems="center" justifyContent="space-evenly" w="full" gap={4}>
-      {left ? <Image src={useColorModeValue(img, imgDark)} alt="Connected" width={600} /> : null}
-      <Box>
-        <Heading as="h1" size="xl" mb={6}>{heading}</Heading>
-        <Text color={useColorModeValue("gray.700", "gray.200")}>
-          {desc}
-        </Text>
-      </Box>
-      {!left ? <Image src={useColorModeValue(img, imgDark)} alt="Connected" width={600} /> : null}
+const HeroItem = ({ page, img, imgDark, heading, desc, left }) => {
+  const im = useColorModeValue(img, imgDark)
+  return (
+    <Flex
+      height="100vh"
+      justifyContent="center"
+      alignItems="center"
+      transform={"translateY(-" + (page*100).toString() + "%)"}
+      transition="transform 0.5s"
+    >
+      <Flex direction="row" p={12} rounded={6} alignItems="center" justifyContent="space-evenly" w="full" gap={4}>
+        {left ? <Image src={im} alt="Connected" width={600} /> : null}
+        <Box>
+          <Heading as="h1" size="xl" mb={6}>{heading}</Heading>
+          <Text color={useColorModeValue("gray.700", "gray.200")}>
+            {desc}
+          </Text>
+        </Box>
+        {!left ? <Image src={im} alt="Connected" width={600} /> : null}
+      </Flex>
     </Flex>
-  </Flex>
-)
+  )
+}
 
 export default function HeroPage() {
   const [ page, setPage ] = useState(0)
@@ -63,22 +66,24 @@ export default function HeroPage() {
     }
   ]
 
-  const onScroll = (event: any) => {
-    const isDown = parseInt(event.deltaY) > 0;
-    setThresold(thresold + 1)
-    console.log(thresold)
-    if (thresold > 3) {
-      setThresold(0)
-      setPage(isDown ? (page >= items.length ? page : page + 1) : 0)
-    }
-  }
 
   useEffect(() => {
+    const onScroll = (event: any) => {
+      const isDown = parseInt(event.deltaY) > 0;
+      setThresold(thresold + 1)
+      if (thresold > 3) {
+        setThresold(0)
+        setPage(isDown ? (page >= items.length ? page : page + 1) : 0)
+      }
+    }
+
     window.addEventListener('wheel', onScroll);
     return () => {
       window.removeEventListener('scroll', onScroll);
     }
-  }, [thresold]);
+  }, [thresold, items.length, page]);
+
+  const pointerColor = useColorModeValue("green.500","green.200")
 
   return (
     <Box height={"200vh"}
@@ -124,7 +129,7 @@ export default function HeroPage() {
         _hover={{ 
           cursor: "pointer",
           transform: "scale(1.2)",
-          color: useColorModeValue("green.500","green.200")
+          color: pointerColor
         }}
         onClick={() => setPage(page - 1)}
       >
@@ -141,7 +146,7 @@ export default function HeroPage() {
         _hover={{ 
           cursor: "pointer",
           transform: "scale(1.2)",
-          color: useColorModeValue("green.500","green.200")
+          color: pointerColor
         }}
         onClick={() => setPage(page + 1)}
       >

@@ -29,12 +29,12 @@ export default function JobSubmitted() {
               />
               <Text color={useColorModeValue('gray.600', 'gray.400')}
               mt={4} align='center' fontSize="sm" fontFamily="monospace" fontWeight="bold">
-                Your job has been submitted. You will be redirected to the job page once it has been processed.
+                Your job has been submitted. Job can take up to several minutes to be completed...
+                You will be redirected to the job page once it has been processed.
               </Text>
             </Flex>
           </Flex>
         </Flex>
-    
       );
     }
     

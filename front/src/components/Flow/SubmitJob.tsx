@@ -118,7 +118,9 @@ export default function SubmitJob() {
     if (request.input?.cid) {
       write?.();
     }
-  }, [request])
+  }, [request, write])
+
+  const descriptionText = useColorModeValue('gray.600', 'gray.400')
 
   return (
     <Flex direction='column' h='full' w='full' p={8}>
@@ -193,8 +195,8 @@ export default function SubmitJob() {
               color='green.500'
               size='xl'
             />
-            <Text color={useColorModeValue('gray.600', 'gray.400')}
-            mt={4} align='center' fontSize="xl" fontFamily="system-ui" fontWeight="bold">
+            <Text color={descriptionText}
+              mt={4} align='center' fontSize="xl" fontFamily="system-ui" fontWeight="bold">
               Waiting for transaction confirmation...
             </Text>
           </Flex>

@@ -58,52 +58,51 @@ export default function SelectFromDaoInput() {
     return str.substring(1);
   }
 
-  const convertToCids = () => {
-    let newCids: string[] = [];
-    rawCids.forEach((raw) => {
-      newCids.push(hex2a(raw));
-    });
-    setCids(newCids);
-  };
-
-  const storeCidType = async () => {
-    let newAllFiles: File[] = [];
-    for (const index in cids) {
-      const cid = cids[index];
-      let file = "https://ipfs.io/ipfs/" + cid;
-
-      const fetchPromise = fetch(file, { method: "HEAD" });
-      const timeoutPromise = new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve({ cid: `ERROR: ${cid}`, size: null, type: null });
-        }, 5000);
-      });
-
-      const result = await Promise.race([fetchPromise, timeoutPromise]);
-      if (result instanceof Response) {
-        let size = result.headers.get("content-length");
-        size = size || null;
-        let type = result.headers.get("content-type");
-        type = type || "undefined";
-        newAllFiles.push({
-          cid,
-          type,
-          size,
-        });
-      } else {
-        newAllFiles.push(result);
-      }
-    }
-    setAllFiles(newAllFiles);
-  };
 
   useEffect(() => {
+    const convertToCids = () => {
+      let newCids: string[] = [];
+      rawCids.forEach((raw) => {
+        newCids.push(hex2a(raw));
+      });
+      setCids(newCids);
+    };
     convertToCids();
   }, [rawCids]);
 
   useEffect(() => {
+    const storeCidType = async () => {
+      let newAllFiles: File[] = [];
+      for (const index in cids) {
+        const cid = cids[index];
+        let file = "https://ipfs.io/ipfs/" + cid;
+
+        const fetchPromise = fetch(file, { method: "HEAD" });
+        const timeoutPromise = new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve({ cid: `ERROR: ${cid}`, size: null, type: null });
+          }, 1000);
+        });
+
+        const result = await Promise.race([fetchPromise, timeoutPromise]);
+        if (result instanceof Response) {
+          let size = result.headers.get("content-length");
+          size = size || null;
+          let type = result.headers.get("content-type");
+          type = type || "undefined";
+          newAllFiles.push({
+            cid,
+            type,
+            size,
+          });
+        } else {
+          newAllFiles.push(result);
+        }
+      }
+      setAllFiles(newAllFiles);
+    };
     storeCidType();
-  }, [cids]);
+  }, [cids, setAllFiles]);
 
   return (
     <Flex pt={3}>

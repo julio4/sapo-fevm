@@ -23,46 +23,45 @@ export default function SelectFromDaoInput() {
   const [cidInput, setCidInput] = useState("");
   const [cid, setCid] = useState<string>("");
 
-  const storeCidType = async () => {
-    let newAllFiles: File[] = [];
-    let file = "https://ipfs.io/ipfs/" + cid;
-
-    try {
-      const fetchPromise = fetch(file, { method: "HEAD" });
-      const timeoutPromise = new Promise((resolve, reject) => {
-        setTimeout(() => {
-          reject(new Error(`ERROR: ${cid}`));
-        }, 2000);
-      });
-      const result = await Promise.race([fetchPromise, timeoutPromise]);
-      if (result.ok) {
-        let size = result.headers.get("content-length");
-        size = size || null;
-        let type = result.headers.get("content-type");
-        type = type || "undefined";
-        newAllFiles.push({
-          cid,
-          type,
-          size,
-        });
-      } else {
-        throw new Error(`ERROR: ${cid}`);
-      }
-    } catch (error) {
-      newAllFiles.push({
-        cid: `ERROR: ${cid}`,
-        type: null,
-        size: null,
-      });
-    }
-    setAllFiles(newAllFiles);
-  };
-
   useEffect(() => {
+    const storeCidType = async () => {
+      let newAllFiles: File[] = [];
+      let file = "https://ipfs.io/ipfs/" + cid;
+  
+      try {
+        const fetchPromise = fetch(file, { method: "HEAD" });
+        const timeoutPromise = new Promise((resolve, reject) => {
+          setTimeout(() => {
+            reject(new Error(`ERROR: ${cid}`));
+          }, 2000);
+        });
+        const result = await Promise.race([fetchPromise, timeoutPromise]);
+        if (result.ok) {
+          let size = result.headers.get("content-length");
+          size = size || null;
+          let type = result.headers.get("content-type");
+          type = type || "undefined";
+          newAllFiles.push({
+            cid,
+            type,
+            size,
+          });
+        } else {
+          throw new Error(`ERROR: ${cid}`);
+        }
+      } catch (error) {
+        newAllFiles.push({
+          cid: `ERROR: ${cid}`,
+          type: null,
+          size: null,
+        });
+      }
+      setAllFiles(newAllFiles);
+    };
     if (cid) {
       storeCidType();
     }
-  }, [cid]);
+  }, [cid, setAllFiles]);
 
   return (
     <Flex pt={3}>
