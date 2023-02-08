@@ -7,16 +7,8 @@ import {
   Flex,
   Box,
   useColorModeValue,
-  Heading,
   Divider,
   Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   Badge,
 } from "@chakra-ui/react";
 
@@ -63,20 +55,9 @@ const jobsList: JobResult[] = [
   },
 ];
 
+const statusText: string[] = ["Pending", "Completed", "Failed", "Loading..."];
 
-const statusText: string[] = [
-  "Pending",
-  "Completed",
-  "Failed",
-  "Loading...",
-];
-
-const statusColor: string[] = [
-  "blue",
-  "green",
-  "red",
-  "orange",
-]
+const statusColor: string[] = ["blue", "green", "red", "orange"];
 
 const JobInstance = ({
   onSelect,
@@ -89,6 +70,7 @@ const JobInstance = ({
   selected: `0x${string}` | null;
   id: number;
 }) => {
+  const [outputUrl, setOutputUrl] = useState<string>("");
   // TODO Bacalhau
   let [job, setJob] = useState<JobResult>({
     id: id,
@@ -99,7 +81,11 @@ const JobInstance = ({
     stdout: "",
   });
 
-  let { data: jobId, isLoading: jobIdIsLoading, isError: jobIdIsError } = useContractRead({
+  let {
+    data: jobId,
+    isLoading: jobIdIsLoading,
+    isError: jobIdIsError,
+  } = useContractRead({
     address: jobAddress,
     abi: [
       {
@@ -109,11 +95,11 @@ const JobInstance = ({
           {
             internalType: "string",
             name: "",
-            type: "string"
-          }
+            type: "string",
+          },
         ],
         stateMutability: "view",
-        type: "function"
+        type: "function",
       },
     ],
     functionName: "getResult",
@@ -129,42 +115,56 @@ const JobInstance = ({
           {
             internalType: "enum SapoJob.Status",
             name: "",
-            type: "uint8"
-          }
+            type: "uint8",
+          },
         ],
         stateMutability: "view",
-        type: "function"
+        type: "function",
       },
     ],
     functionName: "getStatus",
   });
 
   let { data: status, isLoading: statusIsLoading } = res;
-  console.log("test: ", { job, jobId, status, jobIdIsLoading, statusIsLoading, jobIdIsError });
 
-  const unselectedColor = useColorModeValue("whiteAlpha.700", "transparent")
-  const selectedColor = useColorModeValue("teal.50", "teal.800")
+  const unselectedColor = useColorModeValue("whiteAlpha.700", "transparent");
+  const selectedColor = useColorModeValue("teal.50", "teal.800");
+
+  async function getFileFromGateway(/* cid, path */) {
+    try {
+      const response = await fetch(
+        `https://ipfs.io/ipfs/QmcGJ2KkiUwSpbdFiEgzVgYVJDfn11WBg6tUUGWAGeRa2N/outputs/image0.png`
+      );
+      const formattedUrl = response.url.replace(
+        /http.*\/ipfs\//,
+        "https://ipfs.io/ipfs/"
+      );
+      setOutputUrl(formattedUrl);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    getFileFromGateway();
+  }, [outputUrl]);
 
   return (
     <Box
       key={job.id}
       transition="all 0.2s ease-in"
-      bg={
-        selected && selected === jobAddress
-          ? selectedColor
-          : unselectedColor
-      }
+      bg={selected && selected === jobAddress ? selectedColor : unselectedColor}
       _hover={{
         bg: useColorModeValue("blackAlpha.100", "blackAlpha.400"),
         cursor: "pointer",
       }}
       onClick={() => {
-        console.log("Sending selection", {job, jobId, jobIdIsLoading, status, statusIsLoading})
         onSelect({
           ...job,
-          jobId: (jobId ? jobId : null),
-          status: (status ? status : null),
-        })
+          jobId: jobId ? jobId : null,
+          status: status ? status : null,
+          outputUrl: outputUrl ? outputUrl : null,
+        });
       }}
     >
       <Flex px={4} py={2} justifyContent="space-between" paddingX="5%">
@@ -175,22 +175,19 @@ const JobInstance = ({
             ? jobId.substring(0, 22) + "..."
             : jobId}
         </Text>
-
         <Badge
-          colorScheme={
-            statusColor[statusIsLoading ? 3 : (status ? status : 0)]
-          }
+          colorScheme={statusColor[statusIsLoading ? 3 : status ? status : 0]}
           style={{ display: "flex", alignItems: "center" }}
           borderRadius="8px"
         >
           <Text width="6vw" align="center">
-            {statusText[statusIsLoading ? 3 : (status ? status : 0)]}
+            {statusText[statusIsLoading ? 3 : status ? status : 0]}
           </Text>
         </Badge>
       </Flex>
       <Divider />
     </Box>
   );
-}
+};
 
 export default JobInstance;

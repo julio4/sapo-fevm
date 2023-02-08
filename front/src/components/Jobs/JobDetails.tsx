@@ -16,6 +16,8 @@ import {
   ModalCloseButton,
 } from "@chakra-ui/react";
 
+import Image from "next/image";
+
 import { useDisclosure } from "@chakra-ui/react";
 import JobResult from "./JobResult";
 import { CheckCircleIcon, TimeIcon, WarningIcon } from "@chakra-ui/icons";
@@ -59,7 +61,6 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
     } else if (from === "stdout") {
       setModalTitle("Stdout");
       setModalContent("Not yet implemented");
-
     }
     onOpen();
   }
@@ -113,7 +114,10 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
           <span style={styleDetail}>Exit Code:</span> {job?.exitCode}
         </Text>
         <Text display="flex" alignItems="center" mb={2}>
-          <span style={styleDetail}>Outputs: </span> {(!job || (job.status === 0 || job.status === null)) ? job?.outputs : "Not yet implemented"}
+          <span style={styleDetail}>Outputs: </span>{" "}
+          {!job || job.status === 0 || job.status === null
+            ? job?.outputs
+            : "Not yet implemented"}
           {job?.status === 1 ? (
             <Button
               mb={1}
@@ -131,7 +135,10 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
           )}
         </Text>
         <Text display="flex" alignItems="center" mb={2}>
-          <span style={styleDetail}>Stderr:</span> {(!job || (job.status === 0 || job.status === null)) ? job?.stderr : "Not yet implemented"}
+          <span style={styleDetail}>Stderr:</span>{" "}
+          {!job || job.status === 0 || job.status === null
+            ? job?.stderr
+            : "Not yet implemented"}
           {job?.status === 1 ? (
             <Button
               mb={1}
@@ -149,7 +156,10 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
           )}
         </Text>
         <Text display="flex" alignItems="center" mb={2}>
-          <span style={styleDetail}>Stdout:</span> {(!job || (job.status === 0 || job.status === null)) ? job?.stdout : "Not yet implemented"}
+          <span style={styleDetail}>Stdout:</span>{" "}
+          {!job || job.status === 0 || job.status === null
+            ? job?.stdout
+            : "Not yet implemented"}
           {job?.status === 1 ? (
             <Button
               mb={1}
@@ -166,6 +176,33 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
             <Text fontStyle={"italic"}>Waiting for result...</Text>
           )}
         </Text>
+        {job?.outputUrl ? (
+          <Box display={"flex"} justifyContent={"center"}>
+            <Box
+              borderRadius={"lg"}
+              width={"40%"}
+              display={"flex"}
+              flexDirection={"column"}
+              overflow={"hidden"}
+              alignItems={"center"}
+              mt={4}
+            >
+              <Image
+                loader={() => job?.outputUrl}
+                src={job?.outputUrl}
+                width="100"
+                height="100"
+                alt="Image of the output"
+                layout="responsive"
+              />
+              <Text fontWeight={"bold"} mt={2}>
+                Your beautiful result
+              </Text>
+            </Box>
+          </Box>
+        ) : (
+          <></>
+        )}
       </Box>
 
       <Modal isOpen={isOpen} onClose={onClose}>

@@ -7,6 +7,7 @@ type JobSummary = {
   outputs: string[]; // CIDs
   stderr: string;
   stdout: string;
+  outputUrl: string | null;
 };
 
 export default JobSummary;
