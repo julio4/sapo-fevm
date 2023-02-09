@@ -166,7 +166,7 @@ func (workflow *Workflow) ProcessEvent(ctx context.Context, event Event) (result
 	case OrderStateSubmitted:
 		result, err = workflow.Bacalhau.Create(ctx, event.(ContractSubmittedEvent))
 	case OrderStateCompleted:
-		result, err = workflow.Contract.Complete(ctx, event.(BacalhauJobCompletedEvent))
+		result, err = workflow.Contract.Complete(ctx, event.(BacalhauJobCompletedEvent), *workflow.Bacalhau.(*bacalhauRunner).Client)
 	case OrderStateJobError:
 		event := event.(BacalhauJobFailedEvent)
 		if ShouldRetry(event) {

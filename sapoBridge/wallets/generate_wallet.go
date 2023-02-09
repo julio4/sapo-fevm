@@ -85,7 +85,7 @@ func test_call() {
 	log.Print("cid1 ", cid1)
 	log.Print("cid2 ", cid2)
 
-	tx, err := contract.SaveResult(opts, jobAddr, cid1, cid2)
+	tx, err := contract.SaveResult(opts, jobAddr, cid1, cid2, cid1, cid2)
 
 	if err != nil {
 		log.Print("Error has occurred during transaction ", tx)

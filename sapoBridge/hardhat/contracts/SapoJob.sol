@@ -66,6 +66,12 @@ contract SapoJob {
     bytes32 private result2;
 
     /**
+     * @dev     The result (jobId) of the job execution. Has two parts
+     */
+    bytes32 private result1CID;
+    bytes32 private result2CID;
+
+    /**
      * @dev     The amount paid by the used for the job execution.
      */
     uint256 private amountPaid;
@@ -85,24 +91,15 @@ contract SapoJob {
      * @param   exResult1 result jobId (part 1).
      * @param   exResult2 result jobId (part 2).
      */
-    function saveResult(bytes32 exResult1, bytes32 exResult2) public isBridge isPending {
+    function saveResult(bytes32 exResult1, bytes32 exResult2, bytes32 exCid1, bytes32 exCid2) public isBridge isPending {
         (bool success, ) = payable(bridge).call{value: address(this).balance}("");
         require(success, "Failed to send Ether");
         completed = Status.Completed;
         result1 = exResult1;
         result2 = exResult2;
+        result1CID = exCid1;
+        result2CID = exCid2;
         emit JobSucceeded();
-    }
-
-    /**
-     * @dev     Get the result of the job execution.
-     *          Only the initiator can call this function.
-     * @return  The result of the job execution.
-     */
-    function getResult() public view isDone returns (string memory) {
-        SapoBridge sb = SapoBridge(owner);
-        string memory resString = sb.bytes64ToString(result1, result2);
-        return resString;
     }
 
     /**
@@ -119,6 +116,18 @@ contract SapoJob {
     }
 
     /* Getters */
+    function getResult() public view isDone returns (string memory) {
+        SapoBridge sb = SapoBridge(owner);
+        string memory resString = sb.bytes64ToString(result1, result2);
+        return resString;
+    }
+
+    function getResultCid() public view isDone returns (string memory) {
+        SapoBridge sb = SapoBridge(owner);
+        string memory resString = sb.bytes64ToString(result1CID, result2CID);
+        return resString;
+    }
+
     function getBridgeAddress() public view returns (address) {
         return bridge;
     }
