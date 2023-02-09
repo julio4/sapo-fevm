@@ -127,7 +127,7 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
         <Text>
           <span style={styleDetail}>About the results:</span>
         </Text>
-        <Accordion allowToggle>
+        <Accordion allowMultiple>
           <AccordionItem>
             <h2>
               <AccordionButton>
@@ -215,7 +215,7 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
                       borderRadius="md"
                       color="BlackAlpha.900"
                     >
-                      <Text>Stderr:{job.stderr}</Text>
+                      <Text>{job.stderr}</Text>
                     </Container>
                   </Box>
                 </>

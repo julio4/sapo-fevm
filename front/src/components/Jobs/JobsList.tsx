@@ -61,15 +61,17 @@ const JobsList = ({
 
       <Divider />
 
-      {Object.entries(jobAddresses).map((tab) => {
-        let [key, jobAddress] = tab;
-        return (
-          <JobInstance
-            {...{ onSelect, jobAddress, selected, id: parseInt(key) }}
-            key={key}
-          />
-        );
-      })}
+      {Object.entries(jobAddresses)
+        .sort((a, b) => parseInt(b[0]) - parseInt(a[0]))
+        .map((tab) => {
+          let [key, jobAddress] = tab;
+          return (
+            <JobInstance
+              {...{ onSelect, jobAddress, selected, id: parseInt(key) }}
+              key={key}
+            />
+          );
+        })}
     </Box>
   );
 };
