@@ -38,6 +38,7 @@ type Job = {
   runParams: string[];
   desc: string;
   needInput: boolean;
+  complexity: number;
 };
 
 type JobRequest = {
@@ -144,6 +145,7 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
       runParams: ["python3", "/inputs"],
       desc: "Execute python script with pandas (input: .py)",
       needInput: true,
+      complexity: 2
     },
     {
       name: "Python Hello World",
@@ -153,6 +155,7 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
       runParams: ["python3", "-c", "print(\"Hello, world\")"],
       desc: "Print Hello world in python",
       needInput: false,
+      complexity: 1
     },
     {
       name: "R script",
@@ -162,6 +165,7 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
       runParams: ["Rscript", "/inputs"],
       desc: "Execute R script (input: .r)",
       needInput: true,
+      complexity: 2
     },
     {
       name: "Sparkov credit card",
@@ -180,6 +184,7 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
       ],
       desc: "synthetic credit card transaction data generation using Sparkov",
       needInput: false,
+      complexity: 2
     },
     {
       name: "Csv data cleaning",
@@ -189,6 +194,7 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
       runParams: ["python3", "-c", "import pandas as pd;df = pd.read_csv('./input');df.dropna(inplace=True);df.drop_duplicates(inplace=True);df.to_csv('./output/output.csv', index=False)"],
       desc: "Check for missing values, duplicates, and columns data types (input: .csv)",
       needInput: true,
+      complexity: 1
     },
     {
       name: "Batch image resizing",
@@ -198,6 +204,7 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
       runParams: ["magick", "mogrify", "-resize 100x100", "-quality", "100", "-path", "/outputs", "'/inputs/*.jpg'"],
       desc: "Resize a batch of jpg to 100x100 (input: ./*.jpg)",
       needInput: true,
+      complexity: 3
     },
     {
       name: "Python script",
@@ -207,15 +214,27 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
       runParams: ["python3", "/inputs"],
       desc: "Execute python script (input: .py)",
       needInput: true,
+      complexity: 2
     },
     {
-      name: "Stable Diffusion",
+      name: "Stable Diffusion CPU",
       category: allCategories[2],
       image: "ghcr.io/bacalhau-project/examples/stable-diffusion-cpu:0.0.1",
       inputTypes: ["text/plain"],
-      runParams: ["python", "demo.py", "--prompt", "$(cat /inputs)", "--output", "/outputs/output.png"],
+      runParams: ["/bin/bash", "-c", "python demo.py --prompt \"$(cat /inputs)\" --output /outputs"],
       desc: "Stable diffusion image generation from prompt (input: .txt)",
       needInput: true,
+      complexity: 5
+    },
+    {
+      name: "Stable Diffusion GPU",
+      category: allCategories[2],
+      image: "ghcr.io/bacalhau-project/examples/stable-diffusion-gpu:0.0.1",
+      inputTypes: ["text/plain"],
+      runParams: ["/bin/bash", "-c", "python /main.py --o /outputs --p \"$(cat /inputs)\""],
+      desc: "Stable diffusion image generation from prompt (input: .txt)",
+      needInput: true,
+      complexity: 5
     },
     {
       name: "Image to Text (EasyOCR)",
@@ -225,6 +244,7 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
       runParams: ["easyocr", "-l", "ch_sim", "en", "-f", "./inputs", "--detail=1", "--gpu=True"],
       desc: "(NOT WORKING: waiting for GPU support) Optical Character Recognition from jpg using EasyOCR (input: .jpg)",
       needInput: true,
+      complexity: 5
     },
     {
       name: "Speech Recognition",
@@ -234,6 +254,7 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
       runParams: ["python", "openai-whisper.py", "-p", "./inputs", "-o", "outputs"],
       desc: "(NOT WORKING: waiting for GPU support) Speech recognition using Whisper (input: .mp4)",
       needInput: true,
+      complexity: 5
     },
     {
       name: "Object Detection (YOLOv5)",
@@ -243,6 +264,7 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
       runParams: ["/bin/bash", "-c", "'find /inputs -type f -exec cp {} /outputs/yolov5s.pt \; ; python detect.py --weights /outputs/yolov5s.pt --source /datasets --project /outputs'"],
       desc: "(NOT WORKING: waiting for GPU support) Object detection with YOLOv5 (input: .jpg)",
       needInput: true,
+      complexity: 5
     },
   ]);
   const [allFiles, setAllFiles] = useState<File[]>([]);

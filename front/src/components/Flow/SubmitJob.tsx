@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Spinner,
   Box,
@@ -67,7 +67,23 @@ const cidToHex = (cid: string) => {
 }
 
 export default function SubmitJob() {
+  const { setStep, jobRequest, setJobRequest } = useJobContext();
+  const [ isSubmitting, setIsSubmitting] = useState(false);
+  const [ isPending, setIsPending] = useState(false);
+  const [ isError, setIsError] = useState(false);
   const [contract, setContract] = useState<any>(null);
+
+  const [price, setPrice] = useState(0.1);
+  const baseFee = 0.02;
+  const complexityFee = 0.02;
+  const sizeFee = 0.001;
+
+  useEffect(() => {
+    setPrice(baseFee 
+      + (jobRequest.usrInput?.size || 100) * sizeFee 
+      + (jobRequest.job?.complexity || 2) * complexityFee)
+  }, []);
+
   useSigner({
     onSuccess(signer) {
       const sapoContract = new ethers.Contract(AddressSapoBridge.address, AbiSapoBridge, signer);
@@ -75,10 +91,7 @@ export default function SubmitJob() {
     }
   });
 
-  const { setStep, jobRequest, setJobRequest } = useJobContext();
-  const [ isSubmitting, setIsSubmitting] = useState(false);
-  const [ isPending, setIsPending] = useState(false);
-  const [ isError, setIsError] = useState(false);
+
 
   const handleSubmit = async () => {
     setIsError(false);
@@ -104,7 +117,7 @@ export default function SubmitJob() {
     try {
       const txPromise = contract.request(args[0], args[1], {
         gasLimit: ethers.BigNumber.from(1000000000),
-        value: ethers.utils.parseEther('0.1'),
+        value: ethers.utils.parseEther(price.toString()),
       });  
       const txRes = await txPromise; 
       setIsPending(true);
@@ -178,8 +191,8 @@ export default function SubmitJob() {
 
           <SpecCard 
             title="Approximate price" 
-            value='~0.15 FIL'
-            desc="If the job fails, you'll be refunded atleast 50%" />
+            value={price.toFixed(2) + " FIL"}
+            desc="Base fee + job complexity + input size. If the job fails, you'll be refunded atleast 50%" />
         </SimpleGrid>
 
         <Box p={4}>
@@ -206,14 +219,6 @@ export default function SubmitJob() {
 
         {isPending &&
           <Flex my={8} direction='column' alignContent='center' justifyContent='center'>
-            <Spinner
-              alignSelf='center'
-              thickness='4px'
-              speed='0.65s'
-              emptyColor='gray.200'
-              color='green.500'
-              size='xl'
-            />
             <Text color={descriptionText}
               mt={4} align='center' fontSize="xl" fontFamily="system-ui" fontWeight="bold">
               Waiting for transaction confirmation...
