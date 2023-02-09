@@ -71,6 +71,11 @@ const JobInstance = ({
   id: number;
 }) => {
   const [outputUrl, setOutputUrl] = useState<string>("");
+  const [cidExitCode, setCidExitCode] = useState<string>("");
+  const [cidOutputs, setCidOutputs] = useState<string>("");
+  const [cidStderr, setCidStderr] = useState<string>("");
+  const [cidStdout, setCidStdout] = useState<string>("");
+
   // TODO Bacalhau
   let [job, setJob] = useState<JobResult>({
     id: id,
@@ -105,6 +110,26 @@ const JobInstance = ({
     functionName: "getResult",
   });
 
+  let { data: cidResult } = useContractRead({
+    address: "0x2949328f2f33dE0a07e4eaF22D2A7A9Dfbc5Dbf3", //test console
+    abi: [
+      {
+        inputs: [],
+        name: "getResultCid",
+        outputs: [
+          {
+            internalType: "string",
+            name: "",
+            type: "string",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+    ],
+    functionName: "getResultCid",
+  });
+
   let res = useContractRead({
     address: jobAddress,
     abi: [
@@ -130,23 +155,65 @@ const JobInstance = ({
   const unselectedColor = useColorModeValue("whiteAlpha.700", "transparent");
   const selectedColor = useColorModeValue("teal.50", "teal.800");
 
-  async function getFileFromGateway(/* cid, path */) {
+  async function getFileFromGateway(cid: string /*, path */) {
     try {
-      const response = await fetch(
-        `https://ipfs.io/ipfs/QmcGJ2KkiUwSpbdFiEgzVgYVJDfn11WBg6tUUGWAGeRa2N/outputs/image0.png`
+      const request = await fetch(`https://ipfs.io/api/v0/ls/${cid}`);
+      const responseJson = await request.json();
+      const filesCid = responseJson.Objects[0].Links.map(
+        (link: { Hash: any }) => link.Hash
       );
-      const formattedUrl = response.url.replace(
-        /http.*\/ipfs\//,
-        "https://ipfs.io/ipfs/"
+      // Mettre les filescid dans les states correspondants
+      setCidExitCode(filesCid[0]);
+      setCidOutputs(filesCid[1]);
+      setCidStderr(filesCid[2]);
+      setCidStdout(filesCid[3]);
+
+      // List files in the outputs directory
+      const request2 = await fetch(`https://ipfs.io/api/v0/ls/${filesCid[1]}`);
+      const responseJson2 = await request2.json();
+      const namesOutputsAndCids = responseJson2.Objects[0].Links.map(
+        (link: { Name: any; Hash: any }) => {
+          return { name: link.Name, cid: link.Hash };
+        }
       );
-      setOutputUrl(formattedUrl);
+
+      const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp"];
+
+      const imagelist = namesOutputsAndCids.filter(
+        (filename: { name: string; cid: any }) => {
+          const extension = filename.name.substr(
+            filename.name.lastIndexOf(".")
+          );
+          if (imageExtensions.includes(extension)) {
+            return [imageExtensions.includes(extension), filename.cid];
+          }
+        }
+      );
+
+      if (imagelist.length === 1) {
+        console.log("imagelist", imagelist);
+        console.log("There is exactly one image in the array");
+        const response = await fetch(
+          `https://ipfs.io/ipfs/${cid}/outputs/${imagelist[0].name}`
+        );
+        const formattedUrl = response.url.replace(
+          /http.*\/ipfs\//,
+          "https://ipfs.io/ipfs/"
+        );
+        setOutputUrl(formattedUrl);
+      } else {
+        console.log("There is not exactly one image in the array");
+      }
     } catch (error) {
       console.log(error);
     }
+    console.log("outputUrl", outputUrl);
   }
 
   useEffect(() => {
-    getFileFromGateway();
+    if (cidResult) {
+      getFileFromGateway(cidResult);
+    }
   }, [outputUrl]);
 
   return (
