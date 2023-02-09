@@ -81,8 +81,8 @@ contract SapoBridge {
      * @param   result1 The job result jobId (part1).
      * @param   result2 The job result jobId (part2).
      */
-    function saveResult(address job, bytes32 result1, bytes32 result2) public onlyBridge {
-        SapoJob(job).saveResult(result1, result2);
+    function saveResult(address job, bytes32 result1, bytes32 result2, bytes32 cid1, bytes32 cid2) public onlyBridge {
+        SapoJob(job).saveResult(result1, result2, cid1, cid2);
     }
 
     /**
