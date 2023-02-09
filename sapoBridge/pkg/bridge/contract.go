@@ -39,7 +39,7 @@ func (r *RealContract) Complete(ctx context.Context, event BacalhauJobCompletedE
 	timeoutCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	jobs, err := client.GetResults(timeoutCtx, "2cb7f3ed-efa3-4cff-a8e9-621c14abef07")
+	jobs, err := client.GetResults(timeoutCtx, event.JobID())
 
 	if err != nil {
 		log.Ctx(ctx).Error().Err(err).Send()
