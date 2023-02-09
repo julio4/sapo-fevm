@@ -12,6 +12,7 @@ import {
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
+  Container,
 } from "@chakra-ui/react";
 
 import Image from "next/image";
@@ -66,7 +67,7 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
       border="1px"
       borderColor={useColorModeValue("gray.200", "gray.700")}
       borderRadius="lg"
-      overflow={"scroll"}
+      maxHeight={"95%"}
     >
       <Box px={4}>
         <Heading
@@ -128,32 +129,41 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
               </AccordionButton>
             </h2>
             <AccordionPanel pb={4}>
-              {job?.outputsNamesAndCids?.length ? (
-                job.outputsNamesAndCids.map((output) => (
-                  <>
-                    <Box
-                      display={"flex"}
-                      alignItems={"center"}
-                      justifyContent={"flex-start"}
-                    >
-                      <Text mr={"5%"}>
-                        <span style={styleDetail}>{output.name}:</span>{" "}
-                        {output.cid}
-                      </Text>
-                      <Button
-                        size={"sm"}
-                        onClick={() =>
-                          window.open(`https://ipfs.io/ipfs/${output.cid}`)
-                        }
+              <Container
+                py="2%"
+                maxW="95%"
+                bg={useColorModeValue("green.300", "green.500")}
+                borderRadius="md"
+                color={useColorModeValue("gray.700", "gray.200")}
+              >
+                {job?.outputsNamesAndCids?.length ? (
+                  job.outputsNamesAndCids.map((output) => (
+                    <>
+                      <Box
+                        display={"flex"}
+                        alignItems={"center"}
+                        justifyContent={"flex-start"}
                       >
-                        Show on IPFS.io
-                      </Button>
-                    </Box>
-                  </>
-                ))
-              ) : (
-                <Text>No outputs</Text>
-              )}
+                        <Text mr={"5%"}>
+                          <span style={styleDetail}>{output.name}:</span>{" "}
+                          {output.cid}
+                        </Text>
+                        <Button
+                          size={"sm"}
+                          bg={useColorModeValue("blue.300", "blue.500")}
+                          onClick={() =>
+                            window.open(`https://ipfs.io/ipfs/${output.cid}`)
+                          }
+                        >
+                          Show on IPFS
+                        </Button>
+                      </Box>
+                    </>
+                  ))
+                ) : (
+                  <Text>No outputs</Text>
+                )}
+              </Container>
             </AccordionPanel>
           </AccordionItem>
 
@@ -175,8 +185,24 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
             <AccordionPanel pb={4}>
               {job?.stderr ? (
                 <>
-                  <Text>Here is the stderr of the job:</Text>
-                  <Text style={styleDetail}>Stderr:{job.stderr}</Text>
+                  <Box
+                    display={"flex"}
+                    alignItems={"center"}
+                    flexDirection={"column"}
+                  >
+                    <Text mb={2}>
+                      <span style={styleDetail}> CID:</span> {job.cidStderr}
+                    </Text>
+                    <Container
+                      py="2%"
+                      maxW="95%"
+                      bg={useColorModeValue("red.300", "red.500")}
+                      borderRadius="md"
+                      color="BlackAlpha.900"
+                    >
+                      <Text>Stderr:{job.stderr}</Text>
+                    </Container>
+                  </Box>
                 </>
               ) : (
                 <Text>No stderr</Text>
@@ -201,10 +227,24 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
             <AccordionPanel pb={4}>
               {job?.stdout ? (
                 <>
-                  <Text>Here is the stdout of the job:</Text>
-                  <Text>
-                    <span style={styleDetail}>Stdout:</span> {job.stdout}
-                  </Text>
+                  <Box
+                    display={"flex"}
+                    alignItems={"center"}
+                    flexDirection={"column"}
+                  >
+                    <Text mb={2}>
+                      <span style={styleDetail}> CID:</span> {job.cidStdout}
+                    </Text>
+                    <Container
+                      py="2%"
+                      maxW="95%"
+                      bg={useColorModeValue("green.300", "green.500")}
+                      borderRadius="md"
+                      color={useColorModeValue("gray.700", "gray.200")}
+                    >
+                      <Text>Stderr:{job.stdout}</Text>
+                    </Container>
+                  </Box>
                 </>
               ) : (
                 <Text>No stdout</Text>
@@ -213,29 +253,6 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
           </AccordionItem>
         </Accordion>
 
-        {/*         <Text display="flex" alignItems="center" mb={2}>
-          <span style={styleDetail}>Stdout:</span>{" "}
-          {!job || job.status === 0 || job.status === null ? (
-            job?.stdout
-          ) : (
-            <></>
-          )}
-          {job?.status === 1 ? (
-            <Button
-              mb={1}
-              ml={6}
-              onClick={() => handleClickShow("stdout")}
-              size="xs"
-              bgGradient={jobBgGradient}
-              color={jobColor}
-              fontWeight="bold"
-            >
-              Show
-            </Button>
-          ) : (
-            <Text fontStyle={"italic"}>Waiting for result...</Text>
-          )}
-        </Text> */}
         {job?.outputUrl ? (
           <Box display={"flex"} justifyContent={"center"}>
             <Box
@@ -250,13 +267,13 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
               <Image
                 loader={() => job?.outputUrl}
                 src={job?.outputUrl}
-                width="100"
-                height="100"
+                width="500"
+                height="500"
                 alt="Image of the output"
                 layout="responsive"
               />
               <Text fontWeight={"bold"} mt={2}>
-                Your beautiful result
+                {job?.outputsNamesAndCids[0]?.name}
               </Text>
             </Box>
           </Box>
