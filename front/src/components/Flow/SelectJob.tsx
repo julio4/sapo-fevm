@@ -24,7 +24,7 @@ const JobCard = ({ job, onClick }: { job: Job, onClick: () => void }) => (
         >
             <Box
                 bg={useColorModeValue('white', 'gray.800')}
-                maxW="sm"
+                maxW="md"
                 borderWidth="1px"
                 rounded="lg"
                 shadow="lg"
@@ -34,11 +34,11 @@ const JobCard = ({ job, onClick }: { job: Job, onClick: () => void }) => (
                     bg={useColorModeValue(
                         (job.category?.color || "gray") + '.100',
                         (job.category?.color || "blackAlpha") + '.700')}
-                    height="100px"
+                    height="50px"
                     roundedTop="lg"
                 />
 
-                <Box p="6">
+                <Box p="5">
                     <Flex alignItems="baseline">
                         {job.category && (
                             <Badge rounded="full" px="2" fontSize="0.8em"
@@ -74,8 +74,10 @@ export default function SelectJob() {
                 </Text>
             </Box>
 
-            <SimpleGrid columns={{ '2xl': 5, xl: 4, lg: 3, md: 2 }} spacing={8}>
-                {allJobs.filter((job) => category === null || job.category === category).map((job) => {
+            <SimpleGrid columns={{ '2xl': 4, xl: 3, lg: 2}} spacing={8}>
+                {allJobs
+                    .sort((a, b) => a.name.localeCompare(b.name))
+                    .filter((job) => category === null || job.category === category).map((job) => {
                     return (
                         <JobCard key={job.name} job={job} onClick={() => {
                             setJob(job);
