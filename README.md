@@ -89,21 +89,23 @@ yarn install
 
 ## Goal
 
-Sapo offers a one-stop solution and opens up new opportunities for Data Daos, researchers, and developers to harness the power of decentralized cloud computing with enhanced security, privacy, and control over their data and applications. It provides a complete and convenient solution for both generic and custom computing jobs.
+The goal of Sapo is to revolutionize decentralized cloud computing by offering a comprehensive and user-friendly solution for Data Daos, researchers, and developers. With enhanced security, privacy, and control, Sapo enables its users to harness the full potential of decentralized computing for both generic and custom computing jobs. Our seamless one-stop platform empowers users to tackle even the most complex data-driven tasks with ease.
 
 ## Features
 
 #### What can you already do with Sapo?
 
-- Import your file directly from IPFS or your Data DAO
-- Request a new job to compute your data on chain
-- Check the status of your computation with Bacalhau
-- Get the result on front-end
+- Import Files: Directly import your files from IPFS or your Data DAO into Sapo.
+- Request Computation: Request a new job to compute your data on chain
+- Job Monitoring: Check the status of your computation with Bacalhau
+- Results: Quickly access the result of your computation through the user-friendly front-end.
 
 #### More to come
 
-- Verify your deterministic result of your computation on chain
-- Create your own job directly on Sapo front-end
+- Deterministic Verification: Verify the accuracy of your computation results on the blockchain.
+- Custom Jobs: Create and run custom computation jobs directly from the Sapo front-end.
+- Increased Scalability: Enhance the scalability of the platform to accommodate growing demands and larger computation jobs.
+- Job Notifications: Integrate with the Push Protocol to notify users about the status of their computation jobs in real-time.
 
 </br>
 
