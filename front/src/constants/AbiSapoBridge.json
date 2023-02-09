@@ -71,6 +71,16 @@
 				"internalType": "bytes32",
 				"name": "result2",
 				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "cid1",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "cid2",
+				"type": "bytes32"
 			}
 		],
 		"name": "saveResult",
