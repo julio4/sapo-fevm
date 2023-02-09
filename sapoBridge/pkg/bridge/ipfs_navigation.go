@@ -20,6 +20,11 @@ type LightJobSpec struct {
 
 func ParseSpecsTimeout(cid string, timeout time.Duration) (*LightJobSpec, error) {
 	ipfsShell := ipfsapi.NewLocalShell()
+
+	if ipfsShell == nil {
+		return nil, errors.New("Could not instanciate ipfs shell")
+	}
+
 	ipfsShell.SetTimeout(timeout)
 	out, err := ipfsShell.Cat(cid)
 
@@ -55,6 +60,7 @@ func ParseSpecsIPFS(ctx context.Context, cid string, tries int) (*LightJobSpec, 
 		time.Sleep(5 * time.Second)
 		return ParseSpecsIPFS(ctx, cid, tries+1)
 	}
+
 	defer out.Body.Close()
 
 	jobSpecs := LightJobSpec{}
