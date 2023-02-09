@@ -32,3 +32,19 @@ Tom,40.0,Male,6.0
 example input: prompt.txt
 
 CID: QmebvD6J2E3qQ1umQkUn3UhHGWZs5ppZ6uAinxG74QsZK6
+
+## Solidity compiler
+
+example input: contract.sol
+
+CID: QmaGUaaxQL7fi8bczL4ytyDUVsnMjqs6YVNmnTQzt6AiPr
+
+example output:
+
+## Speech recognition with Whisper
+
+example input: Apollo_11_moonwalk_montage_720p.mp4
+
+CID: QmP6M19sqqEuB4wDXnMbQ9rVQiNRycnhFLwchsv7wj6EEr
+
+example output:

@@ -217,6 +217,16 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
       complexity: 2
     },
     {
+      name: "Solidity compiler",
+      category: allCategories[4],
+      image: "ethereum/solc:stable",
+      inputTypes: ["text"],
+      runParams: ["solc","-o", "/outputs", "--abi", "--bin", "/inputs"],
+      desc: "Generate evm bytecode and ABI from solidity code (input: .sol)",
+      needInput: true,
+      complexity: 2
+    },
+    {
       name: "Stable Diffusion CPU",
       category: allCategories[2],
       image: "ghcr.io/bacalhau-project/examples/stable-diffusion-cpu:0.0.1",
@@ -252,7 +262,7 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
       image: "jsacex/whisper",
       inputTypes: ["text"],
       runParams: ["python", "openai-whisper.py", "-p", "./inputs", "-o", "outputs"],
-      desc: "(NOT WORKING: waiting for GPU support) Speech recognition using Whisper (input: .mp4)",
+      desc: "Speech recognition using Whisper (input: .mp4|.mp3)",
       needInput: true,
       complexity: 5
     },
