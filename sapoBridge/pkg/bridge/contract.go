@@ -141,10 +141,13 @@ func (r *RealContract) ReadLogs(ctx context.Context, out chan<- ContractSubmitte
 			spec, err = json.Marshal(model.Spec{
 				Engine:    model.EngineDocker,
 				Verifier:  model.VerifierNoop,
-				Publisher: model.PublisherIpfs,
+				Publisher: model.PublisherEstuary,
 				Docker: model.JobSpecDocker{
 					Image:      lightSpecs.Image,
 					Entrypoint: lightSpecs.RunParams,
+				},
+				Resources: model.ResourceUsageConfig{
+					GPU: "1",
 				},
 				Inputs: []model.StorageSpec{
 					{
