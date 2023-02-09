@@ -66,7 +66,6 @@ export default function DaoNavBar() {
       setCids(newCids);
     };
 
-    console.log("Raw CIDS: ", rawCids);
     convertToCids();
   }, [rawCids]);
 
@@ -83,13 +82,11 @@ export default function DaoNavBar() {
       });
       setCidType(newTypeCids);
     };
-  
-    console.log("Clean CIDS: ", cids);
+
     getCidType();
   }, [cids]);
 
   useEffect(() => {
-    console.log("Cid types:", cidType);
   }, [cidType]);
   
   return (

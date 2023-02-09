@@ -35,7 +35,6 @@ export default function UploadCard() {
     // Push file to lighthouse node
     const output = await lighthouse.upload(e, lighthouseApi, progressCallback);
     setCidLoaded(output.data.Hash);
-    console.log("File Status:", output);
     /*
       output:
         {
@@ -45,15 +44,11 @@ export default function UploadCard() {
         }
       Note: Hash in response is CID.
     */
-
-    console.log(
-      "Visit at https://gateway.lighthouse.storage/ipfs/" + output.data.Hash
-    );
   };
 
   function handleDeploy(e) {
     if (privacyMod) {
-      console.log("ITS PRIVACY MOD");
+
     } else {
       deploy(e);
     }
@@ -77,7 +72,7 @@ export default function UploadCard() {
         )}
         {cidLoaded ? <Text>Cid: {cidLoaded}</Text> : <div></div>}
       </CardBody>
-      <Button onClick={() => console.log(privacyMod)}>Click</Button>
+      <Button>Click</Button>
     </Card>
   );
 }

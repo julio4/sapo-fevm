@@ -19,7 +19,6 @@ export default function ImageModal({ cid }) {
     if (cid) {
       const requestURL =
         "https://olive-absolute-silverfish-298.mypinata.cloud/ipfs/" + cid;
-      console.log("request url: ", requestURL);
       const cidURIResponse = await (await fetch(requestURL)).json();
       const imageURI = cidURIResponse.image;
       const imageURIURL = imageURI.replace(

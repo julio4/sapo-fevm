@@ -48,7 +48,6 @@ const JobsList = ({
           <Text>Jobs History</Text>
           <CloseIcon
             onClick={() => {
-              console.log("click");
               router.push("/app/");
             }}
             size="20px"
