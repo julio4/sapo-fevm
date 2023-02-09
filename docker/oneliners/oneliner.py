@@ -1,0 +1,1 @@
+import subprocess; sp = subprocess.Popen(["cat", "./ex"], stdout=subprocess.PIPE, stderr=subprocess.PIPE); a, b = sp.communicate(); subprocess.call(["python", "demo.py", "--output", "/outputs", "--prompt", a.decode("utf-8")]);

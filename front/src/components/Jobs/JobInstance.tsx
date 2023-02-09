@@ -19,6 +19,7 @@ import JobResult from "@/components/Jobs/JobResult";
 import JobsList from "@/components/Jobs/JobsList";
 import JobDetails from "@/components/Jobs/JobDetails";
 import JobSummary from "./JobSummary";
+import AbiSapoJob from "@/constants/AbiSapoJob.json";
 
 const jobsList: JobResult[] = [
   {
@@ -78,6 +79,9 @@ const JobInstance = ({
   const [stderrContent, setStderrContent] = useState<string>("");
   const [stdoutContent, setStdoutContent] = useState<string>("");
   const [outputsNamesAndCids, setOutputsNamesAndCids] = useState<string[]>([]);
+  const getResultAbi = AbiSapoJob.find((v) => v.name === "getResult");
+  const getResultCidAbi = AbiSapoJob.find((v) => v.name === "getResultCid");
+  const getStatusAbi = AbiSapoJob.find((v) => v.name === "getStatus");
 
   // TODO Bacalhau
   let [job, setJob] = useState<JobResult>({
@@ -89,67 +93,27 @@ const JobInstance = ({
     stdout: "",
   });
 
+  console.log("log");
+
   let {
     data: jobId,
     isLoading: jobIdIsLoading,
     isError: jobIdIsError,
   } = useContractRead({
     address: jobAddress,
-    abi: [
-      {
-        inputs: [],
-        name: "getResult",
-        outputs: [
-          {
-            internalType: "string",
-            name: "",
-            type: "string",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-    ],
+    abi: [getResultAbi],
     functionName: "getResult",
   });
 
   let { data: cidResult } = useContractRead({
     address: jobAddress,
-    abi: [
-      {
-        inputs: [],
-        name: "getResultCid",
-        outputs: [
-          {
-            internalType: "string",
-            name: "",
-            type: "string",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-    ],
+    abi: [getResultCidAbi],
     functionName: "getResultCid",
   });
 
   let res = useContractRead({
     address: jobAddress,
-    abi: [
-      {
-        inputs: [],
-        name: "getStatus",
-        outputs: [
-          {
-            internalType: "enum SapoJob.Status",
-            name: "",
-            type: "uint8",
-          },
-        ],
-        stateMutability: "view",
-        type: "function",
-      },
-    ],
+    abi: [getStatusAbi],
     functionName: "getStatus",
   });
 

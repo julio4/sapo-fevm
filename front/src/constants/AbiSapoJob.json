@@ -1,0 +1,130 @@
+[
+	{
+		"anonymous": false,
+		"inputs": [],
+		"name": "JobFailed",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [],
+		"name": "JobSucceeded",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "failAndRefund",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "exResult1",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "exResult2",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "exCid1",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "exCid2",
+				"type": "bytes32"
+			}
+		],
+		"name": "saveResult",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "requestInitiator",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "sapoBridge",
+				"type": "address"
+			}
+		],
+		"stateMutability": "payable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [],
+		"name": "getBridgeAddress",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getInitiator",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getResult",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getResultCid",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getStatus",
+		"outputs": [
+			{
+				"internalType": "enum SapoJob.Status",
+				"name": "",
+				"type": "uint8"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]

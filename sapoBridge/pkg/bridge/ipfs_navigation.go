@@ -68,7 +68,7 @@ func ParseSpecsIPFS(ctx context.Context, cid string, tries int) (*LightJobSpec, 
 
 	err = decoder.Decode(&jobSpecs)
 
-	log.Ctx(ctx).Error().Err(err).Msg("Retrieved cid " + cid + " from ipfs.io")
+	log.Ctx(ctx).Info().Err(err).Msg("Retrieved cid " + cid + " from ipfs.io")
 
 	return &jobSpecs, nil
 }

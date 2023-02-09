@@ -179,7 +179,7 @@ export default function SubmitJob() {
           <SpecCard 
             title="Approximate price" 
             value='~0.15 FIL'
-            desc="If the job fail, you'll be refunded atleast 50%" />
+            desc="If the job fails, you'll be refunded atleast 50%" />
         </SimpleGrid>
 
         <Box p={4}>

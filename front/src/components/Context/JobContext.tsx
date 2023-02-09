@@ -213,7 +213,7 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
       category: allCategories[2],
       image: "ghcr.io/bacalhau-project/examples/stable-diffusion-cpu:0.0.1",
       inputTypes: ["text/plain"],
-      runParams: ["python", "demo.py", "--prompt", "\"$(cat /inputs)\"", "--output", "../outputs/output.png"],
+      runParams: ["python", "demo.py", "--prompt", "$(cat /inputs)", "--output", "/outputs/output.png"],
       desc: "Stable diffusion image generation from prompt (input: .txt)",
       needInput: true,
     },
