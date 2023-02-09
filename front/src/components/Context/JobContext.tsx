@@ -201,7 +201,7 @@ const JobProvider = ({ children }: { children: React.ReactNode }) => {
       category: allCategories[0],
       image: "dpokidov/imagemagick:7.1.0-47-ubuntu",
       inputTypes: ["text/html"],
-      runParams: ["magick", "mogrify", "-resize 100x100", "-quality", "100", "-path", "/outputs", "'/inputs/*.jpg'"],
+      runParams: ["magick", "mogrify", "-resize", "100x100", "-quality", "100", "-path", "/outputs", "/inputs/*.jpg"],
       desc: "Resize a batch of jpg to 100x100 (input: ./*.jpg)",
       needInput: true,
       complexity: 3
