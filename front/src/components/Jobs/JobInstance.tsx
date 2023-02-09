@@ -16,45 +16,8 @@ import { CheckCircleIcon, TimeIcon, WarningIcon } from "@chakra-ui/icons";
 import { useContractRead, useAccount } from "wagmi";
 import { useDisclosure, defineStyleConfig } from "@chakra-ui/react";
 import JobResult from "@/components/Jobs/JobResult";
-import JobsList from "@/components/Jobs/JobsList";
-import JobDetails from "@/components/Jobs/JobDetails";
 import JobSummary from "./JobSummary";
 import AbiSapoJob from "@/constants/AbiSapoJob.json";
-
-const jobsList: JobResult[] = [
-  {
-    id: 0,
-    address: "0x07705e0fFdc102e6144e22261477B4cE46Da341C",
-    exitCode: 0,
-    outputs: ["QmX2", "QmX3"],
-    stderr: "",
-    stdout: "Hello world",
-  },
-  {
-    id: 1,
-    address: "0x07705e0fFdc102e6144e22261477B4cE46DaABC",
-    exitCode: 1,
-    outputs: [],
-    stderr: "Error",
-    stdout: "",
-  },
-  {
-    id: 2,
-    address: "0x07705e0fFdc102e6144e22261477BSA8D46aCvC1",
-    exitCode: 1,
-    outputs: ["funfile.txt", "funfile2.txt"],
-    stderr: "Error",
-    stdout: "",
-  },
-  {
-    id: 3,
-    address: "0x07705e0fFdc102e6144e22261477BSA8D46aCvC1",
-    exitCode: 1,
-    outputs: [],
-    stderr: "",
-    stdout: "",
-  },
-];
 
 const statusText: string[] = ["Pending", "Completed", "Failed", "Loading..."];
 
@@ -93,8 +56,6 @@ const JobInstance = ({
     stdout: "",
   });
 
-  console.log("log");
-
   let {
     data: jobId,
     isLoading: jobIdIsLoading,
@@ -122,9 +83,8 @@ const JobInstance = ({
   const unselectedColor = useColorModeValue("whiteAlpha.700", "transparent");
   const selectedColor = useColorModeValue("teal.50", "teal.800");
 
-  async function getFileFromGateway(cid: string /*, path */) {
+  async function getFileFromGateway(cid: string) {
     try {
-      // cid = "bafybeidrkxnf373hy4fkimgqfhgnpupcawtzpmlwb2wmhgls4eashm3btq";
       const request = await fetch(`https://ipfs.io/api/v0/ls/${cid}`);
 
       const responseJson = await request.json();
@@ -193,7 +153,6 @@ const JobInstance = ({
 
   useEffect(() => {
     if (cidResult) {
-      console.log("cidResult = ", cidResult);
       getFileFromGateway(cidResult);
     }
   }, [cidResult]);
@@ -220,6 +179,7 @@ const JobInstance = ({
           stderr: stderrContent ? stderrContent : null,
           stdout: stdoutContent ? stdoutContent : null,
           outputsNamesAndCids: outputsNamesAndCids ? outputsNamesAndCids : null,
+          cidResult: cidResult ? cidResult : null,
         });
       }}
     >
