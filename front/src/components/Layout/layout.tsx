@@ -5,7 +5,7 @@ import Footer from './footer'
 import Connect from './connect'
 import { ReactNode } from 'react';
 
-import { Box, Flex, useColorModeValue } from '@chakra-ui/react'
+import { Flex, useColorModeValue } from '@chakra-ui/react'
 
 import { useAccount } from 'wagmi'
 
@@ -20,11 +20,9 @@ export default function Layout({ children }: { children: ReactNode }) {
     }
   })
 
-  // useEffect(() => {
-  //   setConnected(isConnected)
-  //   console.log('isconnected', isConnected)
-  //   console.log('connected', connected)
-  // }, [])
+  useEffect(() => {
+    setConnected(isConnected)
+  }, [isConnected])
 
   if (!connected) {
     return (
