@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Spinner,
   Box,
@@ -13,11 +13,11 @@ import {
   FormHelperText,
 } from "@chakra-ui/react";
 
-import { JobRequest, useJobContext, } from "../Context/JobContext";
+import { useJobContext } from "../Context/JobContext";
 
 import AbiSapoBridge from "@/constants/AbiSapoBridge.json";
 import AddressSapoBridge from "@/constants/AddressSapoBridge.json";
-import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from "wagmi";
+import { useSigner } from "wagmi";
 import { ethers } from "ethers";
 
 import lighthouse from '@lighthouse-web3/sdk';
@@ -67,37 +67,22 @@ const cidToHex = (cid: string) => {
 }
 
 export default function SubmitJob() {
-  const { step, setStep, jobRequest, setJobRequest } = useJobContext();
-  const [ isSubmitting, setIsSubmitting] = useState(false)
-
-  const [ request, setRequest ] = useState<JobRequest>(jobRequest);
-
-  const { config } = usePrepareContractWrite({
-    address: AddressSapoBridge.address,
-    abi: AbiSapoBridge,
-    functionName: "request",
-    args: cidToHex(request.input?.cid || ""),
-    overrides: {
-      gasLimit: ethers.BigNumber.from(1000000000),
-      value: ethers.utils.parseEther('0.1'),
+  const [contract, setContract] = useState<any>(null);
+  useSigner({
+    onSuccess(signer) {
+      const sapoContract = new ethers.Contract(AddressSapoBridge.address, AbiSapoBridge, signer);
+      setContract(sapoContract);
     }
   });
 
-  const { data, write } = useContractWrite(config);
-
-  const { isLoading } = useWaitForTransaction({
-    hash: data?.hash,
-    onError: () => {
-      setIsSubmitting(false)
-    },
-    onSuccess: () => {
-      setJobRequest(request);
-      setStep(3);
-    },
-  })
+  const { setStep, jobRequest, setJobRequest } = useJobContext();
+  const [ isSubmitting, setIsSubmitting] = useState(false);
+  const [ isPending, setIsPending] = useState(false);
+  const [ isError, setIsError] = useState(false);
 
   const handleSubmit = async () => {
-    setIsSubmitting(true)
+    setIsError(false);
+    setIsSubmitting(true);
 
     // Wrap Job spec in a IPFS object
     const jobSpec = {
@@ -106,30 +91,54 @@ export default function SubmitJob() {
       "runParams": jobRequest.job?.runParams
     }
 
+    // Send it to Lighthouse to pin it
     const jobSpecInput = await lighthouse.uploadText(
       JSON.stringify(jobSpec),
       process.env.lightHouseApi
     );
 
-    // Update request state, trigger write
-    setRequest((prev) => ({
-      ...prev,
-      input: {
-        cid: jobSpecInput.data.Hash,
-        type: "application/json",
-        size: parseInt(jobSpecInput.data.Size.toString())
+    // Call contract to request a job
+    const args = cidToHex(jobSpecInput.data.Hash);
+
+    // Wait for transaction to be mined
+    try {
+      const txPromise = contract.request(args[0], args[1], {
+        gasLimit: ethers.BigNumber.from(1000000000),
+        value: ethers.utils.parseEther('0.1'),
+      });  
+      const txRes = await txPromise; 
+      setIsPending(true);
+
+      const txReceipt = await txRes.wait();
+      setIsPending(false);
+
+
+      // Check if transaction failed
+      if (txReceipt.status === 0) { setIsError(true); } 
+      else {
+        // Transaction succeeded
+        // Update job request
+        setJobRequest({
+          ...jobRequest,
+          input: {
+            cid: jobSpecInput.data.Hash,
+            type: "application/json",
+            size: parseInt(jobSpecInput.data.Size.toString())
+          }
+        });
+        setStep(3);
       }
-    }))
+    } catch (e) {
+      setIsError(true);
+      setIsSubmitting(false);
+      return;
+    }
+
+    setIsSubmitting(false)
   }
 
-  useEffect(() => {
-    if (request.input?.cid) {
-      console.log("trying to confirm tx", request)
-      write?.();
-    }
-  }, [request])
-
   const descriptionText = useColorModeValue('gray.600', 'gray.400')
+  const errorText = useColorModeValue('red.600', 'red.400')
 
   return (
     <Flex direction='column' h='full' w='full' p={8}>
@@ -175,7 +184,7 @@ export default function SubmitJob() {
 
         <Box p={4}>
           <Button
-            isLoading={!write && isSubmitting}
+            isLoading={isSubmitting}
             fontFamily={'heading'}
             mt={8}
             w={'full'}
@@ -195,7 +204,7 @@ export default function SubmitJob() {
           </Button>
         </Box>
 
-        {isLoading &&
+        {isPending &&
           <Flex my={8} direction='column' alignContent='center' justifyContent='center'>
             <Spinner
               alignSelf='center'
@@ -208,6 +217,15 @@ export default function SubmitJob() {
             <Text color={descriptionText}
               mt={4} align='center' fontSize="xl" fontFamily="system-ui" fontWeight="bold">
               Waiting for transaction confirmation...
+            </Text>
+          </Flex>
+        }
+
+        {isError &&
+          <Flex my={8} direction='column' alignContent='center' justifyContent='center'>
+            <Text color={errorText}
+              mt={4} align='center' fontSize="xl" fontFamily="system-ui" fontWeight="bold">
+              Transaction failed, please try again.
             </Text>
           </Flex>
         }
