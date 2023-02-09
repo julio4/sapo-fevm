@@ -7,13 +7,6 @@ import {
   Heading,
   Divider,
   Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   Accordion,
   AccordionItem,
   AccordionButton,
@@ -46,6 +39,12 @@ const statusTextIcon = [
     failed
     <WarningIcon ml={2} size="20px" color={"red.500"} />
   </>,
+];
+
+const statusIcon = [
+  <TimeIcon ml={2} size="20px" color={"blue.500"} />,
+  <CheckCircleIcon ml={2} size="20px" color={"green.500"} />,
+  <WarningIcon ml={2} size="20px" color={"red.500"} />,
 ];
 
 const JobDetails = ({ job }: { job: JobSummary | null }) => {
@@ -92,12 +91,18 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
         <Text>
           <span style={styleDetail}>Job Address:</span> {job?.address}
         </Text>
-        <Text>
-          <span style={styleDetail}>Job Status:</span>{" "}
-          {statusTextIcon[job.status]}
-        </Text>
-        <Text mb={"5%"}>
-          <span style={styleDetail}>Exit Code:</span> {job?.exitCode}
+        <Text mb={"5%"} display={"flex"}>
+          <span style={styleDetail}>Exit Code:</span>{" "}
+          {job?.exitCode ? (
+            <>
+              {job.exitCode} {statusIcon[job.status]}
+            </>
+          ) : (
+            <Text>
+              NaN
+              <WarningIcon ml={2} size="20px" color={"blue.500"} />{" "}
+            </Text>
+          )}
         </Text>
         <Text>
           <span style={styleDetail}>About the results:</span>
@@ -106,7 +111,13 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
           <AccordionItem>
             <h2>
               <AccordionButton>
-                <Box as="span" flex="1" textAlign="left">
+                <Box
+                  as="span"
+                  flex="1"
+                  textAlign="left"
+                  fontWeight={"semibold"}
+                  fontSize={"lg"}
+                >
                   Outputs
                 </Box>
                 <AccordionIcon />
@@ -145,7 +156,13 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
           <AccordionItem>
             <h2>
               <AccordionButton>
-                <Box as="span" flex="1" textAlign="left">
+                <Box
+                  as="span"
+                  flex="1"
+                  textAlign="left"
+                  fontWeight={"semibold"}
+                  fontSize={"lg"}
+                >
                   Stderr
                 </Box>
                 <AccordionIcon />
@@ -165,7 +182,13 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
           <AccordionItem>
             <h2>
               <AccordionButton>
-                <Box as="span" flex="1" textAlign="left">
+                <Box
+                  as="span"
+                  flex="1"
+                  textAlign="left"
+                  fontWeight={"semibold"}
+                  fontSize={"lg"}
+                >
                   Stdout
                 </Box>
                 <AccordionIcon />
