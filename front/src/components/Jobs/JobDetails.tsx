@@ -54,13 +54,13 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
       setModalContent("Not yet implemented");
     } else if (from == "outputs") {
       setModalTitle("Outputs");
-      setModalContent(job?.outputs);
+      setModalContent(`Outputs: ${job?.outputs ? job.outputs : "No outputs"}`);
     } else if (from === "stderr") {
       setModalTitle("Stderr");
-      setModalContent("Not yet implemented");
+      setModalContent(`Stderr: ${job?.stderr ? job.stderr : "No stderr"}`);
     } else if (from === "stdout") {
       setModalTitle("Stdout");
-      setModalContent(`Cid of Stdout: ${job?.cidStdout}`);
+      setModalContent(`Stdout: ${job?.stdout ? job.stdout : "No stdout"}`);
     }
     onOpen();
   }

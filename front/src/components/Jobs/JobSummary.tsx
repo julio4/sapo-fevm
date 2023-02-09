@@ -5,8 +5,8 @@ type JobSummary = {
   jobId: string | null; // JobId
   exitCode: number | null;
   outputs: string[]; // CIDs
-  stderr: string;
-  stdout: string;
+  stderr: string | null;
+  stdout: string | null;
   outputUrl: string | null;
   cidStderr: string | null;
   cidStdout: string | null;

@@ -75,6 +75,8 @@ const JobInstance = ({
   const [cidOutputs, setCidOutputs] = useState<string>("");
   const [cidStderr, setCidStderr] = useState<string>("");
   const [cidStdout, setCidStdout] = useState<string>("");
+  const [stderrContent, setStderrContent] = useState<string>("");
+  const [stdoutContent, setStdoutContent] = useState<string>("");
 
   // TODO Bacalhau
   let [job, setJob] = useState<JobResult>({
@@ -179,8 +181,8 @@ const JobInstance = ({
         }
       );
 
+      // Handling images
       const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp"];
-
       const imagelist = namesOutputsAndCids.filter(
         (filename: { name: string; cid: any }) => {
           const extension = filename.name.substr(
@@ -204,6 +206,15 @@ const JobInstance = ({
       } else {
         console.log("");
       }
+
+      // Handling stdout content and stderr content
+      const requestStderr = await fetch(`https://ipfs.io/ipfs/${cid}/stderr`);
+      const textStderr = await requestStderr.text();
+      setStderrContent(textStderr);
+
+      const requestStdout = await fetch(`https://ipfs.io/ipfs/${cid}/stdout`);
+      const textStdout = await requestStdout.text();
+      setStdoutContent(textStdout);
     } catch (error) {
       console.log(error);
     }
@@ -235,6 +246,8 @@ const JobInstance = ({
           cidOutputs: cidOutputs ? cidOutputs : null,
           cidStderr: cidStderr ? cidStderr : null,
           cidStdout: cidStdout ? cidStdout : null,
+          stderr: stderrContent ? stderrContent : null,
+          stdout: stdoutContent ? stdoutContent : null,
         });
       }}
     >
