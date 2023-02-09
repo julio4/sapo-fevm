@@ -1,8 +1,12 @@
 package main
 
 import (
-	"log"
+	"context"
+	"fmt"
 	"sapoBridge/pkg/bridge"
+
+	"github.com/filecoin-project/bacalhau/pkg/requester/publicapi"
+	"github.com/rs/zerolog/log"
 	// ipfsapi "github.com/ipfs/go-ipfs-api"
 )
 
@@ -14,6 +18,15 @@ func main() {
 
 	// log.Print(string(str))
 
+	apiPort := 1234
+	apiHost := "35.245.115.191"
+	client := publicapi.NewRequesterAPIClient(fmt.Sprintf("http://%s:%d", apiHost, apiPort))
+	ctx := log.Logger.WithContext(context.Background())
+
+	jobs, _ := client.GetResults(ctx, "2cb7f3ed-efa3-4cff-a8e9-621c14abef07")
+
+	println("OK")
+	fmt.Printf("CID: %s DONE", jobs[0].Data.CID)
 }
 
 func convertToBytes() {
@@ -25,12 +38,12 @@ func convertToBytes() {
 	log.Print(cid2)
 }
 
-func parseSpecsCid() {
-	jobSpec, err := bridge.ParseSpecs("QmcFV6bjk7JdyyPDCCaSUBigggDP4sq77DtZ2V6s53nnsR")
+func parseSpecsCid(ctx context.Context) {
+	jobSpec, err := bridge.ParseSpecs(ctx, "QmcFV6bjk7JdyyPDCCaSUBigggDP4sq77DtZ2V6s53nnsR")
 
 	if err != nil {
 		log.Print("ERROR HAS OCCURED")
-		log.Fatal(err)
+		log.Err(err)
 	}
 
 	log.Print("ALLRIGHT")

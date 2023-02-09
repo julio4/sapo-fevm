@@ -14,6 +14,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/filecoin-project/bacalhau/pkg/model"
+	"github.com/filecoin-project/bacalhau/pkg/requester/publicapi"
 	"github.com/go-co-op/gocron"
 	"github.com/rs/zerolog/log"
 )
@@ -21,7 +22,7 @@ import (
 type SmartContract interface {
 	Listen(context.Context, chan<- ContractSubmittedEvent) error
 
-	Complete(context.Context, BacalhauJobCompletedEvent) (ContractPaidEvent, error)
+	Complete(context.Context, BacalhauJobCompletedEvent, publicapi.RequesterAPIClient) (ContractPaidEvent, error)
 
 	Refund(context.Context, ContractFailedEvent) (ContractRefundedEvent, error)
 }
@@ -34,23 +35,41 @@ type RealContract struct {
 }
 
 // Complete implements SmartContract
-func (r *RealContract) Complete(ctx context.Context, event BacalhauJobCompletedEvent) (ContractPaidEvent, error) {
-	// TODO, partially refund
+func (r *RealContract) Complete(ctx context.Context, event BacalhauJobCompletedEvent, client publicapi.RequesterAPIClient) (ContractPaidEvent, error) {
+	timeoutCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	jobs, err := client.GetResults(timeoutCtx, "2cb7f3ed-efa3-4cff-a8e9-621c14abef07")
+
+	if err != nil {
+		log.Ctx(ctx).Error().Err(err).Send()
+		return event, err
+	}
+
+	outCID := jobs[0].Data.CID
+
 	jobId1, err1 := Pack(event.JobID()[:32])
 	jobId2, err2 := Pack(event.JobID()[32:])
+
+	CID1, err3 := Pack(outCID[:32])
+	CID2, err4 := Pack(outCID[32:])
 
 	localCtx := log.Ctx(ctx).With().
 		Str("jobAddress", event.Addr().Hex()).
 		Bytes("jobId1", jobId1[:]).
 		Bytes("jobId2", jobId2[:]).
+		Bytes("CID1", CID1[:]).
+		Bytes("CID2", CID2[:]).
 		Logger().WithContext(ctx)
 
-	if err1 != nil || err2 != nil {
-		log.Ctx(localCtx).Debug().Err(err1).Err(err2).Msg("Result saving of completed job has failed")
+	if err1 != nil || err2 != nil || err3 != nil || err4 != nil {
+		log.Ctx(localCtx).Debug().
+			Err(err1).Err(err2).Err(err3).Err(err4).
+			Msg("Result saving of completed job has failed")
 		return event, context.Canceled
 	}
 
-	tx, err := r.contract.SaveResult(r.transact, event.Addr(), jobId1, jobId2)
+	tx, err := r.contract.SaveResult(r.transact, event.Addr(), jobId1, jobId2, CID1, CID2)
 
 	if err != nil {
 		log.Ctx(localCtx).Err(err).Msg("Error in saveResult transaction")
@@ -246,7 +265,7 @@ type mockContract struct {
 }
 
 // Complete implements SmartContract
-func (mock mockContract) Complete(ctx context.Context, e BacalhauJobCompletedEvent) (ContractPaidEvent, error) {
+func (mock mockContract) Complete(ctx context.Context, e BacalhauJobCompletedEvent, client publicapi.RequesterAPIClient) (ContractPaidEvent, error) {
 	log.Ctx(ctx).Info().Stringer("id", e.OrderId()).Msg("Complete")
 	if mock.CompleteHandler != nil {
 		return mock.CompleteHandler(ctx, e)
