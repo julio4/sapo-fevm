@@ -43,9 +43,9 @@ const statusTextIcon = [
 ];
 
 const statusIcon = [
-  <TimeIcon ml={2} size="20px" color={"blue.500"} />,
-  <CheckCircleIcon ml={2} size="20px" color={"green.500"} />,
-  <WarningIcon ml={2} size="20px" color={"red.500"} />,
+  <CheckCircleIcon ml={2} size="20px" color={"green.500"} key="success" />,
+  <WarningIcon ml={2} size="20px" color={"red.500"} key="failed" />,
+  <WarningIcon ml={2} size="20px" color={"blue.500"} key="unknown" />,
 ];
 
 const JobDetails = ({ job }: { job: JobSummary | null }) => {
@@ -55,6 +55,21 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
   );
   const jobColor = useColorModeValue("gray.700", "gray.200");
 
+  function jobStatusIcon(status: number) {
+    let icon;
+    switch (job?.exitCode) {
+      case "0":
+        icon = statusIcon[0];
+        break;
+      case "1":
+        icon = statusIcon[1];
+        break;
+      default:
+        icon = statusIcon[2];
+        break;
+    }
+    return icon;
+  }
   return (
     <Box
       w={job ? "full" : "0"}
@@ -100,7 +115,7 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
           <span style={styleDetail}>Exit Code:</span>{" "}
           {job?.exitCode ? (
             <>
-              {job.exitCode} {statusIcon[job.status]}
+              {job.exitCode} {jobStatusIcon(Number(job.exitCode))}
             </>
           ) : (
             <Text>
