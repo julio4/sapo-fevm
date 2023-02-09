@@ -71,7 +71,7 @@ const JobInstance = ({
   id: number;
 }) => {
   const [outputUrl, setOutputUrl] = useState<string>("");
-  const [cidExitCode, setCidExitCode] = useState<string>("");
+  const [exitCode, setExitCode] = useState<number>(-1);
   const [cidOutputs, setCidOutputs] = useState<string>("");
   const [cidStderr, setCidStderr] = useState<string>("");
   const [cidStdout, setCidStdout] = useState<string>("");
@@ -80,7 +80,7 @@ const JobInstance = ({
   let [job, setJob] = useState<JobResult>({
     id: id,
     address: jobAddress,
-    exitCode: 1,
+    exitCode: NaN,
     outputs: [""],
     stderr: "",
     stdout: "",
@@ -157,13 +157,15 @@ const JobInstance = ({
 
   async function getFileFromGateway(cid: string /*, path */) {
     try {
+      cid = "QmVy4i2g13aPYMtgV7LGfqKbBEhsNHHdmiJrSzp7gaDi3M";
       const request = await fetch(`https://ipfs.io/api/v0/ls/${cid}`);
+
       const responseJson = await request.json();
       const filesCid = responseJson.Objects[0].Links.map(
         (link: { Hash: any }) => link.Hash
       );
       // Mettre les filescid dans les states correspondants
-      setCidExitCode(filesCid[0]);
+      setExitCode(filesCid[0]);
       setCidOutputs(filesCid[1]);
       setCidStderr(filesCid[2]);
       setCidStdout(filesCid[3]);
@@ -191,8 +193,6 @@ const JobInstance = ({
       );
 
       if (imagelist.length === 1) {
-        console.log("imagelist", imagelist);
-        console.log("There is exactly one image in the array");
         const response = await fetch(
           `https://ipfs.io/ipfs/${cid}/outputs/${imagelist[0].name}`
         );
@@ -202,19 +202,19 @@ const JobInstance = ({
         );
         setOutputUrl(formattedUrl);
       } else {
-        console.log("There is not exactly one image in the array");
+        console.log("");
       }
     } catch (error) {
       console.log(error);
     }
-    console.log("outputUrl", outputUrl);
+    console.log("outputUrl = ", outputUrl);
   }
 
   useEffect(() => {
     if (cidResult) {
       getFileFromGateway(cidResult);
     }
-  }, [outputUrl]);
+  }, [cidResult]);
 
   return (
     <Box
@@ -231,6 +231,10 @@ const JobInstance = ({
           jobId: jobId ? jobId : null,
           status: status ? status : null,
           outputUrl: outputUrl ? outputUrl : null,
+          exitCode: exitCode ? exitCode : null,
+          cidOutputs: cidOutputs ? cidOutputs : null,
+          cidStderr: cidStderr ? cidStderr : null,
+          cidStdout: cidStdout ? cidStdout : null,
         });
       }}
     >

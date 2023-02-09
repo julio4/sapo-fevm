@@ -54,13 +54,13 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
       setModalContent("Not yet implemented");
     } else if (from == "outputs") {
       setModalTitle("Outputs");
-      setModalContent("Not yet implemented");
+      setModalContent(job?.outputs);
     } else if (from === "stderr") {
       setModalTitle("Stderr");
       setModalContent("Not yet implemented");
     } else if (from === "stdout") {
       setModalTitle("Stdout");
-      setModalContent("Not yet implemented");
+      setModalContent(`Cid of Stdout: ${job?.cidStdout}`);
     }
     onOpen();
   }
@@ -117,7 +117,7 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
           <span style={styleDetail}>Outputs: </span>{" "}
           {!job || job.status === 0 || job.status === null
             ? job?.outputs
-            : "Not yet implemented"}
+            : "Something to be see"}
           {job?.status === 1 ? (
             <Button
               mb={1}
@@ -138,7 +138,7 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
           <span style={styleDetail}>Stderr:</span>{" "}
           {!job || job.status === 0 || job.status === null
             ? job?.stderr
-            : "Not yet implemented"}
+            : job?.cidStderr}
           {job?.status === 1 ? (
             <Button
               mb={1}
@@ -159,7 +159,7 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
           <span style={styleDetail}>Stdout:</span>{" "}
           {!job || job.status === 0 || job.status === null
             ? job?.stdout
-            : "Not yet implemented"}
+            : job?.cidStdout}
           {job?.status === 1 ? (
             <Button
               mb={1}
