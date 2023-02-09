@@ -66,6 +66,7 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
       border="1px"
       borderColor={useColorModeValue("gray.200", "gray.700")}
       borderRadius="lg"
+      overflow={"scroll"}
     >
       <Box px={4}>
         <Heading
@@ -90,6 +91,9 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
         </Text>
         <Text>
           <span style={styleDetail}>Job Address:</span> {job?.address}
+        </Text>
+        <Text>
+          <span style={styleDetail}>Cid Result:</span> {job?.cidResult}
         </Text>
         <Text mb={"5%"} display={"flex"}>
           <span style={styleDetail}>Exit Code:</span>{" "}

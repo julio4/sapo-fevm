@@ -12,6 +12,7 @@ type JobSummary = {
   cidStdout: string | null;
   cidOutputs: string | null;
   outputsNamesAndCids: string[] | null;
+  cidResult: string | null;
 };
 
 export default JobSummary;
