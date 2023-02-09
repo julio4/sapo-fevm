@@ -3,7 +3,7 @@ type JobSummary = {
   address: `0x${string}`;
   status: number | null; // 0: pending, 1: success, 2: fail
   jobId: string | null; // JobId
-  exitCode: number | null;
+  exitCode: string | null;
   outputs: string[]; // CIDs
   stderr: string | null;
   stdout: string | null;
@@ -11,6 +11,7 @@ type JobSummary = {
   cidStderr: string | null;
   cidStdout: string | null;
   cidOutputs: string | null;
+  outputsNamesAndCids: string[] | null;
 };
 
 export default JobSummary;

@@ -14,6 +14,11 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
 } from "@chakra-ui/react";
 
 import Image from "next/image";
@@ -28,43 +33,22 @@ const styleDetail = { fontWeight: "bold", marginRight: "1ex" };
 const statusTextIcon = [
   <>
     {" "}
-    Pending
+    pending
     <TimeIcon ml={2} size="20px" color={"blue.500"} />
   </>,
   <>
     {" "}
-    Completed
+    completed
     <CheckCircleIcon ml={2} size="20px" color={"green.500"} />
   </>,
   <>
     {" "}
-    Failed
+    failed
     <WarningIcon ml={2} size="20px" color={"red.500"} />
   </>,
 ];
 
 const JobDetails = ({ job }: { job: JobSummary | null }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [modalTitle, setModalTitle] = useState("");
-  const [modalContent, setModalContent] = useState("");
-
-  function handleClickShow(from: string) {
-    if (from == "result") {
-      setModalTitle("Result");
-      setModalContent("Not yet implemented");
-    } else if (from == "outputs") {
-      setModalTitle("Outputs");
-      setModalContent(`Outputs: ${job?.outputs ? job.outputs : "No outputs"}`);
-    } else if (from === "stderr") {
-      setModalTitle("Stderr");
-      setModalContent(`Stderr: ${job?.stderr ? job.stderr : "No stderr"}`);
-    } else if (from === "stdout") {
-      setModalTitle("Stdout");
-      setModalContent(`Stdout: ${job?.stdout ? job.stdout : "No stdout"}`);
-    }
-    onOpen();
-  }
-
   const jobBgGradient = useColorModeValue(
     "linear(to-r, blue.200, blue.200)",
     "linear(to-r, blue.900, blue.900)"
@@ -98,7 +82,12 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
 
       <Box px={4} py={2}>
         <Text>
-          <span style={styleDetail}>Job ID:</span> {job ? job.id : "no job"}
+          <span style={styleDetail}>
+            Job n° {job ? job.id : "Nan"} {statusTextIcon[job.status]}{" "}
+          </span>
+        </Text>
+        <Text>
+          <span style={styleDetail}>Bacalhau ID:</span> {job?.jobId}
         </Text>
         <Text>
           <span style={styleDetail}>Job Address:</span> {job?.address}
@@ -107,59 +96,103 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
           <span style={styleDetail}>Job Status:</span>{" "}
           {statusTextIcon[job.status]}
         </Text>
-        <Text>
-          <span style={styleDetail}>JobId Result:</span> {job?.jobId}
-        </Text>
-        <Text>
+        <Text mb={"5%"}>
           <span style={styleDetail}>Exit Code:</span> {job?.exitCode}
         </Text>
-        <Text display="flex" alignItems="center" mb={2}>
-          <span style={styleDetail}>Outputs: </span>{" "}
-          {!job || job.status === 0 || job.status === null
-            ? job?.outputs
-            : "Something to be see"}
-          {job?.status === 1 ? (
-            <Button
-              mb={1}
-              ml={6}
-              onClick={() => handleClickShow("outputs")}
-              size="xs"
-              bgGradient={jobBgGradient}
-              color={jobColor}
-              fontWeight="bold"
-            >
-              Show
-            </Button>
-          ) : (
-            <Text fontStyle={"italic"}>Waiting for result...</Text>
-          )}
+        <Text>
+          <span style={styleDetail}>About the results:</span>
         </Text>
-        <Text display="flex" alignItems="center" mb={2}>
-          <span style={styleDetail}>Stderr:</span>{" "}
-          {!job || job.status === 0 || job.status === null
-            ? job?.stderr
-            : job?.cidStderr}
-          {job?.status === 1 ? (
-            <Button
-              mb={1}
-              ml={6}
-              onClick={() => handleClickShow("stderr")}
-              size="xs"
-              bgGradient={jobBgGradient}
-              color={jobColor}
-              fontWeight="bold"
-            >
-              Show
-            </Button>
-          ) : (
-            <Text fontStyle={"italic"}>Waiting for result...</Text>
-          )}
-        </Text>
-        <Text display="flex" alignItems="center" mb={2}>
+        <Accordion allowToggle>
+          <AccordionItem>
+            <h2>
+              <AccordionButton>
+                <Box as="span" flex="1" textAlign="left">
+                  Outputs
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+            </h2>
+            <AccordionPanel pb={4}>
+              {job?.outputsNamesAndCids?.length ? (
+                job.outputsNamesAndCids.map((output) => (
+                  <>
+                    <Box
+                      display={"flex"}
+                      alignItems={"center"}
+                      justifyContent={"flex-start"}
+                    >
+                      <Text mr={"5%"}>
+                        <span style={styleDetail}>{output.name}:</span>{" "}
+                        {output.cid}
+                      </Text>
+                      <Button
+                        size={"sm"}
+                        onClick={() =>
+                          window.open(`https://ipfs.io/ipfs/${output.cid}`)
+                        }
+                      >
+                        Show on IPFS.io
+                      </Button>
+                    </Box>
+                  </>
+                ))
+              ) : (
+                <Text>No outputs</Text>
+              )}
+            </AccordionPanel>
+          </AccordionItem>
+
+          <AccordionItem>
+            <h2>
+              <AccordionButton>
+                <Box as="span" flex="1" textAlign="left">
+                  Stderr
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+            </h2>
+            <AccordionPanel pb={4}>
+              {job?.stderr ? (
+                <>
+                  <Text>Here is the stderr of the job:</Text>
+                  <Text style={styleDetail}>Stderr:{job.stderr}</Text>
+                </>
+              ) : (
+                <Text>No stderr</Text>
+              )}
+            </AccordionPanel>
+          </AccordionItem>
+          <AccordionItem>
+            <h2>
+              <AccordionButton>
+                <Box as="span" flex="1" textAlign="left">
+                  Stdout
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+            </h2>
+            <AccordionPanel pb={4}>
+              {job?.stdout ? (
+                <>
+                  <Text>Here is the stdout of the job:</Text>
+                  <Text>
+                    <span style={styleDetail}>Stdout:</span> {job.stdout}
+                  </Text>
+                </>
+              ) : (
+                <Text>No stdout</Text>
+              )}
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
+
+        {/*         <Text display="flex" alignItems="center" mb={2}>
           <span style={styleDetail}>Stdout:</span>{" "}
-          {!job || job.status === 0 || job.status === null
-            ? job?.stdout
-            : job?.cidStdout}
+          {!job || job.status === 0 || job.status === null ? (
+            job?.stdout
+          ) : (
+            <></>
+          )}
           {job?.status === 1 ? (
             <Button
               mb={1}
@@ -175,7 +208,7 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
           ) : (
             <Text fontStyle={"italic"}>Waiting for result...</Text>
           )}
-        </Text>
+        </Text> */}
         {job?.outputUrl ? (
           <Box display={"flex"} justifyContent={"center"}>
             <Box
@@ -204,23 +237,6 @@ const JobDetails = ({ job }: { job: JobSummary | null }) => {
           <></>
         )}
       </Box>
-
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>{modalTitle}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text>{modalContent}</Text>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
     </Box>
   );
 };

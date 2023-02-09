@@ -71,12 +71,13 @@ const JobInstance = ({
   id: number;
 }) => {
   const [outputUrl, setOutputUrl] = useState<string>("");
-  const [exitCode, setExitCode] = useState<number>(-1);
+  const [exitCode, setExitCode] = useState<string>("");
   const [cidOutputs, setCidOutputs] = useState<string>("");
   const [cidStderr, setCidStderr] = useState<string>("");
   const [cidStdout, setCidStdout] = useState<string>("");
   const [stderrContent, setStderrContent] = useState<string>("");
   const [stdoutContent, setStdoutContent] = useState<string>("");
+  const [outputsNamesAndCids, setOutputsNamesAndCids] = useState<string[]>([]);
 
   // TODO Bacalhau
   let [job, setJob] = useState<JobResult>({
@@ -113,7 +114,7 @@ const JobInstance = ({
   });
 
   let { data: cidResult } = useContractRead({
-    address: "0x2949328f2f33dE0a07e4eaF22D2A7A9Dfbc5Dbf3", //test console
+    address: jobAddress,
     abi: [
       {
         inputs: [],
@@ -159,7 +160,7 @@ const JobInstance = ({
 
   async function getFileFromGateway(cid: string /*, path */) {
     try {
-      cid = "QmVy4i2g13aPYMtgV7LGfqKbBEhsNHHdmiJrSzp7gaDi3M";
+      // cid = "bafybeidrkxnf373hy4fkimgqfhgnpupcawtzpmlwb2wmhgls4eashm3btq";
       const request = await fetch(`https://ipfs.io/api/v0/ls/${cid}`);
 
       const responseJson = await request.json();
@@ -167,7 +168,6 @@ const JobInstance = ({
         (link: { Hash: any }) => link.Hash
       );
       // Mettre les filescid dans les states correspondants
-      setExitCode(filesCid[0]);
       setCidOutputs(filesCid[1]);
       setCidStderr(filesCid[2]);
       setCidStdout(filesCid[3]);
@@ -180,6 +180,7 @@ const JobInstance = ({
           return { name: link.Name, cid: link.Hash };
         }
       );
+      setOutputsNamesAndCids(namesOutputsAndCids);
 
       // Handling images
       const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp"];
@@ -207,7 +208,7 @@ const JobInstance = ({
         console.log("");
       }
 
-      // Handling stdout content and stderr content
+      // Handling stdout content and stderr content and exit code
       const requestStderr = await fetch(`https://ipfs.io/ipfs/${cid}/stderr`);
       const textStderr = await requestStderr.text();
       setStderrContent(textStderr);
@@ -215,14 +216,20 @@ const JobInstance = ({
       const requestStdout = await fetch(`https://ipfs.io/ipfs/${cid}/stdout`);
       const textStdout = await requestStdout.text();
       setStdoutContent(textStdout);
+
+      const requestExitCode = await fetch(
+        `https://ipfs.io/ipfs/${cid}/exitCode`
+      );
+      const textExitCode = await requestExitCode.text();
+      setExitCode(textExitCode);
     } catch (error) {
       console.log(error);
     }
-    console.log("outputUrl = ", outputUrl);
   }
 
   useEffect(() => {
     if (cidResult) {
+      console.log("cidResult = ", cidResult);
       getFileFromGateway(cidResult);
     }
   }, [cidResult]);
@@ -248,6 +255,7 @@ const JobInstance = ({
           cidStdout: cidStdout ? cidStdout : null,
           stderr: stderrContent ? stderrContent : null,
           stdout: stdoutContent ? stdoutContent : null,
+          outputsNamesAndCids: outputsNamesAndCids ? outputsNamesAndCids : null,
         });
       }}
     >
